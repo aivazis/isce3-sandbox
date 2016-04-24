@@ -1,0 +1,76 @@
+// -*- C++ -*-
+//
+// michael a.g. aïvázis
+// parasim
+// (c) 2003-2016 all rights reserved
+//
+
+// code guard
+#if !defined(isce_image_Shape_icc)
+#error This header file contains implementation details of class isce::image::Shape
+#endif
+
+
+// meta-methods
+isce::image::Shape::
+Shape(size_t lines, size_t samples, size_t bands) :
+    _shape{lines, samples, bands}
+{}
+
+
+// interface
+size_t
+isce::image::Shape::
+lines() const {
+    // the number of lines is the zeroth item in _shape
+    return _shape[0];
+}
+
+size_t
+isce::image::Shape::
+samples() const {
+    // the number of samples is the first item in _shape
+    return _shape[1];
+}
+
+size_t
+isce::image::Shape::
+bands() const {
+    // the number of bands is the second item in _shape
+    return _shape[2];
+}
+
+size_t
+isce::image::Shape::
+operator() (size_t item) const {
+    // bounds check
+    if (item >= _dim) {
+        // open a channel
+        pyre::journal::firewall_t firewall("isce.image.bounds");
+        // complain
+        firewall
+            << pyre::journal::at(__HERE__)
+            << "index error: shape index out of range: " << item << " > " << _dim-1
+            << pyre::journal::endl;
+
+    }
+    // look it up and return it
+    return _shape[item];
+}
+
+const size_t *
+isce::image::Shape::
+begin() const {
+    // the array itself is the beginning
+    return _shape;
+}
+
+const size_t *
+isce::image::Shape::
+end() const {
+    // compute the element "one past the end"
+    return _shape + sizeof(_shape)/sizeof(size_t);
+}
+
+
+// end of file

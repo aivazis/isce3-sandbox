@@ -1,0 +1,55 @@
+// -*- C++ -*-
+//
+// michael a.g. aïvázis
+// parasim
+// (c) 2003-2016 all rights reserved
+//
+
+// code guard
+#if !defined(isce_image_Index_icc)
+#error This header file contains implementation details of class isce::image::Index
+#endif
+
+
+// meta-methods
+isce::image::Index::
+Index(size_t line, size_t sample, size_t band) :
+    _index{line, sample, band}
+{}
+
+
+// interface
+size_t
+isce::image::Index::
+operator() (size_t item) const {
+    // bounds check
+    if (item >= _dim) {
+        // open a channel
+        pyre::journal::firewall_t firewall("isce.image.bounds");
+        // complain
+        firewall
+            << pyre::journal::at(__HERE__)
+            << "index error: out of range: " << item << " > " << _dim-1
+            << pyre::journal::endl;
+
+    }
+    // look it up and return it
+    return _index[item];
+}
+
+const size_t *
+isce::image::Index::
+begin() const {
+    // the array itself is the beginning
+    return _index;
+}
+
+const size_t *
+isce::image::Index::
+end() const {
+    // compute the element "one past the end"
+    return _index + sizeof(_index)/sizeof(size_t);
+}
+
+
+// end of file

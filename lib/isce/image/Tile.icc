@@ -1,0 +1,42 @@
+// -*- C++ -*-
+//
+// michael a.g. aïvázis
+// parasim
+// (c) 2003-2016 all rights reserved
+//
+
+// code guard
+#if !defined(isce_image_Tile_icc)
+#error This header file contains implementation details of class isce::image::Tile
+#endif
+
+
+// meta-methods
+isce::image::Tile::
+Tile(shape_t shape, layout_t layout) :
+    _shape(shape),
+    _layout(layout)
+{}
+
+
+// interface
+size_t
+isce::image::Tile::
+pixel(index_t index) const {
+    // initialize the offset
+    size_t offset = 0;
+    // and the running product
+    size_t product = 1;
+    // loop over the packing order
+    for (auto dim : _layout) {
+        // update the offset
+        offset += index(dim) * product;
+        // update the product
+        product *= _shape(dim);
+    }
+    // all done
+    return offset;
+}
+
+
+// end of file

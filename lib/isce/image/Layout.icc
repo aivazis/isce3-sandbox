@@ -1,0 +1,37 @@
+// -*- C++ -*-
+//
+// michael a.g. aïvázis
+// parasim
+// (c) 2003-2016 all rights reserved
+//
+
+// code guard
+#if !defined(isce_image_Layout_icc)
+#error This header file contains implementation details of class isce::image::Layout
+#endif
+
+
+// meta-methods
+isce::image::Layout::
+Layout(size_t dim0, size_t dim1, size_t dim2) :
+    _layout{dim0, dim1, dim2}
+{}
+
+
+// interface
+const size_t *
+isce::image::Layout::
+begin() const {
+    // the array itself is the beginning
+    return _layout;
+}
+
+const size_t *
+isce::image::Layout::
+end() const {
+    // compute the element "one past the end"
+    return _layout + sizeof(_layout)/sizeof(size_t);
+}
+
+
+// end of file
