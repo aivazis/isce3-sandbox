@@ -31,6 +31,9 @@ export::
 live:
 	BLD_ACTION="live" $(MM) recurse
 
+pull:
+	bzr pull bzr+ssh://$(PROJECT)@$(PROJ_REPO_HOST)
+
 push:
 	bzr push bzr+ssh://$(PROJECT)@$(PROJ_REPO_HOST)
 
