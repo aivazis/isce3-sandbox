@@ -1,0 +1,17 @@
+;
+; michael a.g. aïvázis
+; parasim
+; (c) 2003-2016 all rights reserved
+;
+
+grant:
+  repository = /home/projects/isce/repository
+  readers =
+  writers =
+    piyush.agram,
+    michael.aivazis,
+    eric.gurrola,
+    paul.rosen,
+    giangi.sacco
+
+; end of file
