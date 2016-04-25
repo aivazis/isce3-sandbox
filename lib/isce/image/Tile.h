@@ -37,7 +37,7 @@ public:
 
     // interface
 public:
-    inline size_t pixel(index_t index) const;
+    inline size_t operator[](index_t index) const;
 
     // implementation details
 private:

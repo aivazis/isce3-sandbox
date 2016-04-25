@@ -22,7 +22,7 @@ Tile(shape_t shape, layout_t layout) :
 // interface
 size_t
 isce::image::Tile::
-pixel(index_t index) const {
+operator[](index_t index) const {
     // initialize the offset
     size_t offset = 0;
     // and the running product
@@ -30,9 +30,9 @@ pixel(index_t index) const {
     // loop over the packing order
     for (auto dim : _layout) {
         // update the offset
-        offset += index(dim) * product;
+        offset += index[dim] * product;
         // update the product
-        product *= _shape(dim);
+        product *= _shape[dim];
     }
     // all done
     return offset;

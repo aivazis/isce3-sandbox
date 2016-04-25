@@ -35,10 +35,7 @@ public:
     inline size_t bands() const;
 
     // indexed access
-    inline size_t operator()(size_t item) const;
-    // container support
-    inline const size_t * begin() const;
-    inline const size_t * end() const;
+    inline size_t operator[](size_t item) const;
 
     // implementation details
 private:

@@ -6,6 +6,8 @@
 //
 
 
+// portability
+#include <portinfo>
 // externals
 #include <iostream>
 

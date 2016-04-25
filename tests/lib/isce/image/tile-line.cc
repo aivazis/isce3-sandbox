@@ -6,6 +6,8 @@
 //
 
 
+// portability adjustments
+#include <portinfo>
 // externals
 #include <iostream>
 
@@ -37,7 +39,7 @@ int main() {
                 // make an index
                 isce::image::index_t index{line, sample, band};
                 // compute the address of the pixel
-                size_t pixel = tile.pixel(index);
+                size_t pixel = tile[index];
                 // verify the offset has the expected value
                 if (offset != pixel) {
                     // open a channel

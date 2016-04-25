@@ -42,7 +42,7 @@ bands() const {
 
 size_t
 isce::image::Shape::
-operator() (size_t item) const {
+operator[] (size_t item) const {
     // bounds check
     if (item >= _dim) {
         // open a channel
@@ -57,20 +57,5 @@ operator() (size_t item) const {
     // look it up and return it
     return _shape[item];
 }
-
-const size_t *
-isce::image::Shape::
-begin() const {
-    // the array itself is the beginning
-    return _shape;
-}
-
-const size_t *
-isce::image::Shape::
-end() const {
-    // compute the element "one past the end"
-    return _shape + sizeof(_shape)/sizeof(size_t);
-}
-
 
 // end of file
