@@ -9,19 +9,6 @@
 #if !defined(isce_image_Tile_h)
 #define isce_image_Tile_h
 
-// support
-#include "Index.h"
-#include "Layout.h"
-#include "Shape.h"
-
-// forward declarations
-namespace isce {
-    namespace image {
-        // declarations
-        class Tile;
-    }
-}
-
 
 // declaration
 class isce::image::Tile {
@@ -37,6 +24,7 @@ public:
 
     // interface
 public:
+    // compute the pixel offset at the given index
     inline size_t operator[](index_t index) const;
 
     // implementation details

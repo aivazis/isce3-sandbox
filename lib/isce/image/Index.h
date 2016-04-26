@@ -9,17 +9,6 @@
 #if !defined(isce_image_Index_h)
 #define isce_image_Index_h
 
-// externals
-#include <pyre/journal.h>
-
-// forward declarations
-namespace isce {
-    namespace image {
-        // declarations
-        class Index;
-    }
-}
-
 
 // declaration
 class isce::image::Index {
@@ -34,8 +23,7 @@ public:
 
     // implementation details
 private:
-    const size_t _index[3];
-    const size_t _dim = sizeof(_index)/sizeof(size_t);
+    const size_t _index[_dim];
 };
 
 

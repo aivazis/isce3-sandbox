@@ -33,5 +33,4 @@ end() const {
     return _layout + sizeof(_layout)/sizeof(size_t);
 }
 
-
 // end of file

@@ -14,8 +14,8 @@
 // meta-methods
 isce::image::Tile::
 Tile(shape_t shape, layout_t layout) :
-    _shape(shape),
-    _layout(layout)
+    _shape{shape},
+    _layout{layout}
 {}
 
 
@@ -37,6 +37,5 @@ operator[](index_t index) const {
     // all done
     return offset;
 }
-
 
 // end of file

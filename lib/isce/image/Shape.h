@@ -9,17 +9,6 @@
 #if !defined(isce_image_Shape_h)
 #define isce_image_Shape_h
 
-// support
-#include <pyre/journal.h>
-
-// forward declarations
-namespace isce {
-    namespace image {
-        // declarations
-        class Shape;
-    }
-}
-
 
 // declaration
 class isce::image::Shape {
@@ -39,8 +28,7 @@ public:
 
     // implementation details
 private:
-    const size_t _shape[3];
-    const size_t _dim = sizeof(_shape)/sizeof(size_t);
+    const size_t _shape[_dim];
 };
 
 
