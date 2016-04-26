@@ -13,9 +13,12 @@ PACKAGE = image
 # the package headers
 EXPORT_PKG_HEADERS = \
     Index.h Index.icc \
+    Iterator.h Iterator.icc \
     Layout.h Layout.icc \
-    Shape.h Shape.icc \
     Tile.h Tile.icc \
+
+# adjustments to the project settings
+PROJ_CLEAN += $(EXPORT_INCDIR)/$(PACKAGE)
 
 # the standard targets
 all: export

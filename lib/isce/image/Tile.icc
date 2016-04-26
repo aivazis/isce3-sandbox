@@ -20,6 +20,30 @@ Tile(shape_t shape, layout_t layout) :
 
 
 // interface
+
+// accessors
+size_t
+isce::image::Tile::
+lines() const {
+    // the number of lines is the zeroth item in _shape
+    return _shape[0];
+}
+
+size_t
+isce::image::Tile::
+samples() const {
+    // the number of samples is the first item in _shape
+    return _shape[1];
+}
+
+size_t
+isce::image::Tile::
+bands() const {
+    // the number of bands is the second item in _shape
+    return _shape[2];
+}
+
+// indexed access
 size_t
 isce::image::Tile::
 operator[](index_t index) const {
@@ -36,6 +60,28 @@ operator[](index_t index) const {
     }
     // all done
     return offset;
+}
+
+// iteration support
+isce::image::Tile::iterator_t
+isce::image::Tile::
+begin() const {
+    // build a packing-order iterator pointing to the beginning of the tile
+    return iterator_t(_shape, _layout);
+}
+
+isce::image::Tile::iterator_t
+isce::image::Tile::
+end() const {
+    // build an iterator pointing to the end of the tile
+    return iterator_t(_shape, _shape, _layout);
+}
+
+isce::image::Tile::iterator_t
+isce::image::Tile::
+order(layout_t order) const {
+    // build an arbitrary order iterator pointing to the beginning of the tile
+    return iterator_t(_shape, order);
 }
 
 // end of file

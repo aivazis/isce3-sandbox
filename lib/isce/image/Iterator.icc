@@ -1,0 +1,83 @@
+// -*- C++ -*-
+//
+// michael a.g. aïvázis
+// parasim
+// (c) 2003-2016 all rights reserved
+//
+
+// code guard
+#if !defined(isce_image_Iterator_icc)
+#error This header file contains implementation details of class isce::image::Iterator
+#endif
+
+
+// meta-methods
+isce::image::Iterator::
+Iterator(index_t shape, layout_t layout) :
+    _current{0,0,0},
+    _shape{shape},
+    _layout{layout}
+{}
+
+
+isce::image::Iterator::
+Iterator(index_t current, index_t shape, layout_t layout) :
+    _current{current},
+    _shape{shape},
+    _layout{layout}
+{}
+
+
+// interface
+bool
+isce::image::Iterator::
+operator==(const Iterator & other) const {
+    // equality is all about the index value...
+    return _current == other._current;
+}
+
+
+bool
+isce::image::Iterator::
+operator!=(const Iterator & other) const {
+    // delegate to operator ==
+    return !(*this == other);
+}
+
+
+const isce::image::Iterator::index_t &
+isce::image::Iterator::
+operator*() const {
+    // return my current index
+    return _current;
+}
+
+
+isce::image::Iterator &
+isce::image::Iterator::
+operator++() {
+    // increment me in the specified order
+    for (auto dim : _layout) {
+        // get the associated limit
+        auto limit = _shape[dim];
+        // get my value for this component and increment it
+        auto value = _current[dim] + 1;
+        // if it has not overflowed
+        if (value < limit) {
+            // adjust the value
+            _current[dim] = value;
+            // we are done
+            return *this;
+        }
+        // otherwise, we overflowed; set this component to 0 and grab the next one
+        _current[dim] = 0;
+    }
+
+    // if we get this far, every component has overflowed; adjust the current value to indicate
+    // overflow
+    _current = _shape;
+    // and return myself
+    return *this;
+}
+
+// end of file

@@ -17,8 +17,8 @@ namespace isce {
     namespace image {
         // declarations
         class Index;
-        class Shape;
         class Layout;
+        class Iterator;
         class Tile;
 
         // constants
@@ -28,8 +28,8 @@ namespace isce {
 
 // the object model
 #include "image/Index.h"
-#include "image/Shape.h"
 #include "image/Layout.h"
+#include "image/Iterator.h"
 #include "image/Tile.h"
 
 // namespace additions
@@ -38,8 +38,9 @@ namespace isce {
 
         // type aliases
         typedef Index index_t;
+        typedef Index shape_t;
         typedef Layout layout_t;
-        typedef Shape shape_t;
+        typedef Iterator iterator_t;
         typedef Tile tile_t;
 
         // interleaving

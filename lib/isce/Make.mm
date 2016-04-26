@@ -15,6 +15,9 @@ RECURSE_DIRS = \
 EXPORT_HEADERS = \
     image.h
 
+# adjustments to the project settings
+PROJ_CLEAN += $(EXPORT_INCDIR)
+
 # the standard targets
 all: export
 	BLD_ACTION="all" $(MM) recurse

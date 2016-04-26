@@ -18,12 +18,17 @@ public:
 
     // interface
 public:
+    // equality
+    inline bool operator==(const Index & other) const;
+    inline bool operator!=(const Index & other) const;
+
     // indexed access
+    inline size_t & operator[](size_t item);
     inline size_t operator[](size_t item) const;
 
     // implementation details
 private:
-    const size_t _index[_dim];
+    size_t _index[_dim];
 };
 
 

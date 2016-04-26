@@ -15,8 +15,9 @@ class isce::image::Tile {
     // types
 public:
     typedef Index index_t;
+    typedef Index shape_t;
     typedef Layout layout_t;
-    typedef Shape shape_t;
+    typedef Iterator iterator_t;
 
     // meta-methods
 public:
@@ -24,8 +25,20 @@ public:
 
     // interface
 public:
+    // accessors
+    inline size_t lines() const;
+    inline size_t samples() const;
+    inline size_t bands() const;
+
     // compute the pixel offset at the given index
     inline size_t operator[](index_t index) const;
+
+    // iteration support
+    // iterating in packing order
+    iterator_t begin() const;
+    iterator_t end() const;
+    // iterating in arbitrary order
+    iterator_t order(layout_t order) const;
 
     // implementation details
 private:

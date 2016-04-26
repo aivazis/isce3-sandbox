@@ -25,42 +25,29 @@ int main() {
 
     // initialize the offset
     size_t offset = 0;
-    // loop in packing order
-    for (size_t line=0; line < shape.lines(); line++) {
-        for (size_t sample=0; sample < shape.samples(); sample++) {
-            for (size_t band=0; band < shape.bands(); band++) {
-#if 0
-                // show me
-                std::cout
-                    << "at: ("
-                    << line << ", " << sample << ", " << band << ")"
-                    << std::endl;
-#endif
-                // make an index
-                isce::image::index_t index{line, sample, band};
-                // compute the address of the pixel
-                size_t pixel = tile[index];
-                // verify the offset has the expected value
-                if (offset != pixel) {
-                    // open a channel
-                    pyre::journal::firewall_t firewall("isce.image.bounds");
-                    // complain
-                    firewall
-                        << pyre::journal::at(__HERE__)
-                        << "offset error: " << offset << " != " << pixel
-                        << pyre::journal::endl;
-                    // and bail
-                    return 1;
-                }
-                // update the counter
-                offset++;
-            }
+
+    // loop over the tile in packing order
+    for (auto index : tile) {
+        // get the offset of the pixel at this index
+        size_t pixel = tile[index];
+        // verify it has the expected value
+        if (offset != pixel) {
+            // open a channel
+            pyre::journal::firewall_t firewall("isce.image.bounds");
+            // complain
+            firewall
+                << pyre::journal::at(__HERE__)
+                << "offset error: " << offset << " != " << pixel
+                << pyre::journal::endl;
+            // and bail
+            return 1;
         }
+        // update the counter
+        offset++;
     }
 
     // all done
     return 0;
 }
-
 
 // end of file

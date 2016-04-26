@@ -19,6 +19,49 @@ Index(size_t line, size_t sample, size_t band) :
 
 
 // interface
+bool
+isce::image::Index::
+operator==(const Index & other) const {
+    // this and other are equal iff their _index values match component-by-component
+    for (size_t idx=0; idx < _dim; ++idx) {
+        // if they differ
+        if (_index[idx] != other._index[idx]) {
+            // no match
+            return false;
+        }
+    }
+    // otherwise, it good
+    return true;
+}
+
+
+bool
+isce::image::Index::
+operator!=(const Index & other) const {
+    // delegate to operator==
+    return !(*this == other);
+}
+
+
+size_t &
+isce::image::Index::
+operator[] (size_t item) {
+    // bounds check
+    if (item >= _dim) {
+        // open a channel
+        pyre::journal::firewall_t firewall("isce.image.bounds");
+        // complain
+        firewall
+            << pyre::journal::at(__HERE__)
+            << "index error: out of range: " << item << " > " << _dim-1
+            << pyre::journal::endl;
+
+    }
+    // return the address of the indicated item
+    return _index[item];
+}
+
+
 size_t
 isce::image::Index::
 operator[] (size_t item) const {
@@ -33,7 +76,7 @@ operator[] (size_t item) const {
             << pyre::journal::endl;
 
     }
-    // look it up and return it
+    // look up the item value and return it
     return _index[item];
 }
 
