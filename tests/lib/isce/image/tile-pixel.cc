@@ -17,11 +17,11 @@
 // entry point
 int main() {
     // shape
-    isce::image::shape_t shape(4,8,3);
+    isce::image::shape_t shape = {4,8,3};
     // the interleaving
-    isce::image::layout_t layout{isce::image::layout::pixel};
+    isce::image::layout_t layout = {isce::image::layout::pixel};
     // make a tile
-    isce::image::tile_t tile(shape, layout);
+    isce::image::tile_t tile = {shape, layout};
 
     // initialize the offset
     size_t offset = 0;
