@@ -19,6 +19,24 @@ Layout(size_t dim0, size_t dim1, size_t dim2) :
 
 
 // interface
+size_t
+isce::image::Layout::
+operator[] (size_t item) const {
+    // bounds check
+    if (item >= _dim) {
+        // open a channel
+        pyre::journal::firewall_t firewall("isce.image.bounds");
+        // complain
+        firewall
+            << pyre::journal::at(__HERE__)
+            << "index error: out of range: " << item << " > " << _dim-1
+            << pyre::journal::endl;
+
+    }
+    // look up the item value and return it
+    return _layout[item];
+}
+
 const size_t *
 isce::image::Layout::
 begin() const {
