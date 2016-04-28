@@ -19,6 +19,13 @@ Index(size_t line, size_t sample, size_t band) :
 
 
 // interface
+size_t
+isce::image::Index::
+size() const {
+    // easy enough
+    return _dim;
+}
+
 bool
 isce::image::Index::
 operator==(const Index & other) const {

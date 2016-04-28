@@ -18,6 +18,9 @@ public:
 
     // interface
 public:
+    // size
+    inline size_t size() const;
+
     // equality
     inline bool operator==(const Index & other) const;
     inline bool operator!=(const Index & other) const;

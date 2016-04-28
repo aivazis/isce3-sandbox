@@ -16,6 +16,9 @@
 
 // entry point
 int main() {
+    // make a firewall channel so we can report errors
+    pyre::journal::firewall_t firewall("isce.image.tile");
+
     // shape
     isce::image::shape_t shape = {4,8,3};
     // the interleaving
@@ -24,6 +27,18 @@ int main() {
     isce::image::index_t index = {2,3,2};
     // make a tile
     isce::image::tile_t tile = {shape, layout};
+
+    // check the tile size calculation
+    if (tile.pixels() != 4*8*3) {
+        // complain
+        firewall
+            << pyre::journal::at(__HERE__)
+            << "tile sizing error: " << tile.pixels() << " != " << 4*8*3
+            << pyre::journal::endl;
+        // bail
+        return 1;
+    }
+
 
     // make a debug channel
     pyre::journal::debug_t debug("isce.image.tile");

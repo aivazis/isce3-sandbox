@@ -43,6 +43,20 @@ bands() const {
     return _shape[2];
 }
 
+size_t
+isce::image::Tile::
+pixels() const {
+    // initialize the size
+    size_t pixels = 1;
+    // go through my shape
+    for (size_t dim=0; dim < _shape.size(); ++dim) {
+        // scale the size up by the extent of this dimension
+        pixels *= _shape[dim];
+    }
+    // all done
+    return pixels;
+}
+
 // indexed access
 size_t
 isce::image::Tile::

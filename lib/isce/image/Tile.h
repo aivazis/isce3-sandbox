@@ -30,6 +30,9 @@ public:
     inline size_t samples() const;
     inline size_t bands() const;
 
+    // image sizing
+    inline size_t pixels() const;
+
     // compute the pixel offset at the given index
     inline size_t operator[](index_t index) const;
 
