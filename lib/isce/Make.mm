@@ -13,7 +13,8 @@ RECURSE_DIRS = \
 
 # the top level headers
 EXPORT_HEADERS = \
-    image.h
+    image.h \
+    version.h \
 
 # adjustments to the project settings
 PROJ_CLEAN += $(EXPORT_INCDIR)
