@@ -8,7 +8,6 @@
 include isce.def
 # my dibdirectories
 RECURSE_DIRS = \
-    lib \
     isce \
 
 # the standard targets
@@ -26,5 +25,8 @@ distclean::
 
 export::
 	BLD_ACTION="export" $(MM) recurse
+
+live:
+	BLD_ACTION="live" $(MM) recurse
 
 # end of file

@@ -9,6 +9,8 @@ include isce.def
 # my dibdirectories
 RECURSE_DIRS = \
     lib \
+    extensions \
+    packages \
     tests \
 
 # the standard targets

@@ -8,7 +8,6 @@
 include isce.def
 # my dibdirectories
 RECURSE_DIRS = \
-    lib \
     isce \
 
 # the standard targets
