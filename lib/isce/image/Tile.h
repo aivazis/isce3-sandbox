@@ -33,9 +33,13 @@ public:
     inline size_t pixels() const;
 
     // compute the pixel offset at the given index
-    inline size_t operator[](index_t index) const;
+    inline size_t offset(index_t index) const;
     // compute the index at a given offset
     inline index_t index(size_t offset) const;
+
+    // syntactic sugar for the above
+    inline size_t operator[](index_t index) const;
+    inline index_t operator[](size_t offset) const;
 
     // iteration support
     // iterating in packing order

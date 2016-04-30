@@ -59,7 +59,7 @@ pixels() const {
 // indexed access
 size_t
 isce::image::Tile::
-operator[](index_t index) const {
+offset(index_t index) const {
     // initialize the offset
     size_t offset = 0;
     // and the running product
@@ -95,6 +95,22 @@ index(size_t offset) const {
 
     // build an index and return it
     return index_t {index[0], index[1], index[2]};
+}
+
+
+// indexed access
+size_t
+isce::image::Tile::
+operator[](index_t index) const {
+    // delegate
+    return this->offset(index);
+}
+
+isce::image::Tile:: index_t
+isce::image::Tile::
+operator[](size_t offset) const {
+    // delegate
+    return this->index(offset);
 }
 
 

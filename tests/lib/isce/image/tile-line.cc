@@ -16,11 +16,11 @@
 // entry point
 int main() {
     // shape
-    isce::image::shape_t shape = {4,8,3};
+    isce::image::shape_t shape {4,8,3};
     // the interleaving
-    isce::image::layout_t layout = {isce::image::layout::line};
+    isce::image::layout_t layout {isce::image::layout::line};
     // make a tile
-    isce::image::tile_t tile = {shape, layout};
+    isce::image::tile_t tile {shape, layout};
 
     // initialize the offset
     size_t offset = 0;
@@ -28,7 +28,7 @@ int main() {
     // loop over the tile in packing order
     for (auto index : tile) {
         // get the offset of the pixel at this index
-        size_t pixel = tile[index];
+        auto pixel { tile[index] };
         // verify it has the expected value
         if (offset != pixel) {
             // open a channel
@@ -43,7 +43,7 @@ int main() {
         }
 
         // map the offset back to an index
-        auto refl { tile.index(offset) };
+        auto refl { tile[offset] };
         // and verify it is identical to our loop index
         if (refl != index) {
             // open a channel
