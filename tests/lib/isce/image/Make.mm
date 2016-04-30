@@ -12,6 +12,7 @@ TESTS = \
     tile-band \
     tile-line \
     tile-pixel \
+    tile-maps \
 
 # the standard targets
 all: test clean
@@ -23,7 +24,7 @@ test: $(TESTS)
             } done
 
 # build
-PROJ_CLEAN = $(TESTS)
+PROJ_CLEAN += $(TESTS)
 PROJ_LIBRARIES = -ljournal
 LIBRARIES = $(PROJ_LIBRARIES) $(EXTERNAL_LIBS)
 
