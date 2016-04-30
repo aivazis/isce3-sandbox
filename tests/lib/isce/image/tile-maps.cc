@@ -7,10 +7,6 @@
 
 // portability adjustments
 #include <portinfo>
-// externals
-#include <iostream>
-#include <iomanip>
-
 // support
 #include <isce/image.h>
 
