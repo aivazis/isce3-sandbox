@@ -21,6 +21,7 @@ PROJ_SRCS = \
     exceptions.cc \
     metadata.cc \
 
+PROJ_TMPDIR = $(BLD_TMPDIR)/${PROJECT}/$(PACKAGE)
 # my dependencies
 PROJ_LIBRARIES += -ljournal $(LCXX_FORTRAN)
 
