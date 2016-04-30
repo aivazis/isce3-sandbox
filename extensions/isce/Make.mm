@@ -8,7 +8,7 @@
 # project defaults
 include isce.def
 # the package
-PACKAGE = extensions/isce
+PACKAGE = extensions
 # the module
 MODULE = isce
 # build a python extension
@@ -21,7 +21,7 @@ PROJ_SRCS = \
     exceptions.cc \
     metadata.cc \
 # the private build space
-PROJ_TMPDIR = $(BLD_TMPDIR)/${PROJECT}/$(PACKAGE)
+PROJ_TMPDIR = $(BLD_TMPDIR)/${PROJECT}/extensions/isce
 # my dependencies
 PROJ_LIBRARIES += -lisce -ljournal $(LCXX_FORTRAN)
 
