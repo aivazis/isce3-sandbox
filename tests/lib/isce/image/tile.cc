@@ -15,8 +15,6 @@
 
 // entry point
 int main() {
-    // make a firewall channel so we can report errors
-    pyre::journal::firewall_t firewall("isce.image.tile");
 
     // shape
     isce::image::shape_t shape = {4,8,3};
@@ -29,6 +27,8 @@ int main() {
 
     // check the tile size calculation
     if (tile.pixels() != 4*8*3) {
+        // make a firewall channel so we can report errors
+        pyre::journal::firewall_t firewall("isce.image.tile");
         // complain
         firewall
             << pyre::journal::at(__HERE__)
@@ -37,7 +37,6 @@ int main() {
         // bail
         return 1;
     }
-
 
     // make a debug channel
     pyre::journal::debug_t debug("isce.image.tile");
@@ -56,6 +55,5 @@ int main() {
     // all done
     return 0;
 }
-
 
 // end of file

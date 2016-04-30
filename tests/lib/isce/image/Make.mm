@@ -27,9 +27,6 @@ PROJ_CLEAN = $(TESTS)
 PROJ_LIBRARIES = -ljournal
 LIBRARIES = $(PROJ_LIBRARIES) $(EXTERNAL_LIBS)
 
-%: %.c
-	$(CC) $(CFLAGS) $^ -o $@ $(LCFLAGS) $(LIBRARIES)
-
 %: %.cc
 	$(CXX) $(CXXFLAGS) $^ -o $@ $(LCXXFLAGS) $(LIBRARIES)
 

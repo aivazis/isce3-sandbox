@@ -75,6 +75,29 @@ operator[](index_t index) const {
     return offset;
 }
 
+isce::image::Tile:: index_t
+isce::image::Tile::
+index(size_t offset) const {
+    // storage for the answer
+    size_t index[_dim];
+    // initialize the product
+    size_t product = pixels();
+
+    // loop in reverse packing order
+    for (int dim = _dim-1; dim >=0; --dim) {
+        // pull the current shape limit out of the product
+        product /= _shape[_layout[dim]];
+        // compute the index
+        index[_layout[dim]] = offset / product;
+        // adjust the offset
+        offset %= product;
+    }
+
+    // build an index and return it
+    return index_t {index[0], index[1], index[2]};
+}
+
+
 // iteration support
 isce::image::Tile::iterator_t
 isce::image::Tile::
