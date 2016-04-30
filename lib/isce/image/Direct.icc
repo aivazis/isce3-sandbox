@@ -1,0 +1,28 @@
+// -*- C++ -*-
+//
+// michael a.g. aïvázis <michael.aivazis@para-sim.com>
+// (c) 2003-2016 all rights reserved
+//
+
+// code guard
+#if !defined(isce_image_Direct_icc)
+#error This header file contains implementation details of class isce::image::Direct
+#endif
+
+
+// meta-methods
+isce::image::Direct::
+Direct(string_t name, size_t size) :
+    _buffer {map(name, size)},
+    _size {size}
+{}
+
+
+isce::image::Direct::
+~Direct() {
+    // delegate
+    unmap(_buffer, _size);
+}
+
+
+// end of file

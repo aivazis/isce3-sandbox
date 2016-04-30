@@ -12,7 +12,7 @@ PROJECT_MAJOR = 2
 PROJECT_MINOR = 0
 
 # project settings
-PROJ_CXX_FLAGS += $(COMPILER_CXX_STD11)
+PROJ_CXX_FLAGS = $(COMPILER_CXX_STD11)
 
 # the repository
 PROJ_REPO_ADMIN = root

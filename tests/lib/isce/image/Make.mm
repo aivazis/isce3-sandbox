@@ -7,12 +7,20 @@
 # project defaults
 include isce.def
 
+# the pile of tests
 TESTS = \
     tile \
     tile-band \
     tile-line \
     tile-pixel \
     tile-maps \
+    direct-create \
+    direct-map \
+    direct-instantiate \
+
+# tests that should fail because their access patterns are prohibited
+SHOULD_FAIL = \
+    direct-clone \
 
 # the standard targets
 all: test clean
@@ -24,8 +32,8 @@ test: $(TESTS)
             } done
 
 # build
-PROJ_CLEAN += $(TESTS)
-PROJ_LIBRARIES = -ljournal
+PROJ_CLEAN += $(TESTS) image.dat
+PROJ_LIBRARIES = -lisce -ljournal
 LIBRARIES = $(PROJ_LIBRARIES) $(EXTERNAL_LIBS)
 
 %: %.cc

@@ -8,16 +8,25 @@
 #if !defined(isce_image_h)
 #define isce_image_h
 
+// externals
+#include <stdexcept>
+#include <iomanip>
+#include <string>
 // support
 #include <pyre/journal.h>
 
 // forward declarations
 namespace isce {
     namespace image {
+        // local aliase
+        typedef std::size_t size_t;
+        typedef std::string string_t;
+
         // declarations
+        class Direct;
         class Index;
-        class Layout;
         class Iterator;
+        class Layout;
         class Tile;
 
         // constants
@@ -30,17 +39,21 @@ namespace isce {
 #include "image/Layout.h"
 #include "image/Iterator.h"
 #include "image/Tile.h"
+#include "image/Direct.h"
 
 // namespace additions
 namespace isce {
     namespace image {
 
-        // type aliases
+        // tile shape, layout and indexing
         typedef Index index_t;
         typedef Index shape_t;
         typedef Layout layout_t;
         typedef Iterator iterator_t;
+        // tiles
         typedef Tile tile_t;
+        // buffer types
+        typedef Direct direct_t;
 
         // interleaving
         namespace layout {

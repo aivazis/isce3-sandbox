@@ -20,10 +20,10 @@ PROJ_LCXX_LIBPATH=$(BLD_LIBDIR)
 PROJ_SRCS = \
     exceptions.cc \
     metadata.cc \
-
+# the private build space
 PROJ_TMPDIR = $(BLD_TMPDIR)/${PROJECT}/$(PACKAGE)
 # my dependencies
-PROJ_LIBRARIES += -ljournal $(LCXX_FORTRAN)
+PROJ_LIBRARIES += -lisce -ljournal $(LCXX_FORTRAN)
 
 # register the dependence on {libisce} so I get recompiled when it changes
 PROJ_OTHER_DEPENDENCIES = $(BLD_LIBDIR)/libisce.$(EXT_SO)
