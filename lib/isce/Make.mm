@@ -13,6 +13,7 @@ RECURSE_DIRS = \
 # the top level headers
 EXPORT_HEADERS = \
     image.h \
+    isce.h \
     version.h \
 
 # adjustments to the project settings
