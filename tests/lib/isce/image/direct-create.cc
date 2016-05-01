@@ -12,7 +12,7 @@
 
 // entry point
 int main() {
-    // untils
+    // units
     size_t k = 1024;
     // declare the type of a pixel
     typedef double pixel_t;
