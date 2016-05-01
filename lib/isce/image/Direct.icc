@@ -13,8 +13,8 @@
 // meta-methods
 isce::image::Direct::
 Direct(string_t name, size_t size) :
-    _buffer {map(name, size)},
-    _size {size}
+    _size {size},
+    _buffer {map(name, _size)}
 {}
 
 
@@ -24,5 +24,21 @@ isce::image::Direct::
     unmap(_buffer, _size);
 }
 
+
+// interface
+// accessors
+size_t
+isce::image::Direct::
+size() const {
+    // easy enough
+    return _size;
+}
+
+void *
+isce::image::Direct::
+buffer() const {
+    // easy enough
+    return _buffer;
+}
 
 // end of file

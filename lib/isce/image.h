@@ -18,7 +18,7 @@
 // forward declarations
 namespace isce {
     namespace image {
-        // local aliase
+        // local aliases
         typedef std::size_t size_t;
         typedef std::string string_t;
 

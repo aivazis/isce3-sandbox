@@ -15,24 +15,31 @@ class isce::image::Direct {
 public:
     typedef std::string string_t;
 
+    // constants
+public:
+    static const size_t entireFile = 0;
+
     // class methods
 public:
     static void create(string_t name, size_t size);
-    static void * map(string_t name, size_t size);
+    static void * map(string_t name, size_t & size);
     static void unmap(void * buffer, size_t size);
 
     // meta-methods
 public:
-    inline Direct(string_t name, size_t size);
+    inline Direct(string_t name, size_t size=entireFile);
     inline ~Direct();
 
     // interface
 public:
+    // accessors
+    inline size_t size() const;
+    inline void * buffer() const;
 
     // implementation details: data
 private:
-    void * _buffer;
     size_t _size;
+    void * _buffer;
 
     // disable automatic life cycle management
 private:

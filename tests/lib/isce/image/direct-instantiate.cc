@@ -23,14 +23,28 @@ int main() {
     // make a tile
     isce::image::tile_t tile {shape, isce::image::layout::pixel};
 
-    // compute the size of the payload
+    // compute the expected size of the payload
     size_t size = sizeof(pixel_t) * tile.pixels();
 
     // map the file
     // turn on the info channel
     // pyre::journal::debug_t("isce.image.direct").activate();
     // map a buffer over the file; it gets unmapped on destruction
-    isce::image::direct_t map {name, size};
+    isce::image::direct_t map {name};
+
+    // ask the map for its size and compare against our calculation
+    if (map.size() != size) {
+        // make a channel
+        pyre::journal::firewall_t firewall("isce.image.direct");
+        // and complain
+            firewall
+                << pyre::journal::at(__HERE__)
+                << "size mismatch for file '" << name << "': " << pyre::journal::newline
+                << "  expected " << size << " bytes, got " << map.size() << " bytes"
+                << pyre::journal::endl;
+            // and bail
+            return 1;
+    }
 
     // all done
     return 0;
