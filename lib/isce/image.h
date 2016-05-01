@@ -19,6 +19,7 @@
 namespace isce {
     namespace image {
         // local aliases
+        typedef off_t offset_t;
         typedef std::size_t size_t;
         typedef std::string string_t;
 

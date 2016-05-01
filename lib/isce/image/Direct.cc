@@ -48,7 +48,7 @@ create(string_t name, size_t size) {
 // memory map the given file
 void *
 isce::image::Direct::
-map(string_t name, size_t & size) {
+map(string_t name, size_t & size, off_t offset) {
     // open the file using low level IO, since we need its file descriptor
     int fd = ::open(name.c_str(), O_RDWR);
     // verify the file was opened correctly
@@ -98,7 +98,7 @@ map(string_t name, size_t & size) {
     }
 
     // map it
-    void * buffer = ::mmap(0, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+    void * buffer = ::mmap(0, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, offset);
     // check it
     if (buffer == MAP_FAILED) {
         // create a channel

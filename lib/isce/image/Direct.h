@@ -22,12 +22,12 @@ public:
     // class methods
 public:
     static void create(string_t name, size_t size);
-    static void * map(string_t name, size_t & size);
+    static void * map(string_t name, size_t & size, offset_t offset);
     static void unmap(void * buffer, size_t size);
 
     // meta-methods
 public:
-    inline Direct(string_t name, size_t size=entireFile);
+    inline Direct(string_t name, size_t size=entireFile, offset_t offset=0);
     inline ~Direct();
 
     // interface

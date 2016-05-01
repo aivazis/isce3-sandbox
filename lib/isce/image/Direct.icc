@@ -12,9 +12,9 @@
 
 // meta-methods
 isce::image::Direct::
-Direct(string_t name, size_t size) :
+Direct(string_t name, size_t size, off_t offset) :
     _size {size},
-    _buffer {map(name, _size)}
+    _buffer {map(name, _size, offset)}
 {}
 
 

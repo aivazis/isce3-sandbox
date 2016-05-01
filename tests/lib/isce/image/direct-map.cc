@@ -27,7 +27,7 @@ int main() {
     // turn on the info channel
     // pyre::journal::debug_t("isce.image.direct").activate();
     // map a buffer over the file
-    void * buffer = isce::image::direct_t::map("image.dat", size);
+    void * buffer = isce::image::direct_t::map("image.dat", size, 0);
     // and undo it
     isce::image::direct_t::unmap(buffer, size);
 
