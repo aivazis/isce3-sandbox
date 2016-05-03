@@ -48,7 +48,7 @@ int main() {
             // complain
             firewall
                 << pyre::journal::at(__HERE__)
-                << "index error at offset " << pyre::journal::newline
+                << "index error at offset " << offset << pyre::journal::newline
                 << "(" << index[0] << "," << index[1] << "," << index[2] << ")"
                 << " != "
                 << "(" << refl[0] << "," << refl[1] << "," << refl[2] << ")"
