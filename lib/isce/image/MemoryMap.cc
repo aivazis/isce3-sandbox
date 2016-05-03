@@ -21,7 +21,7 @@
 // make a file of a specified size
 void
 isce::image::MemoryMap::
-create(string_t name, size_t size) {
+create(uri_t name, size_t size) {
     // create a file stream
     std::ofstream image(name, std::ofstream::binary);
     // go to the end of the file
@@ -48,7 +48,7 @@ create(string_t name, size_t size) {
 // memory map the given file
 void *
 isce::image::MemoryMap::
-map(string_t name, size_t & size, off_t offset, bool writable) {
+map(uri_t name, size_t & size, off_t offset, bool writable) {
     // open the file using low level IO, since we need its file descriptor
     int fd = ::open(name.c_str(), O_RDWR);
     // verify the file was opened correctly
@@ -97,6 +97,7 @@ map(string_t name, size_t & size, off_t offset, bool writable) {
         size = info.st_size;
     }
 
+    // deduce the protection flag
     auto prot = PROT_READ | PROT_WRITE ? writable : PROT_READ;
     // map it
     void * buffer = ::mmap(0, size, prot, MAP_SHARED, fd, offset);

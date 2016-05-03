@@ -13,7 +13,7 @@
 class isce::image::ConstDirect : public isce::image::MemoryMap {
     // meta-methods
 public:
-    inline ConstDirect(string_t name, size_t size=entireFile, offset_t offset=0);
+    inline ConstDirect(uri_t name, size_t size=entireFile, offset_t offset=0);
     inline ~ConstDirect();
 
     // interface

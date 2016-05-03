@@ -18,8 +18,8 @@ public:
 
     // class methods
 public:
-    static void create(string_t name, size_t size);
-    static void * map(string_t name, size_t & size, offset_t offset, bool writable);
+    static void create(uri_t name, size_t size);
+    static void * map(uri_t name, size_t & size, offset_t offset, bool writable);
     static void unmap(const void * buffer, size_t size);
 };
 

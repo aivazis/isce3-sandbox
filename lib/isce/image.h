@@ -18,12 +18,14 @@
 // forward declarations
 namespace isce {
     namespace image {
-        // local aliases
+        // local type aliases
+        // for filenames
+        typedef std::string uri_t;
+        // for describing shapes and regions
         typedef off_t offset_t;
         typedef std::size_t size_t;
-        typedef std::string string_t;
 
-        // declarations
+        // forward declarations of the image api classes
         class ConstDirect;
         class Direct;
         class Index;

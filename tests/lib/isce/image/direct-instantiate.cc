@@ -17,7 +17,7 @@ int main() {
     // declare the type of a pixel
     typedef double pixel_t;
     // the name of the file
-    isce::image::string_t name {"image.dat"};
+    isce::image::uri_t name {"image.dat"};
     // specify the shape of the data
     isce::image::shape_t shape {1*k, 3*k, 3};
     // make a tile

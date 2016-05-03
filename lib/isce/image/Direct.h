@@ -13,7 +13,7 @@
 class isce::image::Direct : public isce::image::MemoryMap {
     // meta-methods
 public:
-    inline Direct(string_t name, size_t size=entireFile, offset_t offset=0);
+    inline Direct(uri_t name, size_t size=entireFile, offset_t offset=0);
     inline ~Direct();
 
     // interface
