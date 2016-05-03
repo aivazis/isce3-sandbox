@@ -72,7 +72,7 @@ namespace isce {
 
             // the familiar ones
             const layout_t c {2, 1, 0};
-            const layout_t fortran {0,1,2};
+            const layout_t fortran {0, 1, 2};
         }
     }
 }
