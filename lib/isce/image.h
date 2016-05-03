@@ -24,10 +24,12 @@ namespace isce {
         typedef std::string string_t;
 
         // declarations
+        class ConstDirect;
         class Direct;
         class Index;
         class Iterator;
         class Layout;
+        class MemoryMap;
         class Tile;
 
         // constants
@@ -40,7 +42,9 @@ namespace isce {
 #include "image/Layout.h"
 #include "image/Iterator.h"
 #include "image/Tile.h"
+#include "image/MemoryMap.h"
 #include "image/Direct.h"
+#include "image/ConstDirect.h"
 
 // namespace additions
 namespace isce {
@@ -55,6 +59,7 @@ namespace isce {
         typedef Tile tile_t;
         // buffer types
         typedef Direct direct_t;
+        typedef ConstDirect constdirect_t;
 
         // interleaving
         namespace layout {

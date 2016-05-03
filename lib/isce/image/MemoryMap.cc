@@ -20,7 +20,7 @@
 // class methods
 // make a file of a specified size
 void
-isce::image::Direct::
+isce::image::MemoryMap::
 create(string_t name, size_t size) {
     // create a file stream
     std::ofstream image(name, std::ofstream::binary);
@@ -47,8 +47,8 @@ create(string_t name, size_t size) {
 
 // memory map the given file
 void *
-isce::image::Direct::
-map(string_t name, size_t & size, off_t offset) {
+isce::image::MemoryMap::
+map(string_t name, size_t & size, off_t offset, bool writable) {
     // open the file using low level IO, since we need its file descriptor
     int fd = ::open(name.c_str(), O_RDWR);
     // verify the file was opened correctly
@@ -97,8 +97,9 @@ map(string_t name, size_t & size, off_t offset) {
         size = info.st_size;
     }
 
+    auto prot = PROT_READ | PROT_WRITE ? writable : PROT_READ;
     // map it
-    void * buffer = ::mmap(0, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, offset);
+    void * buffer = ::mmap(0, size, prot, MAP_SHARED, fd, offset);
     // check it
     if (buffer == MAP_FAILED) {
         // create a channel
@@ -136,10 +137,10 @@ map(string_t name, size_t & size, off_t offset) {
 
 // unmap the given buffer
 void
-isce::image::Direct::
-unmap(void * buffer, size_t size) {
+isce::image::MemoryMap::
+unmap(const void * buffer, size_t size) {
     // unmap
-    ::munmap(buffer, size);
+    ::munmap(const_cast<void *>(buffer), size);
 
     // make a channel
     pyre::journal::debug_t channel("isce.image.direct");

@@ -10,21 +10,7 @@
 
 
 // declaration
-class isce::image::Direct {
-    // types
-public:
-    typedef std::string string_t;
-
-    // constants
-public:
-    static const size_t entireFile = 0;
-
-    // class methods
-public:
-    static void create(string_t name, size_t size);
-    static void * map(string_t name, size_t & size, offset_t offset);
-    static void unmap(void * buffer, size_t size);
-
+class isce::image::Direct : public isce::image::MemoryMap {
     // meta-methods
 public:
     inline Direct(string_t name, size_t size=entireFile, offset_t offset=0);
@@ -38,8 +24,8 @@ public:
 
     // implementation details: data
 private:
-    size_t _size;
-    void * _buffer;
+    void * const _buffer; // the buffer payload is writable; the pointer itself is not
+    const size_t _size;   // need this during destruction
 
     // disable automatic life cycle management
 private:

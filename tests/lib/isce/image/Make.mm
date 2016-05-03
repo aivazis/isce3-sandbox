@@ -14,6 +14,9 @@ TESTS = \
     tile-line \
     tile-pixel \
     tile-maps \
+    constdirect-create \
+    constdirect-map \
+    constdirect-instantiate \
     direct-create \
     direct-map \
     direct-instantiate \
