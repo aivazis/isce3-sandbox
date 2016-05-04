@@ -12,8 +12,8 @@
 
 // meta-methods
 isce::image::Direct::
-Direct(uri_t name, size_t size, off_t offset) :
-    _buffer {map(name, size, offset, true)},
+Direct(uri_t name, size_t size, off_t offset, bool writable) :
+    _buffer {map(name, size, offset, writable)},
     _size {size}
 {}
 

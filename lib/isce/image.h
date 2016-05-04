@@ -26,7 +26,6 @@ namespace isce {
         typedef std::size_t size_t;
 
         // forward declarations of the image api classes
-        class ConstDirect;
         class Direct;
         class Index;
         class Iterator;
@@ -46,7 +45,6 @@ namespace isce {
 #include "image/Tile.h"
 #include "image/MemoryMap.h"
 #include "image/Direct.h"
-#include "image/ConstDirect.h"
 
 // namespace additions
 namespace isce {
@@ -60,8 +58,7 @@ namespace isce {
         // tiles
         typedef Tile tile_t;
         // buffer types
-        typedef Direct direct_t;
-        typedef ConstDirect constdirect_t;
+        typedef Direct direct_t; // memory mapped file
 
         // interleaving
         namespace layout {

@@ -25,7 +25,6 @@ PROJ_CLEAN += $(EXPORT_INCDIR)/$(PACKAGE)
 EXPORT_LIBS = $(PROJ_DLL)
 # the package headers
 EXPORT_PKG_HEADERS = \
-    ConstDirect.h ConstDirect.icc \
     Direct.h Direct.icc \
     Index.h Index.icc \
     Iterator.h Iterator.icc \

@@ -14,9 +14,6 @@ TESTS = \
     tile-line \
     tile-pixel \
     tile-maps \
-    constdirect-create \
-    constdirect-map \
-    constdirect-instantiate \
     direct-create \
     direct-map \
     direct-instantiate \
@@ -28,6 +25,7 @@ SHOULD_FAIL = \
 # the standard targets
 all: test clean
 
+# testing
 test: $(TESTS)
 	@echo "testing:"
 	@for testcase in $(TESTS); do { \
