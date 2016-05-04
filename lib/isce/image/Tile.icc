@@ -48,9 +48,9 @@ pixels() const {
     // initialize the size
     size_t pixels = 1;
     // go through my shape
-    for (size_t dim=0; dim < _shape.size(); ++dim) {
+    for (auto size : _shape) {
         // scale the size up by the extent of this dimension
-        pixels *= _shape[dim];
+        pixels *= size;
     }
     // all done
     return pixels;
@@ -79,9 +79,9 @@ isce::image::Tile:: index_t
 isce::image::Tile::
 index(size_t offset) const {
     // storage for the answer
-    size_t index[_dim];
+    index_t::rep_t index;
     // initialize the product
-    size_t product = pixels();
+    auto product = pixels();
 
     // loop in reverse packing order
     for (int dim = _dim-1; dim >=0; --dim) {
@@ -94,7 +94,7 @@ index(size_t offset) const {
     }
 
     // build an index and return it
-    return index_t {index[0], index[1], index[2]};
+    return index_t {index};
 }
 
 

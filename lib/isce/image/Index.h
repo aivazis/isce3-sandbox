@@ -11,9 +11,16 @@
 
 // declaration
 class isce::image::Index {
+    // types
+public:
+    typedef size_t rep_t[_dim]; // the representation of the index values
+
     // meta-methods
 public:
+    // construction using explicit values for the indices
     inline Index(size_t line, size_t sample, size_t band);
+    // construction from a correctly dimensioned array
+    inline explicit Index(rep_t rep);
 
     // interface
 public:
@@ -24,7 +31,7 @@ public:
     inline bool operator==(const Index & other) const;
     inline bool operator!=(const Index & other) const;
 
-    // indexed access
+    // indexed access to the components
     inline size_t & operator[](size_t item);
     inline size_t operator[](size_t item) const;
 
@@ -34,7 +41,7 @@ public:
 
     // implementation details
 private:
-    size_t _index[_dim];
+    rep_t _index;
 };
 
 

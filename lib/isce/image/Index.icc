@@ -16,6 +16,11 @@ Index(size_t line, size_t sample, size_t band) :
     _index{line, sample, band}
 {}
 
+isce::image::Index::
+Index(rep_t index) :
+    _index{index[0], index[1], index[2]}
+{}
+
 
 // interface
 size_t

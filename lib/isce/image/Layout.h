@@ -11,6 +11,10 @@
 
 // declaration
 class isce::image::Layout {
+    // types
+public:
+    typedef size_t rep_t[_dim]; // the representation of the index values
+
     // meta-methods
 public:
     inline Layout(size_t dim0, size_t dim1, size_t dim2);
@@ -26,7 +30,7 @@ public:
 
     // implementation details
 private:
-    const size_t _layout[_dim];
+    const rep_t _layout;
 };
 
 
