@@ -14,6 +14,11 @@ PROJECT_MINOR = 0
 # project settings
 PROJ_CXX_FLAGS = $(COMPILER_CXX_STD11)
 
+# figure out the build type
+ifeq (debug, ${findstring debug, $(BLD_USER_TARGET)})
+   PROJ_CXX_DEFINES = DEBUG_CHECK_BOUNDS
+endif
+
 # the repository
 PROJ_REPO_ADMIN = root
 PROJ_REPO_HOST = fiji.para-sim.com

@@ -22,6 +22,7 @@ size_t
 isce::image::Layout::
 operator[] (size_t item) const {
     // bounds check
+#if defined(DEBUG_CHECK_BOUNDS)
     if (item >= _dim) {
         // open a channel
         pyre::journal::firewall_t firewall("isce.image.bounds");
@@ -32,6 +33,7 @@ operator[] (size_t item) const {
             << pyre::journal::endl;
 
     }
+#endif
     // look up the item value and return it
     return _layout[item];
 }

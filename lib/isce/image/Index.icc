@@ -53,6 +53,7 @@ size_t &
 isce::image::Index::
 operator[] (size_t item) {
     // bounds check
+#if defined(DEBUG_CHECK_BOUNDS)
     if (item >= _dim) {
         // open a channel
         pyre::journal::firewall_t firewall("isce.image.bounds");
@@ -63,6 +64,7 @@ operator[] (size_t item) {
             << pyre::journal::endl;
 
     }
+#endif
     // return the address of the indicated item
     return _index[item];
 }
@@ -72,6 +74,7 @@ size_t
 isce::image::Index::
 operator[] (size_t item) const {
     // bounds check
+#if defined(DEBUG_CHECK_BOUNDS)
     if (item >= _dim) {
         // open a channel
         pyre::journal::firewall_t firewall("isce.image.bounds");
@@ -82,6 +85,7 @@ operator[] (size_t item) const {
             << pyre::journal::endl;
 
     }
+#endif
     // look up the item value and return it
     return _index[item];
 }
