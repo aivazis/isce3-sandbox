@@ -25,21 +25,21 @@ size_t
 isce::image::Tile::
 lines() const {
     // the number of lines is the zeroth item in _shape
-    return _shape[0];
+    return _shape[line];
 }
 
 size_t
 isce::image::Tile::
 samples() const {
     // the number of samples is the first item in _shape
-    return _shape[1];
+    return _shape[sample];
 }
 
 size_t
 isce::image::Tile::
 bands() const {
     // the number of bands is the second item in _shape
-    return _shape[2];
+    return _shape[band];
 }
 
 size_t

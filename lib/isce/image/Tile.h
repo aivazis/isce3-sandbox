@@ -18,6 +18,13 @@ public:
     typedef Layout layout_t;
     typedef Iterator iterator_t;
 
+    // constants
+public:
+    // constants that specify the interpretation of the index space
+    static const size_t line = 0;
+    static const size_t sample = 1;
+    static const size_t band = 2;
+
     // meta-methods
 public:
     inline Tile(shape_t shape, layout_t layout);
