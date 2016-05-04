@@ -86,4 +86,20 @@ operator[] (size_t item) const {
     return _index[item];
 }
 
+
+// ranged for loops
+const size_t *
+isce::image::Index::
+begin() const {
+    // the array itself is the beginning
+    return _index;
+}
+
+const size_t *
+isce::image::Index::
+end() const {
+    // compute the element "one past the end"
+    return _index + _dim;
+}
+
 // end of file

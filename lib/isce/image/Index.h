@@ -28,6 +28,10 @@ public:
     inline size_t & operator[](size_t item);
     inline size_t operator[](size_t item) const;
 
+    // support for ranged for loops
+    inline const size_t * begin() const;
+    inline const size_t * end() const;
+
     // implementation details
 private:
     size_t _index[_dim];

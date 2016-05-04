@@ -36,6 +36,7 @@ operator[] (size_t item) const {
     return _layout[item];
 }
 
+// ranged for loops
 const size_t *
 isce::image::Layout::
 begin() const {
@@ -43,11 +44,12 @@ begin() const {
     return _layout;
 }
 
+
 const size_t *
 isce::image::Layout::
 end() const {
     // compute the element "one past the end"
-    return _layout + sizeof(_layout)/sizeof(size_t);
+    return _layout + _dim;
 }
 
 // end of file
