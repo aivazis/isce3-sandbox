@@ -12,7 +12,7 @@
 
 // meta-methods
 isce::image::Iterator::
-Iterator(index_t shape, layout_t layout) :
+Iterator(shape_t shape, layout_t layout) :
     _current{0,0,0},
     _shape{shape},
     _layout{layout}
@@ -20,7 +20,7 @@ Iterator(index_t shape, layout_t layout) :
 
 
 isce::image::Iterator::
-Iterator(index_t current, index_t shape, layout_t layout) :
+Iterator(index_t current, shape_t shape, layout_t layout) :
     _current{current},
     _shape{shape},
     _layout{layout}

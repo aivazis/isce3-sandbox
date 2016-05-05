@@ -14,12 +14,13 @@ class isce::image::Iterator {
     // types
 public:
     typedef Index index_t;
+    typedef Index shape_t;
     typedef Layout layout_t;
 
     // meta-methods
 public:
-    inline Iterator(index_t shape, layout_t layout);
-    inline Iterator(index_t current, index_t shape, layout_t layout);
+    inline Iterator(shape_t shape, layout_t layout);
+    inline Iterator(index_t current, shape_t shape, layout_t layout);
 
     // interface
 public:
@@ -32,7 +33,7 @@ public:
     // implementation details
 private:
     index_t _current;
-    const index_t _shape;
+    const shape_t _shape;
     const layout_t _layout;
 };
 
