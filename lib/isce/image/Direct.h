@@ -19,7 +19,13 @@
 class isce::image::Direct : public isce::image::MemoryMap {
     // meta-methods
 public:
-    inline Direct(uri_t name, size_t size=entireFile, offset_t offset=0, bool writable=false);
+    // constructor
+    explicit inline
+    Direct(uri_t name,               // the name of the file
+           size_t size = entireFile, // how much of the file to map
+           offset_t offset = 0,      // starting at this offset from the beginning
+           bool writable = false);   // type of access to grant
+    // destructor
     inline ~Direct();
 
     // interface
