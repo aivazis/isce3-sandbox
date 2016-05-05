@@ -1,0 +1,59 @@
+// -*- C++ -*-
+//
+// michael a.g. aïvázis <michael.aivazis@para-sim.com>
+// (c) 2003-2016 all rights reserved
+//
+
+// code guard
+#if !defined(isce_image_Image_icc)
+#error This header file contains implementation details of class isce::image::Image
+#endif
+
+
+// meta-methods
+template <typename pixel>
+isce::image::Image<pixel>::
+Image(uri_t source, tile_t tile, offset_t offset, bool writable) :
+    _source {source, map_t::entireFile, offset, writable},
+    _tile {tile},
+    // _data(static_cast<pixel_t *>(_source.buffer()))
+    _data(static_cast<pixel_t *>(_source.buffer()))
+{}
+
+
+// interface
+template <typename pixel>
+pixel
+isce::image::Image<pixel>::
+get(tile_t::index_t index) const {
+    // compute the offset
+    auto offset = _tile[index];
+
+    // make a channel
+    pyre::journal::debug_t channel("isce.image");
+    // show me
+    channel
+        << pyre::journal::at(__HERE__)
+        << "data[ (" << index[0] << ", " << index[1] << ", " << index[2] << ") ]"
+        << " = "
+        << "*(" << _data << " + " << offset*sizeof(pixel_t) << ")"
+        << " = "
+        << _data[offset]
+        << pyre::journal::endl;
+
+    // get and return the data stored at that location
+    return _data[offset];
+}
+
+
+// syntactic sugar
+template <typename pixel>
+pixel
+isce::image::Image<pixel>::
+operator[](tile_t::index_t index) const {
+    // delegate to the method
+    return get(index);
+}
+
+
+// end of file

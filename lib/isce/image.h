@@ -27,6 +27,7 @@ namespace isce {
 
         // forward declarations of the image api classes
         class Direct;
+        template <typename> class Image;
         class Index;
         class Iterator;
         class Layout;
@@ -45,6 +46,7 @@ namespace isce {
 #include "image/Tile.h"
 #include "image/MemoryMap.h"
 #include "image/Direct.h"
+#include "image/Image.h"
 
 // namespace additions
 namespace isce {
@@ -59,6 +61,8 @@ namespace isce {
         typedef Tile tile_t;
         // buffer types
         typedef Direct direct_t; // memory mapped file
+        // image types
+        template <typename pixel> using image_t = Image<pixel>;
 
         // interleaving
         namespace layout {

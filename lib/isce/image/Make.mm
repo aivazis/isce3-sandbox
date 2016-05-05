@@ -26,6 +26,7 @@ EXPORT_LIBS = $(PROJ_DLL)
 # the package headers
 EXPORT_PKG_HEADERS = \
     Direct.h Direct.icc \
+    Image.h Image.icc \
     Index.h Index.icc \
     Iterator.h Iterator.icc \
     Layout.h Layout.icc \

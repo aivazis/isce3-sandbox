@@ -17,12 +17,12 @@ TESTS = \
     direct-create \
     direct-map \
     direct-instantiate \
+    image \
 
 # tests that should fail because their access patterns are prohibited
 SHOULD_FAIL = \
     direct-clone \
 
-# the standard targets
 all: test clean
 
 # testing
