@@ -49,8 +49,10 @@ create(uri_t name, size_t size) {
 void *
 isce::image::MemoryMap::
 map(uri_t name, size_t & size, off_t offset, bool writable) {
+    // deduce the mode for opening the file
+    auto mode = writable ? O_RDWR : O_RDONLY;
     // open the file using low level IO, since we need its file descriptor
-    int fd = ::open(name.c_str(), O_RDWR);
+    int fd = ::open(name.c_str(), mode);
     // verify the file was opened correctly
     if (fd < 0) {
         // and if not, create a channel
@@ -71,7 +73,7 @@ map(uri_t name, size_t & size, off_t offset, bool writable) {
 
     // if the {size} argument is 0, interpret it as a request to map the entire file; let's ask
     // the OS for the size of the file
-    if (size == 0) {
+    if (size == entireFile) {
         // allocate space for a {stat} buffer
         struct stat info;
         // fill it with what the OS knows about the file
@@ -98,7 +100,7 @@ map(uri_t name, size_t & size, off_t offset, bool writable) {
     }
 
     // deduce the protection flag
-    auto prot = PROT_READ | PROT_WRITE ? writable : PROT_READ;
+    auto prot = writable ? (PROT_READ | PROT_WRITE) : PROT_READ;
     // map it
     void * buffer = ::mmap(0, size, prot, MAP_SHARED, fd, offset);
     // check it
