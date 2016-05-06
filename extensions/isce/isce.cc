@@ -13,12 +13,12 @@
 // administrivia
 #include "exceptions.h"
 #include "metadata.h"
-
+// image
+#include "image.h"
 
 // put everything in my private namespace
 namespace isce {
     namespace extension {
-
         // the module method table
         PyMethodDef module_methods[] = {
             // administrivia
@@ -27,21 +27,32 @@ namespace isce {
             // the version
             { version__name__, version, METH_VARARGS, version__doc__ },
 
+            // methods for images
+            {
+                image::newImage_float__name__,
+                image::newImage_float,
+                METH_VARARGS, image::newImage_float__doc__
+            },
+
+            // methods for image views
+            {
+                image::newView_float__name__,
+                image::newView_float,
+                METH_VARARGS, image::newView_float__doc__
+            },
+
             // sentinel
             { 0, 0, 0, 0 }
         };
 
-        // the module documentation string
-        const char * const __doc__ = "isce extension module";
-
-        // the module definition structure
+        // the module definition
         PyModuleDef module_definition = {
             // header
             PyModuleDef_HEAD_INIT,
             // the name of the module
             "isce",
             // the module documentation string
-            __doc__,
+            "isce extension module",
             // size of the per-interpreter state of the module; -1 if this state is global
             -1,
             // the methods defined in this module

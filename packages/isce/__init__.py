@@ -5,7 +5,12 @@
 # (c) 2003-2016 all rights reserved
 #
 
-# get the version info
-from . import version
+# export my parts
+from . import (
+    # version info
+    version,
+    # my extension module
+    extensions
+    )
 
 # end of file

@@ -19,6 +19,7 @@ PROJ_LCXX_LIBPATH=$(BLD_LIBDIR)
 # the list of extension source files
 PROJ_SRCS = \
     exceptions.cc \
+    image.cc \
     metadata.cc \
 # the private build space
 PROJ_TMPDIR = $(BLD_TMPDIR)/${PROJECT}/extensions/isce

@@ -32,7 +32,6 @@ endif
 
 # the standard targets
 all: export
-	BLD_ACTION="all" $(MM) recurse
 
 tidy::
 	BLD_ACTION="tidy" $(MM) recurse
