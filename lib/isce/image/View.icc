@@ -1,0 +1,42 @@
+// -*- C++ -*-
+//
+// michael a.g. aïvázis <michael.aivazis@para-sim.com>
+// (c) 2003-2016 all rights reserved
+//
+
+// code guard
+#if !defined(isce_image_View_icc)
+#error This header file contains implementation details of class isce::image::View
+#endif
+
+
+// meta-methods
+template <typename pixel>
+isce::image::View<pixel>::
+View(const image_t & image, tile_t tile) :
+    _tile {tile},
+    _image {image}
+{}
+
+
+// interface
+template <typename pixel>
+pixel
+isce::image::View<pixel>::
+get(tile_t::index_t index) const {
+    // all done
+    return 0;
+}
+
+
+// syntactic sugar
+template <typename pixel>
+pixel
+isce::image::View<pixel>::
+operator[](tile_t::index_t index) const {
+    // delegate to the method
+    return get(index);
+}
+
+
+// end of file

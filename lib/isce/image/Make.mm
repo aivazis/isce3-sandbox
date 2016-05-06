@@ -32,6 +32,7 @@ EXPORT_PKG_HEADERS = \
     Layout.h Layout.icc \
     MemoryMap.h \
     Tile.h Tile.icc \
+    View.h View.icc \
 
 
 # the standard targets

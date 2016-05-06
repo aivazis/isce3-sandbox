@@ -33,6 +33,7 @@ namespace isce {
         class Layout;
         class MemoryMap;
         class Tile;
+        template <typename> class View;
 
         // constants
         const size_t _dim = 3;
@@ -47,6 +48,7 @@ namespace isce {
 #include "image/MemoryMap.h"
 #include "image/Direct.h"
 #include "image/Image.h"
+#include "image/View.h"
 
 // namespace additions
 namespace isce {
@@ -63,6 +65,8 @@ namespace isce {
         typedef Direct direct_t; // memory mapped file
         // image types
         template <typename pixel> using image_t = Image<pixel>;
+        // view types
+        template <typename pixel> using view_t = View<pixel>;
 
         // interleaving
         namespace layout {

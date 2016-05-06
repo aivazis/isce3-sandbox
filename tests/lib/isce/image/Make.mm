@@ -18,6 +18,7 @@ TESTS = \
     direct-map \
     direct-instantiate \
     image \
+    view \
 
 # tests that should fail because their access patterns are prohibited
 SHOULD_FAIL = \
