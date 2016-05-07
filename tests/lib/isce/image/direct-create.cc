@@ -4,6 +4,11 @@
 // (c) 2003-2016 all rights reserved
 //
 
+// access the low level interface to create a file that can fit an image of a specified size
+//
+// N.B.: this test leaves behind a file named "image.dat" that is used by the other tests; it
+// must be cleaned up after the tests are run
+
 // portability
 #include <portinfo>
 

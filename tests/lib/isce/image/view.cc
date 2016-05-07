@@ -4,6 +4,9 @@
 // (c) 2003-2016 all rights reserved
 //
 
+// given a file named "image.dat" in the current directory
+//   map it into memory as an image of the specified shape and layout
+//   establish a view of it in its natural order
 
 // portability
 #include <portinfo>

@@ -4,6 +4,10 @@
 // (c) 2003-2016 all rights reserved
 //
 
+// with a pixel interleaved tile
+//   visit it in its native packing order
+//   verify that the offsets are computed correctly
+//   verify that the offsets map back to their index correctly
 
 // portability adjustments
 #include <portinfo>

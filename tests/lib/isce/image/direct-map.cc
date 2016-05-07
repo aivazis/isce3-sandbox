@@ -4,6 +4,9 @@
 // (c) 2003-2016 all rights reserved
 //
 
+// given a file named "image.dat" in the current directory, use the low level interface to map
+// it into memory
+
 // portability
 #include <portinfo>
 

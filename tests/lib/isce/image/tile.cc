@@ -4,6 +4,11 @@
 // (c) 2003-2016 all rights reserved
 //
 
+// exercise tile construction:
+//   verify that all the parts are accessible through the public headers
+//   verify constructor signatures
+//   assemble a tile
+//   verify it can compute its size correctly
 
 // portability
 #include <portinfo>
@@ -37,7 +42,7 @@ int main() {
 
     // make a debug channel
     pyre::journal::debug_t debug("isce.image.tile");
-    // and display some the tile layout
+    // and display information about the tile layout
     debug
         << pyre::journal::at(__HERE__)
         << "shape  : (" << shape[0] << ", " << shape[1] << ", " << shape[2] << ")"

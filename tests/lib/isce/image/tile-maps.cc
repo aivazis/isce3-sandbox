@@ -4,6 +4,16 @@
 // (c) 2003-2016 all rights reserved
 //
 
+// comparison of the offset maps for band, line and pixel interleaved tiles
+// with three tiles, one for each interleaving strategy:
+//   generate a sequence of indices in pixel order
+//   display the corresponding offset values size by side
+//
+// the test is silenced by default; to display the map, activate its journal channel by setting
+// the DEBUG_OPT environment variable. e.g.:
+//   DEBUG_OPT=isce.image.tile tile-maps
+//
+
 
 // portability adjustments
 #include <portinfo>
