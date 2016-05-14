@@ -13,6 +13,7 @@ TESTS = \
     tile-band \
     tile-line \
     tile-pixel \
+    tile-order \
     tile-maps \
     direct-create \
     direct-map \

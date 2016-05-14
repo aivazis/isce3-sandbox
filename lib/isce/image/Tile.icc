@@ -19,7 +19,6 @@ Tile(shape_t shape, layout_t layout) :
 
 
 // interface
-
 // accessors
 isce::image::Tile::shape_t
 isce::image::Tile::
@@ -145,11 +144,11 @@ end() const {
     return iterator_t(_shape, _shape, _layout);
 }
 
-isce::image::Tile::iterator_t
+isce::image::Tile::tile_t
 isce::image::Tile::
 order(const layout_t & order) const {
     // build an arbitrary order iterator pointing to the beginning of the tile
-    return iterator_t(_shape, order);
+    return tile_t(_shape, order);
 }
 
 // end of file

@@ -16,6 +16,7 @@ public:
     typedef Index index_t;
     typedef Index shape_t;
     typedef Layout layout_t;
+    typedef Tile tile_t;
     typedef Iterator iterator_t;
 
     // constants
@@ -56,8 +57,9 @@ public:
     // iterating in packing order
     iterator_t begin() const;
     iterator_t end() const;
-    // iterating in arbitrary order
-    iterator_t order(const layout_t & order) const;
+
+    // iterating over slices in arbitrary order; these methods are useful in ranged-for loops
+    tile_t order(const layout_t & order) const;
 
     // implementation details
 private:
