@@ -32,6 +32,10 @@ public:
     // interface
 public:
     // accessors
+    inline shape_t shape() const;
+    inline layout_t layout() const;
+
+    // derivative accessors
     inline size_t lines() const;
     inline size_t samples() const;
     inline size_t bands() const;
@@ -53,7 +57,7 @@ public:
     iterator_t begin() const;
     iterator_t end() const;
     // iterating in arbitrary order
-    iterator_t order(layout_t order) const;
+    iterator_t order(const layout_t & order) const;
 
     // implementation details
 private:
