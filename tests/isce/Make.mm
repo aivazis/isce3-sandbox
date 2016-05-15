@@ -9,7 +9,7 @@ include isce.def
 
 all: test clean
 
-test: sanity low-level
+test: sanity low-level srtm
 
 sanity:
 	${PYTHON} ./sanity.py
@@ -18,5 +18,9 @@ low-level:
 	${PYTHON} ./extension.py
 	${PYTHON} ./extension_image.py
 	${PYTHON} ./extension_view.py
+
+srtm:
+	${PYTHON} ./srtm.py
+	${PYTHON} ./srtm_component.py
 
 # end of file

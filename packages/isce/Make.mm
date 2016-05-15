@@ -13,6 +13,7 @@ PROJ_CLEAN += $(EXPORT_MODULEDIR)
 
 # my dibdirectories
 RECURSE_DIRS = \
+    dem \
     extensions \
     image \
 

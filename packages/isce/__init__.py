@@ -5,12 +5,31 @@
 # (c) 2003-2016 all rights reserved
 #
 
+# pull the framework parts
+from pyre import (
+    # protocols, components and traits
+    schemata, protocol, component, foundry, properties, constraints, application,
+    # decorators
+    export, provides,
+    # the runtime manager
+    executive,
+    # miscellaneous packages
+    patterns, tracking, units,
+    )
+
+# fire up
+package = executive.registerPackage(name='isce', file=__file__)
+# save the geography
+home, prefix, defaults = package.layout()
+
 # export my parts
 from . import (
     # version info
     version,
     # my extension module
-    extensions
+    extensions,
+    # digital elevation models
+    dem,
     )
 
 # end of file
