@@ -14,6 +14,7 @@ TESTS = \
     tile-line \
     tile-pixel \
     tile-order \
+    tile-slice \
     tile-maps \
     direct-create \
     direct-map \

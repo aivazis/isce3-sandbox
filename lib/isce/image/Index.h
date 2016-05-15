@@ -8,7 +8,6 @@
 #if !defined(isce_image_Index_h)
 #define isce_image_Index_h
 
-
 // declaration
 class isce::image::Index {
     // types

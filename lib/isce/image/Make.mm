@@ -31,6 +31,7 @@ EXPORT_PKG_HEADERS = \
     Iterator.h Iterator.icc \
     Layout.h Layout.icc \
     MemoryMap.h \
+    Slice.h Slice.icc \
     Tile.h Tile.icc \
     View.h View.icc \
 

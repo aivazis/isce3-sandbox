@@ -12,17 +12,10 @@
 
 // meta-methods
 isce::image::Iterator::
-Iterator(const shape_t & shape, const layout_t & layout) :
-    _current{0,0,0},
-    _shape{shape},
-    _layout{layout}
-{}
-
-
-isce::image::Iterator::
-Iterator(const index_t & current, const shape_t & shape, const layout_t & layout) :
-    _current{current},
-    _shape{shape},
+Iterator(const index_t & begin, const index_t & end, const layout_t & layout) :
+    _current{begin},
+    _begin{begin},
+    _end{end},
     _layout{layout}
 {}
 
@@ -58,7 +51,7 @@ operator++() {
     // increment me in the specified order
     for (auto dim : _layout) {
         // get the associated limit
-        auto limit = _shape[dim];
+        auto limit = _end[dim];
         // get my value for this component and increment it
         auto value = _current[dim] + 1;
         // if it has not overflowed
@@ -69,12 +62,12 @@ operator++() {
             return *this;
         }
         // otherwise, we overflowed; set this component to 0 and grab the next one
-        _current[dim] = 0;
+        _current[dim] = _begin[dim];
     }
 
     // if we get this far, every component has overflowed; adjust the current value to indicate
     // overflow
-    _current = _shape;
+    _current = _end;
     // and return myself
     return *this;
 }

@@ -64,7 +64,7 @@ pixels() const {
     size_t pixels = 1;
     // go through my shape
     for (auto size : _shape) {
-        // scale the size up by the extent of this dimension
+        // scale the size up by the extent of the current dimension
         pixels *= size;
     }
     // all done
@@ -118,14 +118,14 @@ size_t
 isce::image::Tile::
 operator[](index_t index) const {
     // delegate
-    return this->offset(index);
+    return offset(index);
 }
 
 isce::image::Tile:: index_t
 isce::image::Tile::
 operator[](size_t offset) const {
     // delegate
-    return this->index(offset);
+    return index(offset);
 }
 
 
@@ -134,7 +134,7 @@ isce::image::Tile::iterator_t
 isce::image::Tile::
 begin() const {
     // build a packing-order iterator pointing to the beginning of the tile
-    return iterator_t(_shape, _layout);
+    return iterator_t({0,0,0}, _shape, _layout);
 }
 
 isce::image::Tile::iterator_t
@@ -144,11 +144,26 @@ end() const {
     return iterator_t(_shape, _shape, _layout);
 }
 
-isce::image::Tile::tile_t
+// slicing
+isce::image::Tile::slice_t
 isce::image::Tile::
-order(const layout_t & order) const {
+slice(const layout_t & order) const {
     // build an arbitrary order iterator pointing to the beginning of the tile
-    return tile_t(_shape, order);
+    return slice_t(*this, order);
+}
+
+isce::image::Tile::slice_t
+isce::image::Tile::
+slice(const index_t & begin, const index_t & end) const {
+    // build an arbitrary order iterator pointing to the beginning of the tile
+    return slice_t(*this, begin, end, _layout);
+}
+
+isce::image::Tile::slice_t
+isce::image::Tile::
+slice(const index_t & begin, const index_t & end, const layout_t & order) const {
+    // build an arbitrary order iterator pointing to the beginning of the tile
+    return slice_t(*this, begin, end, order);
 }
 
 // end of file

@@ -8,6 +8,9 @@
 #if !defined(isce_image_Tile_h)
 #define isce_image_Tile_h
 
+// slices
+#include "Slice.h"
+
 
 // declaration
 class isce::image::Tile {
@@ -16,6 +19,7 @@ public:
     typedef Index index_t;
     typedef Index shape_t;
     typedef Layout layout_t;
+    typedef Slice slice_t;
     typedef Tile tile_t;
     typedef Iterator iterator_t;
 
@@ -59,7 +63,9 @@ public:
     iterator_t end() const;
 
     // iterating over slices in arbitrary order; these methods are useful in ranged-for loops
-    tile_t order(const layout_t & order) const;
+    slice_t slice(const layout_t & order) const;
+    slice_t slice(const index_t & begin, const index_t & end) const;
+    slice_t slice(const index_t & begin, const index_t & end, const layout_t & layout) const;
 
     // implementation details
 private:
@@ -72,6 +78,10 @@ private:
 #define isce_image_Tile_icc
 #include "Tile.icc"
 #undef isce_image_Tile_icc
+
+#define isce_image_Slice_icc
+#include "Slice.icc"
+#undef isce_image_Slice_icc
 
 #endif
 

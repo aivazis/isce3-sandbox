@@ -32,6 +32,7 @@ namespace isce {
         class Iterator;
         class Layout;
         class MemoryMap;
+        class Slice;
         class Tile;
         template <typename> class View;
 
@@ -45,6 +46,7 @@ namespace isce {
 #include "image/Layout.h"
 #include "image/Iterator.h"
 #include "image/Tile.h"
+#include "image/Slice.h"
 #include "image/MemoryMap.h"
 #include "image/Direct.h"
 #include "image/Image.h"

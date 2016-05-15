@@ -19,8 +19,7 @@ public:
 
     // meta-methods
 public:
-    inline Iterator(const shape_t & shape, const layout_t & layout);
-    inline Iterator(const index_t & current, const shape_t & shape, const layout_t & layout);
+    inline Iterator(const shape_t & begin, const shape_t & end, const layout_t & layout);
 
     // interface
 public:
@@ -33,7 +32,8 @@ public:
     // implementation details
 private:
     index_t _current;
-    const shape_t _shape;
+    const index_t _begin;
+    const index_t _end;
     const layout_t _layout;
 };
 
