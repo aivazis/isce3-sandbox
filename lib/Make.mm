@@ -6,7 +6,7 @@
 
 # project defaults
 include isce.def
-# my dibdirectories
+# my subdirectories
 RECURSE_DIRS = \
     isce \
 

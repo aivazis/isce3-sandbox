@@ -11,7 +11,7 @@ PACKAGE = reservoir
 # clean up
 PROJ_CLEAN += $(EXPORT_MODULEDIR)
 
-# my dibdirectories
+# my subdirectories
 RECURSE_DIRS = \
     extensions \
     image \
