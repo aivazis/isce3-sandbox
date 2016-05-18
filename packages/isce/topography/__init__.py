@@ -16,7 +16,7 @@ from .DEM import DEM as archive
 @isce.foundry(implements=archive)
 def srtm():
     """
-    Component that assembles a DEM from SRTM tiles
+    Component that assembles digital elevation models from SRTM tiles
     """
     # grab the factory
     from .SRTM import SRTM

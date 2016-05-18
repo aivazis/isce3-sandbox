@@ -12,7 +12,7 @@ Sanity check: verify that the SRTM component is accessible
 
 def test():
     # get the component
-    from isce.dem.SRTM import SRTM
+    from isce.topography.SRTM import SRTM
     # access the component factory
     srtm = SRTM(name='srtm')
 
@@ -21,7 +21,7 @@ def test():
     # grab the journal
     import journal
     # make a channel and show me the configuration
-    journal.debug("isce.dem").log(doc)
+    journal.debug("isce.topography").log(doc)
 
     # all done
     return

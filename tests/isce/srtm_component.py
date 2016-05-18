@@ -20,7 +20,7 @@ class SRTM(isce.application, family='isce.applications.srtm'):
     """
 
     # user configurable state
-    dem = isce.dem.archive(default=isce.dem.srtm())
+    dem = isce.topography.archive(default=isce.topography.srtm())
     dem.tip = 'the assembler of the digital elevation model'
 
     # the entry point

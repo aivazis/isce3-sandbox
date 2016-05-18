@@ -13,9 +13,9 @@ PROJ_CLEAN += $(EXPORT_MODULEDIR)
 
 # my dibdirectories
 RECURSE_DIRS = \
-    dem \
     extensions \
     image \
+    topography \
 
 # the list of python modules
 EXPORT_PYTHON_MODULES = \

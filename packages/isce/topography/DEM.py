@@ -10,9 +10,10 @@ import isce
 
 
 # the digital elevation model protocol
-class DEM(isce.protocol, family='isce.dem'):
+class DEM(isce.protocol, family='isce.topography'):
     """
-    The protocol implemented by digital elevation model constructors
+    Requirements for accessors of digital elevation model archives
     """
+
 
 # end of file

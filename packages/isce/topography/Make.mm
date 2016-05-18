@@ -7,7 +7,7 @@
 # project defaults
 include isce.def
 # package name
-PACKAGE = dem
+PACKAGE = topography
 # the python modules
 EXPORT_PYTHON_MODULES = \
     DEM.py \

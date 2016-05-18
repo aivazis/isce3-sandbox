@@ -29,7 +29,7 @@ from . import (
     # my extension module
     extensions,
     # digital elevation models
-    dem,
+    topography,
     )
 
 # end of file
