@@ -22,5 +22,6 @@ low-level:
 srtm:
 	${PYTHON} ./srtm.py
 	${PYTHON} ./srtm_component.py
+	${PYTHON} ./srtm_uris.py
 
 # end of file

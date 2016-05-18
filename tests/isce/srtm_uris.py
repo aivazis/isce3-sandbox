@@ -29,10 +29,18 @@ class SRTM(isce.application, family='isce.applications.srtm'):
         """
         The main entry point for the application
         """
-        # assemble my configuration
-        doc = '\n'.join(srtm.pyre_showConfiguration())
-        # and show me
-        self.info.log(doc)
+        # get the DEM archive manager
+        srtm = self.dem
+        # adjust the region
+        srtm.region = [(0.5, -0.5)]
+        # show me
+        self.info.line("region: {}".format(srtm.region))
+        # form the tile URIs
+        for uri in srtm.uris():
+            # show me
+            self.info.line('  {}'.format(uri))
+        # flush
+        self.info.log()
         # all done
         return 0
 

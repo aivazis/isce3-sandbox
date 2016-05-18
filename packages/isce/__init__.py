@@ -14,7 +14,7 @@ from pyre import (
     # the runtime manager
     executive,
     # miscellaneous packages
-    patterns, tracking, units,
+    geometry, patterns, tracking, units,
     )
 
 # fire up
