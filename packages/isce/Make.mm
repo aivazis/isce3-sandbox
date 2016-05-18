@@ -13,6 +13,8 @@ PROJ_CLEAN += $(EXPORT_MODULEDIR)
 
 # my subdirectories
 RECURSE_DIRS = \
+    actions \
+    components \
     extensions \
     image \
     topography \

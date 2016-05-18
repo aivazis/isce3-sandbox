@@ -12,6 +12,7 @@ RECURSE_DIRS = \
     extensions \
     packages \
     etc \
+    bin \
     tests \
 
 # the standard targets

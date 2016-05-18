@@ -14,7 +14,9 @@ from pyre import (
     # the runtime manager
     executive,
     # miscellaneous packages
-    geometry, patterns, tracking, units,
+    geometry, patterns, primitives, timers, tracking, units,
+    # plexus support
+    action, command, panel, plexus, application
     )
 
 # fire up
@@ -24,12 +26,14 @@ home, prefix, defaults = package.layout()
 
 # export my parts
 from . import (
-    # version info
-    version,
-    # my extension module
-    extensions,
-    # digital elevation models
-    topography,
+    version,        # version info
+    extensions,     # my extension module
+
+    # support
+    topography,     # digital elevation models
+
+    # user interface
+    components, actions,
     )
 
 # end of file

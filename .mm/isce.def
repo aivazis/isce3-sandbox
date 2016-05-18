@@ -8,7 +8,7 @@
 PROJECT = isce
 
 # version info
-PROJECT_MAJOR = 2
+PROJECT_MAJOR = 3
 PROJECT_MINOR = 0
 
 # project settings
