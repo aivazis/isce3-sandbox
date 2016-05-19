@@ -32,7 +32,7 @@ class SRTM(isce.application, family='isce.applications.srtm'):
         # assemble my configuration
         doc = '\n'.join(srtm.pyre_showConfiguration())
         # and show me
-        self.info.log(doc)
+        self.debug.log(doc)
         # all done
         return 0
 

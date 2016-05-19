@@ -29,18 +29,20 @@ class SRTM(isce.application, family='isce.applications.srtm'):
         """
         The main entry point for the application
         """
+        # grab a channel
+        channel = self.debug
         # get the DEM archive manager
         srtm = self.dem
         # adjust the region
         srtm.region = [(0.5, -0.5)]
         # show me
-        self.info.line("region: {}".format(srtm.region))
+        channel.line("region: {}".format(srtm.region))
         # form the tile URIs
         for uri in srtm.uris():
             # show me
-            self.info.line('  {}'.format(uri))
+            channel.line('  {}'.format(uri))
         # flush
-        self.info.log()
+        channel.log()
         # all done
         return 0
 
