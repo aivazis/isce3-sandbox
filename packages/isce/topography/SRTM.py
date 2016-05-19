@@ -65,20 +65,23 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
         if not region:
             # the mosaic is empty
             return []
-        # otherwise, compute the bounding box of all the points in my {region}
-        low = []
-        high = []
-        #  the SRTM data are in 1x1 degree tiles, so we keep the integer part of the
-        # coördinates
-        for axis in zip(*region):
-            # store the minimum in {low}
-            low.append(math.floor(min(axis)))
-            # and one more than the maximum in {high}, so we can form a range that covers the
-            # desired tiles
-            high.append(math.floor(max(axis))+1)
 
-        # form the mosaic by building the cartesian product of the ranges and return it
-        return itertools.product(*(range(*limits) for limits in zip(low,high)))
+        # otherwise, compute the north-south and east-west ranges that cover all the points in
+        # my region; this is accomplished by finding the smallest and largest coördinate along
+        # each axis; in order to handle negative numbers correctly, we use {math.floor} to
+        # compute the integer part; we add one to the upper limits so that we can form the
+        # sequence of values using {range}
+        limits = tuple((math.floor(min(axis)), math.floor(max(axis))+1) for axis in zip(*region))
+        # the limits form a grid whose shape is given by
+        shape = tuple(high - low for low, high in limits)
+        # and whose contents are all pairs of values in the range of each axis
+        contents = itertools.product(*(range(*axis) for axis in limits))
+        # build the grid
+        mosaic = isce.geometry.grid(shape=shape)
+        # populate it
+        mosaic.extend(contents)
+        # and return it
+        return mosaic
 
 
     def tileNames(self, mosaic):
