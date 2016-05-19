@@ -18,6 +18,8 @@ from pyre import (
     # plexus support
     action, command, panel, plexus, application
     )
+# grab the journal
+import journal
 
 # fire up
 package = executive.registerPackage(name='isce', file=__file__)
