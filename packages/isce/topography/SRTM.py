@@ -24,13 +24,10 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
     hires = isce.properties.bool(default=True)
     hires.doc = 'select the model resolution'
 
-    force = isce.properties.bool(default=False)
-    force.doc = 'perform the requested action unconditionally'
-
 
     # protocol obligations
     @isce.export
-    def download(self):
+    def download(self, force=False, dry=False):
         """
         Retrieve the tiles necessary to cover the convex hull of my {region}
         """
