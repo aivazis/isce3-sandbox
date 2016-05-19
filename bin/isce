@@ -6,13 +6,15 @@
 # (c) 2003-2016 all rights reserved
 #
 
-# get the package
-import isce
-# build an instance of the plexus
-app = isce.components.isce(name='isce.plexus')
-# run it
-status = app.run()
-# and report the exit code to the shell
-raise SystemExit(status)
+# main entry point; protect all this to make __main__ importable
+if __name__ == '__main__':
+    # get the package
+    import isce
+    # build an instance of the plexus
+    app = isce.components.isce(name='isce.plexus')
+    # run it
+    status = app.run()
+    # and report the exit code to the shell
+    raise SystemExit(status)
 
 # end of file
