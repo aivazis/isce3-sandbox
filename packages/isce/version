@@ -23,9 +23,11 @@ header = """
     isce {0}.{1} revision {2}
     {3}
 
-authors: <this list is incomplete; please add names as appropriate>
+authors:
+    Piyush Agram        <piyush.agram@jpl.nasa.gov>
     Michael Aïvázis     <michael.aivazis@para-sim.com>
     Eric Gurrola        <eric.m.gurrola@jpl.nasa.gov>
+    Paul Rosen          <paul.a.rosen@jpl.nasa.gov>
     Giangi Sacco        <gianfranco.sacco@jpl.nasa.gov>
 """.format(major, minor, revision, copyright)
 
