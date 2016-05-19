@@ -11,6 +11,7 @@ PACKAGE = actions
 # the python modules
 EXPORT_PYTHON_MODULES = \
     About.py \
+    Topography.py \
     __init__.py
 
 # standard targets

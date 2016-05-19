@@ -9,13 +9,27 @@
 import isce
 
 
+# topography
+@isce.foundry(implements=isce.action, tip="download and assemble digital elevation models")
+def dem():
+    """
+    Display information about this application
+    """
+    # get the command panel
+    from .Topography import Topography
+    # and return it
+    return Topography
+
+
+
+
 # administrivia
 @isce.foundry(implements=isce.action, tip="display information about this application")
 def about():
     """
     Display information about this application
     """
-    # get the record
+    # get the command panel
     from .About import About
     # and return it
     return About
