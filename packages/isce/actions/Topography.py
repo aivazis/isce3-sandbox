@@ -13,7 +13,7 @@ import isce
 # declaration
 class Topography(isce.panel(), family='isce.actions.dem'):
     """
-    Download and assemble digital elevation models
+    Download and assemble a digital elevation model for a region of interest
     """
 
 
@@ -23,6 +23,9 @@ class Topography(isce.panel(), family='isce.actions.dem'):
 
     region = isce.properties.array()
     region.doc = 'an array of (lat, lon) pairs of interest'
+
+    force = isce.properties.bool(default=False)
+    force.doc = 'perform the requested action unconditionally'
 
 
     @isce.export(tip="download the tiles that cover the region of interest")
@@ -36,6 +39,19 @@ class Topography(isce.panel(), family='isce.actions.dem'):
         archive.region = self.region
         # and ask it to do the work
         archive.download()
+        # all done
+        return
+
+
+    @isce.export(tip="stitch together all necessary tiles to form the elevation model")
+    def stitch(self, plexus):
+        """
+        Assemble a digital elevation model by stitching together tiles from a data archive
+        """
+        # grab the error channel
+        error = plexus.error
+        # complain
+        error.log('stitch: not implemented yet')
         # all done
         return
 
