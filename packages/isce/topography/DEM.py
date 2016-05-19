@@ -15,5 +15,21 @@ class DEM(isce.protocol, family='isce.topography'):
     Requirements for accessors of digital elevation model archives
     """
 
+    # user configurable state
+    region = isce.properties.array()
+    region.doc = 'the specification of the region of interest'
+
+
+    # framework obligations
+    @classmethod
+    def pyre_default(cls, **kwds):
+        """
+        Supply a default DEM archive
+        """
+        # the default is
+        from .SRTM import SRTM as default
+        # so return it
+        return default
+
 
 # end of file
