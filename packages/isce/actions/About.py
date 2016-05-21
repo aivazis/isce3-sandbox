@@ -18,12 +18,12 @@ class About(isce.panel(), family='isce.actions.about'):
 
 
     # user configurable state
-    prefix = isce.properties.str()
-    prefix.tip = "specify the portion of the namespace to display"
+    root = isce.properties.str()
+    root.tip = "specify the portion of the namespace to display"
 
 
     @isce.export(tip="the name of the app for configuration purposes")
-    def name(self, plexus):
+    def name(self, plexus, **kwds):
         """
         Print the name of the app for configuration purposes
         """
@@ -34,7 +34,7 @@ class About(isce.panel(), family='isce.actions.about'):
 
 
     @isce.export(tip="the application home directory")
-    def home(self, plexus):
+    def home(self, plexus, **kwds):
         """
         Print the application home directory
         """
@@ -45,7 +45,7 @@ class About(isce.panel(), family='isce.actions.about'):
 
 
     @isce.export(tip="the application installation directory")
-    def prefix(self, plexus):
+    def prefix(self, plexus, **kwds):
         """
         Print the application installation directory
         """
@@ -56,7 +56,7 @@ class About(isce.panel(), family='isce.actions.about'):
 
 
     @isce.export(tip="the application configuration directory")
-    def defaults(self, plexus):
+    def defaults(self, plexus, **kwds):
         """
         Print the application configuration directory
         """
@@ -67,7 +67,7 @@ class About(isce.panel(), family='isce.actions.about'):
 
 
     @isce.export(tip="print the version number")
-    def version(self, plexus):
+    def version(self, plexus, **kwds):
         """
         Print the version of the isce package
         """
@@ -78,7 +78,7 @@ class About(isce.panel(), family='isce.actions.about'):
 
 
     @isce.export(tip="print the copyright note")
-    def copyright(self, plexus):
+    def copyright(self, plexus, **kwds):
         """
         Print the copyright note of the isce package
         """
@@ -89,7 +89,7 @@ class About(isce.panel(), family='isce.actions.about'):
 
 
     @isce.export(tip="print out the acknowledgments")
-    def credits(self, plexus):
+    def credits(self, plexus, **kwds):
         """
         Print out the license and terms of use of the isce package
         """
@@ -100,7 +100,7 @@ class About(isce.panel(), family='isce.actions.about'):
 
 
     @isce.export(tip="print out the license and terms of use")
-    def license(self, plexus):
+    def license(self, plexus, **kwds):
         """
         Print out the license and terms of use of the isce package
         """
@@ -111,7 +111,7 @@ class About(isce.panel(), family='isce.actions.about'):
 
 
     @isce.export(tip='dump the application configuration namespace')
-    def nfs(self, plexus):
+    def nfs(self, plexus, **kwds):
         """
         Dump the application configuration namespace
         """
@@ -124,7 +124,7 @@ class About(isce.panel(), family='isce.actions.about'):
 
 
     @isce.export(tip='dump the application private filesystem')
-    def pfs(self, plexus):
+    def pfs(self, plexus, **kwds):
         """
         Dump the application private filesystem
         """
@@ -139,16 +139,16 @@ class About(isce.panel(), family='isce.actions.about'):
 
 
     @isce.export(tip='dump the application virtual filesystem')
-    def vfs(self, plexus):
+    def vfs(self, plexus, **kwds):
         """
         Dump the application virtual filesystem
         """
         # get the prefix
-        prefix = self.prefix or '/isce'
+        prefix = self.root or '/isce'
         # build the report
         report = '\n'.join(plexus.vfs[prefix].dump())
         # sign in
-        plexus.info.line('vfs: prefix={!r}'.format(prefix))
+        plexus.info.line('vfs: root={!r}'.format(prefix))
         # dump
         plexus.info.log(report)
         # all done

@@ -29,7 +29,7 @@ class Topography(isce.panel(), family='isce.actions.dem'):
 
 
     @isce.export(tip="download the tiles that cover the region of interest")
-    def download(self, plexus):
+    def download(self, plexus, **kwds):
         """
         Download digital elevation models from an archive
         """
@@ -37,6 +37,7 @@ class Topography(isce.panel(), family='isce.actions.dem'):
         archive = self.archive
         # configure it
         archive.region = self.region
+        archive.cache = isce.primitives.path('etc', 'topography')
         # and ask it to do the work
         archive.download()
         # all done
@@ -44,7 +45,7 @@ class Topography(isce.panel(), family='isce.actions.dem'):
 
 
     @isce.export(tip="stitch together all necessary tiles to form the elevation model")
-    def stitch(self, plexus):
+    def stitch(self, plexus, **kwds):
         """
         Assemble a digital elevation model by stitching together tiles from a data archive
         """
