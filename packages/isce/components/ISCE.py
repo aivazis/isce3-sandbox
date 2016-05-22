@@ -20,19 +20,31 @@ class ISCE(isce.plexus, family='isce.components.isce'):
     from .Action import Action as pyre_action
 
 
+    # pyre framework hooks
     # support for the help system
     def pyre_banner(self):
         """
         Place the application banner in the {info} channel
         """
-        # grab the info channel
-        info = self.info
-        # make some space
-        info.line()
-        # get the help header
-        info.line(isce.version.license)
-        # all done
-        return
+        # show the license header
+        return isce.version.license
+
+
+    # interactive session management
+    def pyre_interactiveSessionContext(self, context):
+        """
+        Go interactive
+        """
+        # protect against bad contexts
+        if context is None:
+            # by initializing as an empty dict
+            context = {}
+
+        # set up some context
+        context['isce'] = isce  # my package
+
+        # and chain up
+        return super().pyre_interactiveSessionContext(context=context)
 
 
 # end of file
