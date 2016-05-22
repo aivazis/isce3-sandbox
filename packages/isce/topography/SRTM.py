@@ -8,7 +8,7 @@
 # get the package
 import isce
 # externals
-import itertools, math
+import itertools, math, os, urllib.request
 
 
 # the digital elevation model protocol
@@ -18,6 +18,9 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
     """
 
     # user configurable state
+    cache = isce.properties.path()
+    cache.doc = 'the path to the local cache of SRTM tiles'
+
     region = isce.properties.array()
     region.doc = 'the specification of the region of interest'
 
@@ -27,14 +30,95 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
 
     # protocol obligations
     @isce.export
+    def plan(self):
+        """
+        Describe the work required to generate the specified DEM
+        """
+        # build the uri to my tile cache
+        uri = self.cache / 'srtm'
+        # get the application private filesystem
+        pfs = self.pyre_application.pfs
+
+        self.pyre_application.info.log('\n'.join(pfs.dump()))
+
+        # attempt to
+        try:
+            # get the folder with the cached SRTM tiles
+            cache = pfs[uri]
+        # if it's not there
+        except pfs.NotFoundError:
+            # for the path to the srtm archive
+            path = pfs[self.cache].uri / 'srtm'
+            # ask for the folder to get make
+            # path.mkdir('srtm')
+            # refresh the filesystem view
+            pfs[self.cache].discover(levels=1)
+            # try again
+            cache = pfs[uri]
+
+        print(cache)
+
+
+        # build the mosaic that covers the region
+        mosaic = self.mosaic()
+        # all done
+        return
+
+
+    @isce.export
     def download(self, force=False, dry=False):
         """
         Retrieve the tiles necessary to cover the convex hull of my {region}
         """
+        # make a timer
+        timer = isce.executive.newTimer(name='isce.dem.download')
+        # and a channel
+        channel = isce.journal.info(name='isce.dem')
+
+        # build a mosaic that covers my {region}
+        mosaic = self.mosaic()
+        # assemble their names
+        names = self.tileNames(mosaic)
+        # build the pile of tile URIs and return them to the caller
+        uris = self.tileURIs(names)
+
+        # convert the resolution setting
+        resolution = 1 if self.hires else 3
+        # build the archive uri
+        archive = self.srtm.format(resolution)
+        # make a pile of workers
+        workers = {}
         # go through the tile URIs
-        for uri in self.uris():
+        for uri in uris:
+            # spawn a worker
+            pid = os.fork()
+            # add his id to the pile
+            workers[pid] = uri
+            # if this is the worker
+            if pid == 0:
+                # reset the timer
+                timer.reset().start()
+                # open the url
+                response = urllib.request.urlopen(archive+uri)
+                # grab the bytes
+                content = response.read()
+                # open the destination file
+                tile = open(uri, 'wb')
+                # save
+                tile.write(content)
+                # show me
+                channel.log('got {!r} ({:.3f} sec)'.format(uri, timer.stop().read()))
+                # this worker is done
+                raise SystemExit(0)
+
+        # back at the ranch
+        for _ in range(len(workers)):
+            # wait for a worker to finish
+            pid, status = os.wait()
             # show me
-            print(uri)
+            channel.line('worker {}: tile {!r}, status {}'.format(pid, workers[pid], status))
+        # when they are all done, flush
+        channel.log()
 
         # all done
         return
@@ -107,22 +191,24 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
         """
         Build a sequence of the tile URIs from their names
         """
-        # grab the uri template
-        uri = self.uri
+        # grab the tile template
+        tile = self.tile
         # decide whether we are looking for the low or high resolution images
         resolution = 1 if self.hires else 3
         # go through each name
         for name in names:
             # form the uri and hand itoff
-            yield uri.format(name, resolution)
+            yield tile.format(name, resolution)
 
         # all done
         return
 
 
     # constants
+    # the template for the URI of the datastore
+    srtm = 'http://e4ftl01.cr.usgs.gov/SRTM/SRTMGL{0}.003/2000.02.11/'
     # the tile URI template: tile name and resolution
-    uri = 'http://e4ftl01.cr.usgs.gov/SRTM/SRTMGL{1}.003/2000.02.11/{0}.SRTMGL{1}.hgt.zip'
+    tile = '{0}.SRTMGL{1}.hgt.zip'
 
 
 # end of file
