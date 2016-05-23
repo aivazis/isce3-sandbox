@@ -21,6 +21,15 @@ def dem():
     return Topography
 
 
+@isce.foundry(implements=isce.action, tip="manage the local cache of the SRTM data store")
+def srtm():
+    """
+    Display information about this application
+    """
+    # get the command panel
+    from .SRTM import SRTM
+    # and return it
+    return SRTM
 
 
 # administrivia
