@@ -44,7 +44,7 @@ int main() {
         }
 
         // map the offset back to an index
-        auto refl { tile[offset] };
+        auto refl = tile[offset];
         // and verify it is identical to our loop index
         if (refl != index) {
             // open a channel

@@ -29,7 +29,7 @@ int main() {
     // loop over the tile in packing order
     for (auto index : tile) {
         // get the offset of the pixel at this index
-        auto pixel { tile[index] };
+        auto pixel = tile[index];
         // verify it has the expected value
         if (offset != pixel) {
             // open a channel
@@ -44,7 +44,7 @@ int main() {
         }
 
         // map the offset back to an index
-        auto refl { tile[offset] };
+        auto refl = tile[offset];
         // and verify it is identical to our loop index
         if (refl != index) {
             // open a channel

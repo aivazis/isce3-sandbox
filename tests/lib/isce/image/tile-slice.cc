@@ -41,7 +41,7 @@ int main() {
     // loop over the slice in packing order
     for (auto index : tile.slice(begin, end)) {
         // get the offset of the pixel at this index
-        auto pixel { tile[index] };
+        auto pixel = tile[index];
         // show me
         channel
             << "(" << index[0] << "," << index[1] << "," << index[2] << ")"
