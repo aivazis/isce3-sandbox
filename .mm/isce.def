@@ -4,6 +4,9 @@
 # (c) 2003-2016 all rights reserved
 #
 
+# make sure code is relocatable
+include shared/target.def
+
 # global options for spisce
 PROJECT = isce
 
