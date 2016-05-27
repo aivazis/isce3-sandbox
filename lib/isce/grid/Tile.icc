@@ -1,0 +1,22 @@
+// -*- C++ -*-
+//
+// michael a.g. aïvázis <michael.aivazis@para-sim.com>
+// (c) 2003-2016 all rights reserved
+//
+
+// code guard
+#if !defined(isce_grid_Tile_icc)
+#error This header file contains implementation details of class isce::grid::Tile
+#endif
+
+
+// meta-methods
+template <std::size_t dim, typename valueT>
+isce::grid::Tile<dim, valueT>::
+Tile(shape_t shape, layout_t layout) :
+    _shape{shape},
+    _layout{layout}
+{}
+
+
+// end of file

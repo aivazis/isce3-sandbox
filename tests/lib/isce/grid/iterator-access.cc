@@ -1,0 +1,73 @@
+// -*- C++ -*-
+//
+// michael a.g. aïvázis <michael.aivazis@para-sim.com>
+// (c) 2003-2016 all rights reserved
+//
+
+// exercise grid layout construction:
+//   verify that all the parts are accessible through the public headers
+//   verify constructor signatures
+//   assemble a layout
+//   verify it can be iterated
+
+// portability
+#include <portinfo>
+// support
+#include <isce/grid.h>
+
+// entry point
+int main() {
+    // fix the rep
+    typedef std::array<int, 4> rep_t;
+    // alias index; exercise the compiler's ability to deduce the layout
+    typedef isce::grid::index_t<rep_t> index_t;
+    // create a shortcut to my target iterator type
+    typedef isce::grid::iterator_t<index_t> iterator_t;
+
+    // make a layout
+    iterator_t::layout_t layout {2, 3, 1, 0};
+    // build the iteration boundaries
+    iterator_t::index_t begin {0, 0, 0, 0};
+    iterator_t::index_t end {5, 4, 3, 2};
+    // make a iterator
+    iterator_t iterator {begin, end, layout};
+
+    // increment
+    ++iterator;
+    // get the value
+    iterator_t::index_t got = *iterator;
+    // here is what i expect
+    iterator_t::index_t correct {0, 0, 1, 0};
+
+    // check
+    if (got != correct) {
+        // make a firewall
+        pyre::journal::firewall_t channel("isce.grid");
+
+        // sign in
+        channel
+            << pyre::journal::at(__HERE__)
+            << "error while incrementing iterator:"
+            << pyre::journal::newline;
+        // show me what i expected
+        channel << "expected: (";
+        for (auto idx : correct) {
+            channel << " " << idx;
+        }
+        channel << " )" << pyre::journal::newline;
+        // show me what i got
+        channel << "     got: (";
+        for (auto idx : got) {
+            channel << " " << idx;
+        }
+        channel << " )" << pyre::journal::endl;
+
+        // fail
+        return 1;
+    }
+
+    // all done
+    return 0;
+}
+
+// end of file
