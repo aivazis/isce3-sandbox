@@ -74,15 +74,6 @@ private:
 };
 
 
-// get the inline definitions
-#define isce_image_Tile_icc
-#include "Tile.icc"
-#undef isce_image_Tile_icc
-
-#define isce_image_Slice_icc
-#include "Slice.icc"
-#undef isce_image_Slice_icc
-
 #endif
 
 // end of file

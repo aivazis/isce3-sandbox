@@ -48,11 +48,6 @@ private:
 };
 
 
-// get the inline definitions
-#define isce_image_Direct_icc
-#include "Direct.icc"
-#undef isce_image_Direct_icc
-
 #endif
 
 // end of file

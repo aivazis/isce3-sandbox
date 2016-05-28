@@ -38,11 +38,6 @@ private:
 };
 
 
-// get the inline definitions
-#define isce_image_Iterator_icc
-#include "Iterator.icc"
-#undef isce_image_Iterator_icc
-
 #endif
 
 // end of file

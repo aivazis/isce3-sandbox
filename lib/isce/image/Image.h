@@ -45,11 +45,6 @@ private:
 };
 
 
-// get the inline definitions
-#define isce_image_Image_icc
-#include "Image.icc"
-#undef isce_image_Image_icc
-
 #endif
 
 // end of file

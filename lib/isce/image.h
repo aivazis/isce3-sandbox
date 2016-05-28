@@ -45,8 +45,8 @@ namespace isce {
 #include "image/Index.h"
 #include "image/Layout.h"
 #include "image/Iterator.h"
-#include "image/Tile.h"
 #include "image/Slice.h"
+#include "image/Tile.h"
 #include "image/MemoryMap.h"
 #include "image/Direct.h"
 #include "image/Image.h"
@@ -83,6 +83,49 @@ namespace isce {
         }
     }
 }
+
+
+// the implementations of the inlines
+// index
+#define isce_image_Index_icc
+#include "image/Index.icc"
+#undef isce_image_Index_icc
+
+// layout
+#define isce_image_Layout_icc
+#include "image/Layout.icc"
+#undef isce_image_Layout_icc
+
+// iterator
+#define isce_image_Iterator_icc
+#include "image/Iterator.icc"
+#undef isce_image_Iterator_icc
+
+// slice
+#define isce_image_Slice_icc
+#include "image/Slice.icc"
+#undef isce_image_Slice_icc
+
+// tile
+#define isce_image_Tile_icc
+#include "image/Tile.icc"
+#undef isce_image_Tile_icc
+
+// direct
+#define isce_image_Direct_icc
+#include "image/Direct.icc"
+#undef isce_image_Direct_icc
+
+// image
+#define isce_image_Image_icc
+#include "image/Image.icc"
+#undef isce_image_Image_icc
+
+// view
+#define isce_image_View_icc
+#include "image/View.icc"
+#undef isce_image_View_icc
+
 
 #endif
 

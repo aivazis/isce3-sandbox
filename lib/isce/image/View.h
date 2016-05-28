@@ -40,11 +40,6 @@ private:
 };
 
 
-// get the inline definitions
-#define isce_image_View_icc
-#include "View.icc"
-#undef isce_image_View_icc
-
 #endif
 
 // end of file
