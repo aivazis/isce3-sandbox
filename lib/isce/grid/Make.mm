@@ -28,6 +28,7 @@ EXPORT_PKG_HEADERS = \
     Index.h Index.icc \
     Iterator.h Iterator.icc \
     Layout.h Layout.icc \
+    Slice.h Slice.icc \
     Tile.h Tile.icc \
 
 # the standard targets

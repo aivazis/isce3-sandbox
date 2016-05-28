@@ -48,11 +48,6 @@ private:
 };
 
 
-// get the inline definitions
-#define isce_grid_Index_icc
-#include "Index.icc"
-#undef isce_grid_Index_icc
-
 #endif
 
 // end of file

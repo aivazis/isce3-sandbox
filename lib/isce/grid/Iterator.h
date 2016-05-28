@@ -1,4 +1,3 @@
-
 // -*- C++ -*-
 //
 // michael a.g. aïvázis <michael.aivazis@para-sim.com>
@@ -40,11 +39,6 @@ private:
     const layout_t _layout;
 };
 
-
-// get the inline definitions
-#define isce_grid_Iterator_icc
-#include "Iterator.icc"
-#undef isce_grid_Iterator_icc
 
 #endif
 

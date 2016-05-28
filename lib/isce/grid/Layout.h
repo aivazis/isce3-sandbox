@@ -45,11 +45,6 @@ private:
 };
 
 
-// get the inline definitions
-#define isce_grid_Layout_icc
-#include "Layout.icc"
-#undef isce_grid_Layout_icc
-
 #endif
 
 // end of file
