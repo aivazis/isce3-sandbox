@@ -18,9 +18,9 @@ TESTS = \
     iterator-layout \
     iterator-access \
     iterator-loop \
-
-OTHER = \
     tile \
+    tile-layout \
+
 
 all: test clean
 

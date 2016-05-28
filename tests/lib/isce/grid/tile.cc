@@ -17,18 +17,22 @@
 
 // entry point
 int main() {
-    // create a shortcut to my target tile type
-    typedef isce::grid::tile_t<4> tile_t;
+    // fix the rep
+    typedef std::array<int, 4> rep_t;
+    // build the parts
+    typedef isce::grid::index_t<rep_t> index_t;
+    typedef isce::grid::layout_t<rep_t> layout_t;
+    typedef isce::grid::tile_t<index_t, layout_t> tile_t;
 
     // make a layout
-    tile_t::layout_t layout {3u, 2u, 1u, 0u};
+    tile_t::layout_type layout {3, 2, 1, 0};
     // make a shape
-    tile_t::shape_t shape {2u, 3u, 4u, 5u};
+    tile_t::index_type shape {2, 3, 4, 5};
     // make a tile
     tile_t tile {shape, layout};
 
     // make a channel
-    pyre::journal::info_t channel("isce.grid");
+    pyre::journal::debug_t channel("isce.grid");
 
     // display information about the tile layout
     channel << pyre::journal::at(__HERE__);

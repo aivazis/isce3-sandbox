@@ -63,6 +63,9 @@ namespace isce {
 
         template <typename indexT, typename layoutT = layout_t<typename indexT::rep_type>>
             using iterator_t = Iterator<indexT, layoutT>;
+
+        template <typename indexT, typename layoutT = layout_t<typename indexT::rep_type>>
+            using tile_t = Tile<indexT, layoutT>;
     }
 }
 
@@ -83,6 +86,11 @@ namespace isce {
 #define isce_grid_Iterator_icc
 #include "grid/Iterator.icc"
 #undef isce_grid_Iterator_icc
+
+// tile
+#define isce_grid_Tile_icc
+#include "grid/Tile.icc"
+#undef isce_grid_Tile_icc
 
 // slice
 #define isce_grid_Slice_icc

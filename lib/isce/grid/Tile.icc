@@ -11,9 +11,9 @@
 
 
 // meta-methods
-template <std::size_t dim, typename valueT>
-isce::grid::Tile<dim, valueT>::
-Tile(shape_t shape, layout_t layout) :
+template <typename indexT, typename layoutT>
+isce::grid::Tile<indexT, layoutT>::
+Tile(index_type shape, layout_type layout) :
     _shape{shape},
     _layout{layout}
 {}

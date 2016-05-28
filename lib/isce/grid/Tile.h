@@ -18,6 +18,7 @@ public:
 
     // meta-methods
 public:
+    Tile(index_type shape, layout_type layout);
 
     // interface
 public:
