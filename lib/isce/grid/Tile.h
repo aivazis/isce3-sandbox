@@ -13,8 +13,13 @@ template <typename indexT, typename layoutT>
 class isce::grid::Tile {
     // types
 public:
+    // for sizing things
+    typedef std::size_t size_type;
+    // aliases for my parts
     typedef indexT index_type;
     typedef layoutT layout_type;
+    // iterator
+    typedef Iterator<index_type, layout_type> iterator_type;
 
     // meta-methods
 public:
@@ -22,6 +27,25 @@ public:
 
     // interface
 public:
+    // accessors
+    inline const auto & shape() const;
+    inline const auto & layout() const;
+
+    // the number of cells in this tile
+    inline auto size() const;
+
+    // compute the pixel offset implied by a given index
+    // compute the index that corresponds to a given offset
+    inline auto offset(const index_type & index) const;
+    inline auto index(size_type offset) const;
+
+    // syntactic sugar for the pair above
+    inline auto operator[](const index_type & index) const;
+    inline auto operator[](size_type offset) const;
+
+    // iteration support
+    inline auto begin() const;
+    inline auto end() const;
 
     // implementation details
 private:

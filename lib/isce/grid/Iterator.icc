@@ -86,7 +86,7 @@ auto
 isce::grid::
 operator==(const Iterator<indexT, layoutT> & one, const Iterator<indexT, layoutT> & two) {
     // delegate to the standard algorithm
-    return std::equal(*one.begin(), *one.end(), *two.begin());
+    return std::equal((*one).begin(), (*one).end(), (*two).begin());
 }
 
 
