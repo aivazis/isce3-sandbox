@@ -26,7 +26,7 @@ public:
     // the constructor is a variadic template to enable construction of the rep using
     // initializer lists; an alternative is to relax the access control to {_index} to allow the
     // compiler to do it
-    template <typename... argT> Index(argT... value);
+    template <typename... argT> inline Index(argT... value);
 
     // interface
 public:
@@ -42,7 +42,10 @@ public:
     inline auto end() const;
 
     // implementation details
-    // relax access control to enable initialization through brace enclosed initializer lists
+    // there are two ways to get this to be initialized
+    //  - relax access control to enable initialization through brace enclosed
+    //    initializer lists
+    //  - make the constructor a variadic template with a parameter pack
 private:
     repT _index;
 };

@@ -80,7 +80,7 @@ auto
 isce::grid::Tile<indexT, layoutT>::
 index(size_type offset) const {
     // storage for the answer
-    typename index_type::rep_type index;
+    index_type index;
     // initialize the product of all the dimension extents
     auto product = size();
 
@@ -95,7 +95,7 @@ index(size_type offset) const {
     }
 
     // build an index and return it
-    return index_type {index};
+    return index;
 }
 
 

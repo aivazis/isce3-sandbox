@@ -18,7 +18,6 @@ Index(argT... value) :
 {}
 
 
-
 // interface
 // dimensionality of the index
 template <typename repT>
