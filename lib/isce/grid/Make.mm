@@ -32,8 +32,8 @@ EXPORT_PKG_HEADERS = \
     Tile.h Tile.icc \
 
 # the standard targets
-all: $(PROJ_DLL) export
+all: export
 
-export:: export-package-headers export-libraries
+export:: export-package-headers
 
 # end of file
