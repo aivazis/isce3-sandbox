@@ -10,7 +10,6 @@
 
 // externals
 #include <stdexcept>
-#include <iomanip>
 #include <string>
 // support
 #include <pyre/journal.h>

@@ -37,9 +37,8 @@ EXPORT_PKG_HEADERS = \
 
 
 # the standard targets
-all: $(PROJ_DLL) export
-	echo $(PROJ_DLL)
+all: export
 
-export:: export-package-headers export-libraries
+export:: $(PROJ_DLL) export-package-headers export-libraries
 
 # end of file
