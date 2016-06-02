@@ -116,7 +116,7 @@ class About(isce.panel(), family='isce.actions.about'):
         Dump the application configuration namespace
         """
         # get the prefix
-        prefix = self.prefix or 'isce'
+        prefix = self.root or 'isce'
         # show me
         plexus.pyre_nameserver.dump(prefix)
         # all done
