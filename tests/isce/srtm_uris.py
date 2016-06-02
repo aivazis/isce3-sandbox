@@ -30,19 +30,15 @@ class SRTM(isce.application, family='isce.applications.srtm'):
         The main entry point for the application
         """
         # grab a channel
-        channel = self.debug
+        channel = self.info
         # get the DEM archive manager
         srtm = self.dem
         # adjust the region
         srtm.region = [(0.5, -0.5)]
-        # show me
-        channel.line("region: {}".format(srtm.region))
-        # form the tile URIs
-        for uri in srtm.uris():
-            # show me
-            channel.line('  {}'.format(uri))
-        # flush
-        channel.log()
+        # inform it of the localstore location
+        srtm.cache = self.vfs[self.vfs.STARTUP_DIR]
+        # make a plan and show it to me
+        srtm.plan(channel=channel)
         # all done
         return 0
 

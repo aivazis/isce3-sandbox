@@ -17,50 +17,72 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
     Accessor for the SRTM data archive
     """
 
-    # user configurable state
-    cache = isce.properties.path()
-    cache.doc = 'the path to the local cache of SRTM tiles'
+    # types
+    from .SRTMMosaic import SRTMMosaic as mosaic
 
+    # user configurable state
     region = isce.properties.array()
-    region.doc = 'the specification of the region of interest'
+    region.doc = 'a cloud of (lat,lon) pairs that specifies of the region of interest'
 
     hires = isce.properties.bool(default=True)
     hires.doc = 'select the model resolution'
 
+    pool = isce.properties.int(default=8)
+    pool.doc = 'the maximum number of simultaneous connections to the remote data store'
+
+
 
     # protocol obligations
     @isce.export
-    def plan(self):
+    def plan(self, channel=None):
         """
         Describe the work required to generate the specified DEM
         """
-        # build the uri to my tile cache
-        uri = self.cache / 'srtm'
-        # get the application private filesystem
-        pfs = self.pyre_application.pfs
+        # get my data store
+        cache = self.cache
+        # make a channel
+        channel = isce.journal.info(self.pyre_family()) if channel is None else channel
+        # sign in
+        channel.line('cache:')
+        channel.line('\n'.join(cache.dump(indent=2)))
 
-        self.pyre_application.info.log('\n'.join(pfs.dump()))
+        # get my region
+        region = self.region
+        # make some space
+        channel.line('region of interest: {}'.format(region))
 
-        # attempt to
-        try:
-            # get the folder with the cached SRTM tiles
-            cache = pfs[uri]
-        # if it's not there
-        except pfs.NotFoundError:
-            # for the path to the srtm archive
-            path = pfs[self.cache].uri / 'srtm'
-            # ask for the folder to get make
-            # path.mkdir('srtm')
-            # refresh the filesystem view
-            pfs[self.cache].discover(levels=1)
-            # try again
-            cache = pfs[uri]
+        # build a mosaic that covers my region
+        mosaic = self.mosaic(region=self.region, hires=self.hires)
+        # check the status of its tiles
+        mosaic.checkAvailability(localstore=self.cache)
 
-        print(cache)
+        # separate the tiles into two categories: the ones we have
+        cached = {}
+        # and the ones we need
+        get = {}
 
+        # go through the tiles
+        for tile in mosaic:
+            # check whether the file is present in the cache
+            if tile.isCached:
+                # add to the pile of tiles we already have
+                cached[tile.filename] = tile.name
+            # otherwise
+            else:
+                # add it to the pile of tiles we have to download
+                get[tile.filename] = tile.name
 
-        # build the mosaic that covers the region
-        mosaic = self.mosaic()
+        # show me
+        channel.line('  necessary:')
+        channel.line('    {}'.format(", ".join(tile.name for tile in mosaic)))
+        channel.line('  cached:')
+        channel.line('    {}'.format(", ".join(cached.keys())))
+        channel.line('  download:')
+        channel.line('    {}'.format(", ".join(get.keys())))
+
+        # flush
+        channel.log()
+
         # all done
         return
 
@@ -75,15 +97,11 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
         # and a channel
         channel = isce.journal.info(name='isce.dem')
 
-        # build a mosaic that covers my {region}
-        mosaic = self.mosaic()
-        # assemble their names
-        names = self.tileNames(mosaic)
-        # build the pile of tile URIs and return them to the caller
-        uris = self.tileURIs(names)
+        # build a mosaic that covers my region
+        mosaic = self.mosaic(region=self.region, hires=self.hires)
+        # check the status of its tiles
+        mosaic.checkAvailability(localstore=self.cache)
 
-        # convert the resolution setting
-        resolution = 1 if self.hires else 3
         # build the archive uri
         archive = self.srtm.format(resolution)
         # make a pile of workers
@@ -124,31 +142,18 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
         return
 
 
-    # convenience interface
-    def uris(self):
-        """
-        Build a sequence of {uri}s that point to the tiles that cover my region
-        """
-        # build a mosaic that covers my {region}
-        mosaic = self.mosaic()
-        # assemble their names
-        names = self.tileNames(mosaic)
-        # build the pile of tile URIs and return them to the caller
-        return self.tileURIs(names)
-
-
     # implementation details
-    def mosaic(self):
+    def _mosaic(self):
         """
         Build a mosaic of SRTM tiles that cover the bounding box of the points in my {region} of
         interest
         """
-        # get the region of interest
+        # get the cloud of (lat, lon) pairs that define the region of interest
         region = self.region
-        # if the user has not specified one
-        if not region:
-            # the mosaic is empty
-            return []
+        # make a mosaic
+        mosaic = self.srtmMosaic(region=region)
+        # all done
+        return mosaic
 
         # otherwise, compute the north-south and east-west ranges that cover all the points in
         # my region; this is accomplished by finding the smallest and largest coördinate along
@@ -168,47 +173,8 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
         return mosaic
 
 
-    def tileNames(self, mosaic):
-        """
-        Given a sequence of (lat, lon) pairs, return a sequence of SRTM tile names
-        """
-        # go through each tile
-        for tile in mosaic:
-            # unpack
-            lat, lon = tile
-            # build the name of the tile; numeric fields are zero padded to three digits
-            name = '{}{:02}{}{:03}'.format(
-                "N" if lat >=0 else "S", abs(lat),
-                "E" if lon >= 0 else "W", abs(lon))
-            # hand the name to the caller
-            yield name
-
-        # all done
-        return
-
-
-    def tileURIs(self, names):
-        """
-        Build a sequence of the tile URIs from their names
-        """
-        # grab the tile template
-        tile = self.tile
-        # decide whether we are looking for the low or high resolution images
-        resolution = 1 if self.hires else 3
-        # go through each name
-        for name in names:
-            # form the uri and hand itoff
-            yield tile.format(name, resolution)
-
-        # all done
-        return
-
-
-    # constants
-    # the template for the URI of the datastore
-    srtm = 'http://e4ftl01.cr.usgs.gov/SRTM/SRTMGL{0}.003/2000.02.11/'
-    # the tile URI template: tile name and resolution
-    tile = '{0}.SRTMGL{1}.hgt.zip'
+    # private data
+    cache = None
 
 
 # end of file

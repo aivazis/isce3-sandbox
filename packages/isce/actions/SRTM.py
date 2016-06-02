@@ -18,29 +18,29 @@ class SRTM(isce.panel(), family='isce.actions.srtm'):
 
 
     # user configurable state
-    archive = isce.topography.archive(default=isce.topography.srtm())
-    archive.doc = 'the elevation model archive manager'
+    srtm = isce.topography.archive(default=isce.topography.srtm())
+    srtm.doc = 'the elevation model archive manager'
 
     region = isce.properties.array()
     region.doc = 'an array of (lat, lon) pairs of interest'
+
+    hires = isce.properties.bool(default=True)
+    hires.doc = 'use the high resolution data set'
 
     force = isce.properties.bool(default=False)
     force.doc = 'perform the requested action unconditionally'
 
 
+    # commands
     @isce.export(tip="download the tiles that cover the region of interest")
     def plan(self, plexus, **kwds):
         """
         Describe the workplan to build an elevation model for the region of interest
         """
-        # get the SRTM accessor
-        srtm = self.archive
-        # adjust its configuration
-        srtm.cache = isce.primitives.path('etc', 'topography')
-        # and ask it to estimate the work load
-        srtm.plan()
-        # all done
-        return
+        # get my data store manager
+        srtm = self.srtm
+        # and ask it to make a plan
+        return srtm.plan()
 
 
     @isce.export(tip="download the tiles that cover a cloud of points")
@@ -55,6 +55,38 @@ class SRTM(isce.panel(), family='isce.actions.srtm'):
         error = plexus.error
         # complain
         error.log('download: not implemented yet')
+        # all done
+        return
+
+
+    # meta-methods
+    def __init__(self, plexus, **kwds):
+        # chain up
+        super().__init__(plexus=plexus, **kwds)
+        # grab the plexus private file space
+        pfs = plexus.pfs
+
+        # get my data store manager
+        srtm = self.srtm
+
+        # establish the location of the data store
+        # the default location of the data set is derived from the manager family name
+        cache = srtm.pyre_familyFragments()
+        # if the store manager has the proper pedigree
+        if cache:
+            # derive the location of the data store from its name by dropping the package name
+            uri = isce.primitives.path(cache[1:])
+            # access it; careful not to look too deeply just in case there is a lot of data
+            # cached here
+            topostore = pfs['etc'].mkdir(uri).discover(levels=1)
+            # attach it
+            srtm.cache = topostore
+
+        # pass on the region
+        srtm.region = self.region
+        # and the desired resolution
+        srtm.hires = self.hires
+
         # all done
         return
 

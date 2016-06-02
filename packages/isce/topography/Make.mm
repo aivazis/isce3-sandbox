@@ -12,6 +12,8 @@ PACKAGE = topography
 EXPORT_PYTHON_MODULES = \
     DEM.py \
     SRTM.py \
+    SRTMMosaic.py \
+    SRTMTile.py \
     __init__.py
 
 # standard targets
