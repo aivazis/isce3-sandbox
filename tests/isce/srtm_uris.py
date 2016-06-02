@@ -30,7 +30,7 @@ class SRTM(isce.application, family='isce.applications.srtm'):
         The main entry point for the application
         """
         # grab a channel
-        channel = self.info
+        channel = self.debug
         # get the DEM archive manager
         srtm = self.dem
         # adjust the region

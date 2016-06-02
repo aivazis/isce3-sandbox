@@ -40,7 +40,7 @@ class SRTM(isce.panel(), family='isce.actions.srtm'):
         # get my data store manager
         srtm = self.srtm
         # and ask it to make a plan
-        return srtm.plan()
+        return srtm.plan(channel=plexus.info)
 
 
     @isce.export(tip="download the tiles that cover a cloud of points")
