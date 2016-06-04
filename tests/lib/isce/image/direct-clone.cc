@@ -13,7 +13,7 @@
 // entry point
 int main() {
     // units
-    size_t k = 1024;
+    auto k = 1024;
     // declare the type of a pixel
     typedef double pixel_t;
     // the name of the file

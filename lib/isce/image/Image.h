@@ -10,38 +10,38 @@
 
 
 // declaration
-template <typename pixel>
+template <typename pixelT>
 class isce::image::Image {
     // types
 public:
     // publish my template parameters
-    typedef pixel pixel_t;
+    typedef pixelT pixel_type;
     // local aliases for specifying my parts
-    typedef off_t offset_t;
-    typedef Direct map_t;
-    typedef Tile tile_t;
-    typedef tile_t::index_t index_t;
+    typedef off_t offset_type;
+    typedef direct_t map_type;
+    typedef tile_t tile_type;
+    typedef tile_type::index_type index_type;
 
     // meta-methods
 public:
     Image(uri_t source,           // the name of the file
-          tile_t tile,            // the image shape and memory layout
-          offset_t offset = 0,    // the offset from the beginning of the file to the image data
+          tile_type tile,         // the image shape and memory layout
+          offset_type offset = 0, // the offset from the beginning of the file to the image data
           bool writable = false); // access policy
 
     // interface
-    inline pixel_t get(tile_t::index_t index) const;
+    inline pixel_type get(index_type index) const;
 
     // syntactic sugar
-    inline pixel_t operator[](tile_t::index_t index) const;
+    inline pixel_type operator[](index_type index) const;
 
     // implementation details
 private:
     // data members
-    map_t _source;
-    tile_t _tile;
+    map_type _source;
+    tile_type _tile;
     // my buffer
-    pixel_t * _data;
+    pixel_type * _data;
 };
 
 

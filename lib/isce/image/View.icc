@@ -11,29 +11,29 @@
 
 
 // meta-methods
-template <typename pixel>
-isce::image::View<pixel>::
-View(const image_t & image, tile_t tile) :
+template <typename pixelT>
+isce::image::View<pixelT>::
+View(const image_type & image, tile_type tile) :
     _tile {tile},
     _image {image}
 {}
 
 
 // interface
-template <typename pixel>
-pixel
-isce::image::View<pixel>::
-get(tile_t::index_t index) const {
+template <typename pixelT>
+pixelT
+isce::image::View<pixelT>::
+get(index_type index) const {
     // all done
     return 0;
 }
 
 
 // syntactic sugar
-template <typename pixel>
-pixel
-isce::image::View<pixel>::
-operator[](tile_t::index_t index) const {
+template <typename pixelT>
+pixelT
+isce::image::View<pixelT>::
+operator[](index_type index) const {
     // delegate to the method
     return get(index);
 }

@@ -16,7 +16,7 @@
 // entry point
 int main() {
     // units
-    size_t k = 1024;
+    auto k = 1024;
     // the name of the file
     isce::image::uri_t name {"image.dat"};
 
@@ -36,7 +36,7 @@ int main() {
     isce::image::view_t<pixel_t> view(image, tile);
 
     // make an index
-    isce::image::tile_t::index_t index {1*k-1, 3*k-1, 2};
+    isce::image::tile_t::index_type index {1*k-1, 3*k-1, 2};
     // make channel
     pyre::journal::debug_t channel("isce.image");
     // show me

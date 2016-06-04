@@ -13,11 +13,10 @@
 // meta-methods
 template <typename pixel>
 isce::image::Image<pixel>::
-Image(uri_t source, tile_t tile, offset_t offset, bool writable) :
-    _source {source, map_t::entireFile, offset, writable},
+Image(uri_t source, tile_type tile, offset_type offset, bool writable) :
+    _source {source, map_type::entireFile, offset, writable},
     _tile {tile},
-    // _data(static_cast<pixel_t *>(_source.buffer()))
-    _data(static_cast<pixel_t *>(_source.buffer()))
+    _data(static_cast<pixel_type *>(_source.buffer()))
 {}
 
 
@@ -25,7 +24,7 @@ Image(uri_t source, tile_t tile, offset_t offset, bool writable) :
 template <typename pixel>
 pixel
 isce::image::Image<pixel>::
-get(tile_t::index_t index) const {
+get(tile_t::index_type index) const {
     // compute the offset
     auto offset = _tile[index];
 
@@ -36,7 +35,7 @@ get(tile_t::index_t index) const {
         << pyre::journal::at(__HERE__)
         << "data[ (" << index[0] << ", " << index[1] << ", " << index[2] << ") ]"
         << " = "
-        << "*(" << _data << " + " << offset*sizeof(pixel_t) << ")"
+        << "*(" << _data << " + " << offset*sizeof(pixel_type) << ")"
         << " = "
         << _data[offset]
         << pyre::journal::endl;
@@ -50,7 +49,7 @@ get(tile_t::index_t index) const {
 template <typename pixel>
 pixel
 isce::image::Image<pixel>::
-operator[](tile_t::index_t index) const {
+operator[](index_type index) const {
     // delegate to the method
     return get(index);
 }

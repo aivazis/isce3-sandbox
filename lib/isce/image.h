@@ -13,6 +13,7 @@
 #include <string>
 // support
 #include <pyre/journal.h>
+#include "grid.h"
 
 // forward declarations
 namespace isce {
@@ -24,30 +25,25 @@ namespace isce {
         typedef off_t offset_t;
         typedef std::size_t size_t;
 
-        // forward declarations of the image api classes
-        class Direct;
-        template <typename> class Image;
-        class Index;
-        class Iterator;
-        class Layout;
-        class MemoryMap;
-        class Slice;
-        class Tile;
-        template <typename> class View;
+        // buffer types
+        typedef isce::grid::direct_t direct_t;
 
-        // constants
-        const size_t _dim = 3;
+        // template instantiations for local use
+        typedef std::array<int, 3> rep_t;
+        typedef isce::grid::index_t<rep_t> index_t;
+        typedef index_t shape_t;
+        typedef isce::grid::layout_t<rep_t> layout_t;
+        typedef isce::grid::tile_t<index_t, layout_t> tile_t;
+        typedef isce::grid::slice_t<tile_t> slice_t;
+        typedef isce::grid::iterator_t<index_t, layout_t> iterator_t;
+
+        // forward declarations of the image api classes
+        template <typename> class Image;
+        template <typename> class View;
     }
 }
 
 // the object model
-#include "image/Index.h"
-#include "image/Layout.h"
-#include "image/Iterator.h"
-#include "image/Slice.h"
-#include "image/Tile.h"
-#include "image/MemoryMap.h"
-#include "image/Direct.h"
 #include "image/Image.h"
 #include "image/View.h"
 
@@ -55,15 +51,6 @@ namespace isce {
 namespace isce {
     namespace image {
 
-        // tile shape, layout and indexing
-        typedef Index index_t;
-        typedef Index shape_t;
-        typedef Layout layout_t;
-        typedef Iterator iterator_t;
-        // tiles
-        typedef Tile tile_t;
-        // buffer types
-        typedef Direct direct_t; // memory mapped file
         // image types
         template <typename pixel> using image_t = Image<pixel>;
         // view types
@@ -85,36 +72,6 @@ namespace isce {
 
 
 // the implementations of the inlines
-// index
-#define isce_image_Index_icc
-#include "image/Index.icc"
-#undef isce_image_Index_icc
-
-// layout
-#define isce_image_Layout_icc
-#include "image/Layout.icc"
-#undef isce_image_Layout_icc
-
-// iterator
-#define isce_image_Iterator_icc
-#include "image/Iterator.icc"
-#undef isce_image_Iterator_icc
-
-// slice
-#define isce_image_Slice_icc
-#include "image/Slice.icc"
-#undef isce_image_Slice_icc
-
-// tile
-#define isce_image_Tile_icc
-#include "image/Tile.icc"
-#undef isce_image_Tile_icc
-
-// direct
-#define isce_image_Direct_icc
-#include "image/Direct.icc"
-#undef isce_image_Direct_icc
-
 // image
 #define isce_image_Image_icc
 #include "image/Image.icc"

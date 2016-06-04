@@ -28,13 +28,13 @@ int main() {
     isce::image::tile_t tile = {shape, layout};
 
     // check the tile size calculation
-    if (tile.pixels() != 4*8*3) {
+    if (tile.size() != 4*8*3) {
         // make a firewall channel so we can report errors
         pyre::journal::firewall_t firewall("isce.image.tile");
         // complain
         firewall
             << pyre::journal::at(__HERE__)
-            << "tile sizing error: " << tile.pixels() << " != " << 4*8*3
+            << "tile sizing error: " << tile.size() << " != " << 4*8*3
             << pyre::journal::endl;
         // bail
         return 1;

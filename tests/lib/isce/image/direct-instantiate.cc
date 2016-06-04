@@ -16,7 +16,7 @@
 // entry point
 int main() {
     // units
-    size_t k = 1024;
+    auto k = 1024;
     // declare the type of a pixel
     typedef double pixel_t;
     // the name of the file
@@ -27,7 +27,7 @@ int main() {
     isce::image::tile_t tile {shape, isce::image::layout::pixel};
 
     // compute the expected size of the payload
-    size_t size = sizeof(pixel_t) * tile.pixels();
+    size_t size = sizeof(pixel_t) * tile.size();
 
     // map the file
     // turn on the info channel

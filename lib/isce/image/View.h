@@ -10,33 +10,33 @@
 
 
 // declaration
-template <typename pixel>
+template <typename pixelT>
 class isce::image::View {
     // types
 public:
     // publish my template parameters
-    typedef pixel pixel_t;
+    typedef pixelT pixel_type;
     // local aliases for specifying my parts
-    typedef Tile tile_t;
-    typedef tile_t::index_t index_t;
-    typedef Image<pixel> image_t;
+    typedef tile_t tile_type;
+    typedef tile_type::index_type index_type;
+    typedef Image<pixel_type> image_type;
 
     // meta-methods
 public:
-    View(const image_t & image,   // the underlying image
-         tile_t tile);            // the view shape and memory layout
+    View(const image_type & image,   // the underlying image
+         tile_type tile);            // the view shape and memory layout
 
     // interface
-    inline pixel_t get(tile_t::index_t index) const;
+    inline pixel_type get(index_type index) const;
 
     // syntactic sugar
-    inline pixel_t operator[](tile_t::index_t index) const;
+    inline pixel_type operator[](index_type index) const;
 
     // implementation details
 private:
     // data members
-    const tile_t _tile;
-    const image_t & _image;
+    const tile_type _tile;
+    const image_type & _image;
 };
 
 
