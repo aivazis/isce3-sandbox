@@ -5,8 +5,8 @@
 //
 
 // code guard
-#if !defined(isce_image_Direct_h)
-#define isce_image_Direct_h
+#if !defined(isce_grid_Direct_h)
+#define isce_grid_Direct_h
 
 //
 // Direct is the life cycle manager of a memory mapping
@@ -16,7 +16,7 @@
 //
 
 // declaration
-class isce::image::Direct : public isce::image::MemoryMap {
+class isce::grid::Direct : public isce::grid::MemoryMap {
     // meta-methods
 public:
     // constructor

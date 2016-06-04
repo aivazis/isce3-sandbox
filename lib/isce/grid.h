@@ -18,6 +18,13 @@
 // forward declarations
 namespace isce {
     namespace grid {
+        // local type aliases
+        // for filenames
+        typedef std::string uri_t;
+        // for describing shapes and regions
+        typedef off_t offset_t;
+        typedef std::size_t size_t;
+
         // grid packing order
         template <typename repT> class Layout;
         // grid indices
@@ -28,6 +35,9 @@ namespace isce {
         template <typename indexT, typename layoutT> class Tile;
         // slices
         template <typename tileT> class Slice;
+
+        class Direct;
+        class MemoryMap;
 
         // operators on indices
         // equality
@@ -53,6 +63,8 @@ namespace isce {
 #include "grid/Iterator.h"
 #include "grid/Tile.h"
 #include "grid/Slice.h"
+#include "grid/MemoryMap.h"
+#include "grid/Direct.h"
 
 // namespace additions
 namespace isce {
@@ -66,6 +78,11 @@ namespace isce {
 
         template <typename indexT, typename layoutT = layout_t<typename indexT::rep_type>>
             using tile_t = Tile<indexT, layoutT>;
+
+        template <typename tileT> using slice_t = Slice<tileT>;
+
+        // buffer types
+        typedef Direct direct_t; // memory mapped file
     }
 }
 
@@ -96,6 +113,11 @@ namespace isce {
 #define isce_grid_Slice_icc
 #include "grid/Slice.icc"
 #undef isce_grid_Slice_icc
+
+// slice
+#define isce_grid_Direct_icc
+#include "grid/Direct.icc"
+#undef isce_grid_Direct_icc
 
 
 // end of file

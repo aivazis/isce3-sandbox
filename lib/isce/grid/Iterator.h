@@ -15,28 +15,28 @@ class isce::grid::Iterator {
     // types
 public:
     // my parts
-    typedef indexT index_t;
-    typedef layoutT layout_t;
+    typedef indexT index_type;
+    typedef layoutT layout_type;
 
     // meta-methods
 public:
-    Iterator(const index_t & begin, const index_t & end, const layout_t & layout);
+    Iterator(const index_type & begin, const index_type & end, const layout_type & layout);
 
     // interface
 public:
     inline Iterator & operator++();
-    inline const index_t & operator*() const;
+    inline const index_type & operator*() const;
 
     // access to my limits
-    const index_t & begin() const;
-    const index_t & end() const;
+    const index_type & begin() const;
+    const index_type & end() const;
 
     // implementation details
 private:
-    index_t _current;
-    const index_t _begin;
-    const index_t _end;
-    const layout_t _layout;
+    index_type _current;
+    const index_type _begin;
+    const index_type _end;
+    const layout_type _layout;
 };
 
 

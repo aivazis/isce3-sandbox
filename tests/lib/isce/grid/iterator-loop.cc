@@ -25,10 +25,10 @@ int main() {
     typedef isce::grid::iterator_t<index_t> iterator_t;
 
     // make a layout
-    iterator_t::layout_t layout {1, 0};
+    iterator_t::layout_type layout {1, 0};
     // build the iteration boundaries
-    iterator_t::index_t begin {0, 0};
-    iterator_t::index_t end {3, 2};
+    index_t begin {0, 0};
+    index_t end {3, 2};
     // make a iterator
     iterator_t iterator {begin, end, layout};
 
@@ -37,7 +37,7 @@ int main() {
     // sign in
     channel << pyre::journal::at(__HERE__);
     // loop until the iterator reaches the end
-    for (const iterator_t::index_t & cursor = *iterator; cursor != end; ++iterator) {
+    for (const auto & cursor = *iterator; cursor != end; ++iterator) {
         // show me
         channel << "  (";
         for (auto idx : cursor) {

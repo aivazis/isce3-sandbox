@@ -18,6 +18,8 @@ public:
     // aliases for my parts
     typedef indexT index_type;
     typedef layoutT layout_type;
+    // slices
+    typedef Slice<Tile> slice_type;
     // iterator
     typedef Iterator<index_type, layout_type> iterator_type;
 
@@ -46,6 +48,12 @@ public:
     // iteration support
     inline auto begin() const;
     inline auto end() const;
+
+    // iterating over slices in arbitrary order
+    auto slice(const layout_type & order) const;
+    auto slice(const index_type & begin, const index_type & end) const;
+    auto slice(const index_type & begin, const index_type & end,
+                     const layout_type & layout) const;
 
     // implementation details
 private:

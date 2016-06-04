@@ -13,7 +13,7 @@
 // meta-methods
 template <typename indexT, typename layoutT>
 isce::grid::Iterator<indexT, layoutT>::
-Iterator(const index_t & begin, const index_t & end, const layout_t & layout) :
+Iterator(const index_type & begin, const index_type & end, const layout_type & layout) :
     _current(begin),
     _begin(begin),
     _end(end),
@@ -24,7 +24,7 @@ Iterator(const index_t & begin, const index_t & end, const layout_t & layout) :
 // interface
 // access to the current value
 template <typename indexT, typename layoutT>
-const typename isce::grid::Iterator<indexT, layoutT>::index_t &
+const typename isce::grid::Iterator<indexT, layoutT>::index_type &
 isce::grid::Iterator<indexT, layoutT>::
 operator* () const {
     // return the current value
@@ -64,7 +64,7 @@ operator++ () {
 
 // access to my limits
 template <typename indexT, typename layoutT>
-const typename isce::grid::Iterator<indexT, layoutT>::index_t &
+const typename isce::grid::Iterator<indexT, layoutT>::index_type &
 isce::grid::Iterator<indexT, layoutT>::
 begin() const {
     // easy...
@@ -72,7 +72,7 @@ begin() const {
 }
 
 template <typename indexT, typename layoutT>
-const typename isce::grid::Iterator<indexT, layoutT>::index_t &
+const typename isce::grid::Iterator<indexT, layoutT>::index_type &
 isce::grid::Iterator<indexT, layoutT>::
 end() const {
     // easy...

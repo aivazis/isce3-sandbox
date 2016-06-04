@@ -14,6 +14,7 @@ PROJ_SAR = $(BLD_LIBDIR)/lib$(PROJECT).$(EXT_SAR)
 PROJ_DLL = $(BLD_LIBDIR)/lib$(PROJECT).$(EXT_SO)
 # the sources
 PROJ_SRCS = \
+    MemoryMap.cc \
 
 # the private build space
 PROJ_TMPDIR = $(BLD_TMPDIR)/${PROJECT}/lib/$(PROJECT)
@@ -25,15 +26,17 @@ PROJ_CLEAN += $(EXPORT_INCDIR)/$(PACKAGE)
 EXPORT_LIBS = $(PROJ_DLL)
 # the package headers
 EXPORT_PKG_HEADERS = \
+    Direct.h Direct.icc \
     Index.h Index.icc \
     Iterator.h Iterator.icc \
     Layout.h Layout.icc \
+    MemoryMap.h \
     Slice.h Slice.icc \
     Tile.h Tile.icc \
 
 # the standard targets
 all: export
 
-export:: export-package-headers
+export:: $(PROJ_DLL) export-package-headers export-libraries
 
 # end of file

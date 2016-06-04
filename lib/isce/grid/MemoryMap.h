@@ -5,13 +5,13 @@
 //
 
 // code guard
-#if !defined(isce_image_MemoryMap_h)
-#define isce_image_MemoryMap_h
+#if !defined(isce_grid_MemoryMap_h)
+#define isce_grid_MemoryMap_h
 
 
 // declaration
 // this class is a wrapper around the os calls
-class isce::image::MemoryMap {
+class isce::grid::MemoryMap {
     // constants
 public:
     static const size_t entireFile = 0;

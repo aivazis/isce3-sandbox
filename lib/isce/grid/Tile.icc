@@ -134,5 +134,32 @@ end() const {
     return iterator_type {_shape, _shape, _layout};
 }
 
+// slicing
+template <typename indexT, typename layoutT>
+auto
+isce::grid::Tile<indexT, layoutT>::
+slice(const layout_type & layout) const {
+    // make a slice over the whole tile but with the given layout
+    return slice_type(*this, {}, _shape, layout);
+}
+
+
+template <typename indexT, typename layoutT>
+auto
+isce::grid::Tile<indexT, layoutT>::
+slice(const index_type & begin, const index_type & end) const {
+    // make a slice over the whole tile but with the given layout
+    return slice_type(*this, begin, end, _layout);
+}
+
+
+template <typename indexT, typename layoutT>
+auto
+isce::grid::Tile<indexT, layoutT>::
+slice(const index_type & begin, const index_type & end, const layout_type & layout) const {
+    // make a slice over the whole tile but with the given layout
+    return slice_type(*this, begin, end, layout);
+}
+
 
 // end of file

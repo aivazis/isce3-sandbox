@@ -20,6 +20,8 @@ TESTS = \
     iterator-loop \
     tile \
     tile-layout \
+    slice \
+    tile-slice \
 
 
 all: test clean

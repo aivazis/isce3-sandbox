@@ -9,7 +9,7 @@
 // externals
 #include <fstream>
 // support
-#include "../image.h"
+#include "../grid.h"
 // low level stuff
 #include <cstring> // for strerror
 #include <fcntl.h> // for open
@@ -20,19 +20,19 @@
 // class methods
 // make a file of a specified size
 void
-isce::image::MemoryMap::
+isce::grid::MemoryMap::
 create(uri_t name, size_t size) {
     // create a file stream
-    std::ofstream image(name, std::ofstream::binary);
+    std::ofstream grid(name, std::ofstream::binary);
     // go to the end of the file
-    image.seekp(size - 1);
+    grid.seekp(size - 1);
     // make a byte
     char null = 0;
     // write a byte
-    image.write(&null, sizeof(null));
+    grid.write(&null, sizeof(null));
 
     // make a channel
-    pyre::journal::debug_t channel("isce.image.direct");
+    pyre::journal::debug_t channel("isce.grid.direct");
     // show me
     channel
         << pyre::journal::at(__HERE__)
@@ -40,14 +40,14 @@ create(uri_t name, size_t size) {
         << pyre::journal::endl;
 
     // close
-    image.close();
+    grid.close();
     // all done
     return;
 }
 
 // memory map the given file
 void *
-isce::image::MemoryMap::
+isce::grid::MemoryMap::
 map(uri_t name, size_t & size, off_t offset, bool writable) {
     // deduce the mode for opening the file
     auto mode = writable ? O_RDWR : O_RDONLY;
@@ -56,7 +56,7 @@ map(uri_t name, size_t & size, off_t offset, bool writable) {
     // verify the file was opened correctly
     if (fd < 0) {
         // and if not, create a channel
-        pyre::journal::error_t channel("isce.image.direct");
+        pyre::journal::error_t channel("isce.grid.direct");
         // complain
         channel
             // where
@@ -81,7 +81,7 @@ map(uri_t name, size_t & size, off_t offset, bool writable) {
         // if we were unable to get file information
         if (flag) {
             // create a channel
-            pyre::journal::error_t channel("isce.image.direct");
+            pyre::journal::error_t channel("isce.grid.direct");
             // complain
             channel
                 // where
@@ -106,7 +106,7 @@ map(uri_t name, size_t & size, off_t offset, bool writable) {
     // check it
     if (buffer == MAP_FAILED) {
         // create a channel
-        pyre::journal::error_t channel("isce.image.direct");
+        pyre::journal::error_t channel("isce.grid.direct");
         // complain
         channel
             // where
@@ -123,7 +123,7 @@ map(uri_t name, size_t & size, off_t offset, bool writable) {
     }
 
     // make a channel
-    pyre::journal::debug_t channel("isce.image.direct");
+    pyre::journal::debug_t channel("isce.grid.direct");
     // show me
     channel
         << pyre::journal::at(__HERE__)
@@ -140,13 +140,13 @@ map(uri_t name, size_t & size, off_t offset, bool writable) {
 
 // unmap the given buffer
 void
-isce::image::MemoryMap::
+isce::grid::MemoryMap::
 unmap(const void * buffer, size_t size) {
     // unmap
     ::munmap(const_cast<void *>(buffer), size);
 
     // make a channel
-    pyre::journal::debug_t channel("isce.image.direct");
+    pyre::journal::debug_t channel("isce.grid.direct");
     // show me
     channel
         << pyre::journal::at(__HERE__)

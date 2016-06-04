@@ -25,19 +25,19 @@ int main() {
     typedef isce::grid::iterator_t<index_t> iterator_t;
 
     // make a layout
-    iterator_t::layout_t layout {2, 3, 1, 0};
+    iterator_t::layout_type layout {2, 3, 1, 0};
     // build the iteration boundaries
-    iterator_t::index_t begin {0, 0, 0, 0};
-    iterator_t::index_t end {5, 4, 3, 2};
+    index_t begin {0, 0, 0, 0};
+    index_t end {5, 4, 3, 2};
     // make a iterator
     iterator_t iterator {begin, end, layout};
 
     // increment
     ++iterator;
     // get the value
-    iterator_t::index_t got = *iterator;
+    index_t got = *iterator;
     // here is what i expect
-    iterator_t::index_t correct {0, 0, 1, 0};
+    index_t correct {0, 0, 1, 0};
 
     // check
     if (got != correct) {
