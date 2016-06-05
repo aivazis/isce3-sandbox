@@ -20,6 +20,42 @@ class SRTMAvailabilityMap:
 
 
     # interface
+    def sync(self, cache, mosaic, channel=None, indent=1):
+        """
+        Sync my contents with the contents of the local {cache} for the tiles in {mosaic}
+        """
+        # make a channel
+        channel = isce.journal.info(self.pyre_family()) if channel is None else channel
+        # setup the margin
+        margin = '  '*indent
+
+        # now visit all the tiles in the globe
+        for tile in mosaic:
+            # check whether the tile exists in the local store
+            isCached = tile.name in cache
+            # fetch the map status of this tile
+            status = self.check(tile=tile)
+
+            # do the update
+            # if the file is in the local store but the map doesn't know it
+            if isCached and status is not self.availability.cached:
+                # mark it in the map
+                self.mark(tile=tile, status=self.availability.cached)
+                # and show me
+                channel.line('{}marked tile {tile.name!r} as locally available'.format(
+                    margin, tile=tile))
+
+            # if the file is marked as cached in the map but it's not in the store contents
+            if status is self.availability.cached and not isCached:
+                # update the map
+                self.mark(tile=tile, status=self.availability.unknown)
+                # and show me
+                channel.line('{}tile {tile.name!r} has disappeared'.format(margin, tile=tile))
+
+        # all done
+        return
+
+
     def check(self, tile):
         """
         Check the availability of the given tile

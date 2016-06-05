@@ -50,12 +50,8 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
         # show me
         channel.line('{}      map: {.uri.name}'.format(margin, map))
 
-        # get my local store
-        cache = self.cache
-        # build the pattern for the filenames with relevant tiles
-        pattern = self._filenamePattern.format(srtm=self)
-        # get the contents
-        contents = set(match.group('name') for node, match in cache.find(pattern=pattern))
+        # get the contents of the local store as a set of tile names
+        contents = self.localstoreContents
         # show me
         channel.line('{}   cached: {} tiles'.format(margin, len(contents)))
 
@@ -64,31 +60,8 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
         # show me
         channel.line('{}    globe: {} tiles'.format(margin, len(globe)))
 
-        # now visit all the tiles in the globe
-        for tile in globe:
-            # check whether the tile exists in the local store
-            cached = tile.name in contents
-            # fetch the map status of this tile
-            status = map.check(tile=tile)
-
-            # do the update
-            # if the file is in the local store but the map doesn't know it
-            if cached and status is not self.availability.cached:
-                # mark it in the map
-                map.mark(tile=tile, status=self.availability.cached)
-                # and show me
-                channel.line('{}marked tile {tile.name} as locally available'.format(
-                    margin, tile=tile))
-
-            # if the file is marked as cached in the map but it's not in the store contents
-            if status is self.availability.cached and not cached:
-                # update the map
-                map.mark(tile=tile, status=self.availability.unknown)
-                # and show me
-                channel.line('{}tile {tile.name} has disappeared'.format(margin, tile=tile))
-
-        # all done
-        return
+        # do the sync
+        return map.sync(cache=contents, mosaic=globe, channel=channel)
 
 
     @isce.export
@@ -222,6 +195,29 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
         return map
 
 
+    @property
+    def localstoreContents(self):
+        """
+        Build a set of the tile names that are present in the local cache
+        """
+        # check whether I have done this before
+        contents = self._localstoreContents
+        # and if i have
+        if contents is not None:
+            # all donre
+            return contents
+        # otherwise, get my cache
+        cache = self.cache
+        # build the pattern for the filenames with relevant tiles
+        pattern = self._filenamePattern.format(srtm=self)
+        # get the contents
+        contents = set(match.group('name') for node, match in cache.find(pattern=pattern))
+        # save them
+        self._localstoreContents = contents
+        # and return them
+        return contents
+
+
     def loadAvailabilityMap(self):
         """
         Retrieve the tile availability map
@@ -276,6 +272,7 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
 
     # storage for my properties
     _availabilityMap = None
+    _localstoreContents = None
 
     # constants
     # the availability map filename
