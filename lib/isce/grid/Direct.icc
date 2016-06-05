@@ -12,7 +12,7 @@
 
 // meta-methods
 isce::grid::Direct::
-Direct(uri_t name, size_t size, off_t offset, bool writable) :
+Direct(uri_type name, size_type size, offset_type offset, bool writable) :
     _buffer {map(name, size, offset, writable)},
     _size {size}
 {}
@@ -27,7 +27,7 @@ isce::grid::Direct::
 
 // interface
 // accessors
-size_t
+isce::grid::Direct::size_type
 isce::grid::Direct::
 size() const {
     // easy enough

@@ -12,6 +12,12 @@
 // declaration
 // this class is a wrapper around the os calls
 class isce::grid::MemoryMap {
+    // types
+public:
+    typedef isce::grid::uri_t uri_type;
+    typedef isce::grid::size_t size_type;
+    typedef isce::grid::offset_t offset_type;
+
     // constants
 public:
     static const size_t entireFile = 0;
