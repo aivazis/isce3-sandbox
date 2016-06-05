@@ -32,15 +32,40 @@ class SRTM(isce.panel(), family='isce.actions.srtm'):
 
 
     # commands
-    @isce.export(tip="download the tiles that cover the region of interest")
+    @isce.export(tip="sync the availability map with the contents of the local cache ")
+    def sync(self, plexus, **kwds):
+        """
+        Ensure that the availability map reflects the contents of the local store accurately
+        """
+        # pick a channel
+        channel = plexus.info
+        # sign in
+        channel.line('syncing the local availability map')
+        # get my data store manager
+        srtm = self.srtm
+        # and ask it to make a plan
+        status = srtm.sync(channel=channel)
+        # flush the channel
+        channel.log()
+        # and return the status code
+        return status
+
+
+    @isce.export(tip="make a workplan for assembling the elevation model for the given region")
     def plan(self, plexus, **kwds):
         """
         Describe the workplan to build an elevation model for the region of interest
         """
+        # pick a channel
+        channel = plexus.info
         # get my data store manager
         srtm = self.srtm
         # and ask it to make a plan
-        return srtm.plan(channel=plexus.info)
+        status = srtm.plan(channel=channel)
+        # flush the channel
+        channel.log()
+        # and return the status code
+        return status
 
 
     @isce.export(tip="download the tiles that cover a cloud of points")

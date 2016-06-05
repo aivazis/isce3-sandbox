@@ -32,20 +32,75 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
     pool.doc = 'the maximum number of simultaneous connections to the remote data store'
 
 
-
     # protocol obligations
+    @isce.export
+    def sync(self, channel=None, indent=1):
+        """
+        Ensure that the availability map reflects the contents of the local store accurately
+        """
+        # make a channel
+        channel = isce.journal.info(self.pyre_family()) if channel is None else channel
+        # compute the margin
+        margin = '  '*indent
+        # sign in
+        channel.line('{}local cache: {.cache.uri}'.format(margin, self))
+
+        # get the map
+        map = self.availabilityMap
+        # show me
+        channel.line('{}      map: {.uri.name}'.format(margin, map))
+
+        # get my local store
+        cache = self.cache
+        # build the pattern for the filenames with relevant tiles
+        pattern = self._filenamePattern.format(srtm=self)
+        # get the contents
+        contents = set(match.group('name') for node, match in cache.find(pattern=pattern))
+        # show me
+        channel.line('{}   cached: {} tiles'.format(margin, len(contents)))
+
+        # build a mosaic over the entire globe
+        globe = self.mosaic(region=[(-90,-180), (90,180)], resolution=self.resolution)
+        # show me
+        channel.line('{}    globe: {} tiles'.format(margin, len(globe)))
+
+        # now visit all the tiles in the globe
+        for tile in globe:
+            # check whether the tile exists in the local store
+            cached = tile.name in contents
+            # fetch the map status of this tile
+            status = map.check(tile=tile)
+
+            # do the update
+            # if the file is in the local store but the map doesn't know it
+            if cached and status is not self.availability.cached:
+                # mark it in the map
+                map.mark(tile=tile, status=self.availability.cached)
+                # and show me
+                channel.line('{}marked tile {tile.name} as locally available'.format(
+                    margin, tile=tile))
+
+            # if the file is marked as cached in the map but it's not in the store contents
+            if status is self.availability.cached and not cached:
+                # update the map
+                map.mark(tile=tile, status=self.availability.unknown)
+                # and show me
+                channel.line('{}tile {tile.name} has disappeared'.format(margin, tile=tile))
+
+        # all done
+        return
+
+
     @isce.export
     def plan(self, channel=None):
         """
         Describe the work required to generate the specified DEM
         """
-        # get my data store
-        cache = self.cache
         # make a channel
         channel = isce.journal.info(self.pyre_family()) if channel is None else channel
         # sign in
         channel.line('cache:')
-        channel.line('\n'.join(cache.dump(indent=2)))
+        channel.line('\n'.join(self.cache.dump(indent=2)))
 
         # get my region
         region = self.region
@@ -148,6 +203,39 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
 
 
     # implementation details
+    @property
+    def availabilityMap(self):
+        """
+        Fetch the SRTM tile availability map
+        """
+        # check whether i have done this before
+        map = self._availabilityMap
+        # and if i have
+        if map is not None:
+            # all done
+            return map
+        # otherwise, get the map
+        map = self.loadAvailabilityMap()
+        # cache it
+        self._availabilityMap = map
+        # and return it
+        return map
+
+
+    def loadAvailabilityMap(self):
+        """
+        Retrieve the tile availability map
+        """
+        # otherwise, form the uri to the map
+        uri = self.cache.uri / self._availabilityMapTemplate.format(srtm=self)
+        # grab the factory
+        from .SRTMAvailabilityMap import SRTMAvailabilityMap as factory
+        # build it
+        map = factory(uri)
+        # and return it
+        return map
+
+
     def checkAvailability(self, mosaic):
         """
         Update the status of all tiles that are available in the {localstore}
@@ -183,30 +271,6 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
         return self._usgs.format(self)
 
 
-    @property
-    def availabilityMap(self):
-        """
-        Fetch the SRTM tile availability map
-        """
-        # check whether i have done this before
-        map = self._availabilityMap
-        # and if i have
-        if map is not None:
-            # all done
-            return map
-
-        # otherwise, form the uri to the map
-        uri = self.cache.uri / self._availabilityMapTemplate.format(srtm=self)
-        # grab the factory
-        from .SRTMAvailabilityMap import SRTMAvailabilityMap as factory
-        # build it
-        map = factory(uri)
-        # cache it
-        self._availabilityMap = map
-        # and return it
-        return map
-
-
     # private data
     cache = None # the filesystem node with my local store
 
@@ -218,6 +282,8 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
     _availabilityMapTemplate = 'srtmgl{srtm.resolution}.map'
     # the tile URI template: tile name and resolution
     _filenameTemplate = "{tile.name}.SRTMGL{tile.resolution}.hgt.zip"
+    # the pattern for matching valid tile names in the local store
+    _filenamePattern = '(?P<name>(N|S)\d{{2}}(E|W)\d{{3}})\.SRTMGL{srtm.resolution}.hgt.zip'
     # the template for the URI of the datastore at the USGS
     _usgs = 'http://e4ftl01.cr.usgs.gov/SRTM/SRTMGL{tile.resolution}.003/2000.02.11/'
 
