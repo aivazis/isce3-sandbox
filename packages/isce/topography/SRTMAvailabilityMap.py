@@ -15,6 +15,9 @@ class SRTMAvailabilityMap:
     The tile availability map
     """
 
+    # types
+    from .SRTMAvailability import SRTMAvailability as availability
+
 
     # interface
     def check(self, tile):
@@ -23,8 +26,10 @@ class SRTMAvailabilityMap:
         """
         # get its location
         index = tile.point
-        # get the status from my map and return it
-        return isce.extensions.isce.srtmAvailabilityMapGet(self.map, index)
+        # get the status from my map
+        value = isce.extensions.isce.srtmAvailabilityMapGet(self.map, index)
+        # convert it into an availability code and return it
+        return tuple(self.availability)[value]
 
 
     def mark(self, tile, status):
@@ -33,7 +38,9 @@ class SRTMAvailabilityMap:
         """
         # get its location
         index = tile.point
-        # get the status from my map and return it
+        # get the status value
+        value = status.value
+        # set the status in my map and return it
         return isce.extensions.isce.srtmAvailabilityMapSet(self.map, index, status.value)
 
 

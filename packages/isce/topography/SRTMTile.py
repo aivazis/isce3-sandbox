@@ -16,6 +16,9 @@ class SRTMTile:
     Encapsulation of an SRTM tile
     """
 
+    # types
+    from .SRTMAvailability import SRTMAvailability as availability
+
     # public data
     point = None      # a (lat, lon) pair that locates the SW corner of the tile
     resolution = None # the number of arcseconds per pixel
@@ -50,7 +53,7 @@ class SRTMTile:
         Check whether this tile is marked as locally cached
         """
         # check my status
-        return self.status == self.Status.cached
+        return self.status == self.availability.cached
 
 
     @isCached.setter
@@ -61,7 +64,7 @@ class SRTMTile:
         # if we know for sure
         if flag is True:
             # update my status
-            self.status = self.Status.cached
+            self.status = self.availability.cached
         # all done
         return
 
@@ -75,7 +78,7 @@ class SRTMTile:
         # and the resolution
         self.resolution = resolution # arcseconds per pixel
         # deduce the status of the tile; see the enum definition below
-        self.status = self.Status.unknown if status is None else status
+        self.status = self.availability.unknown if status is None else status
         # all done
         return
 
@@ -83,18 +86,6 @@ class SRTMTile:
     # private data
     # cache for the canonical name
     _name = None
-
-
-    # tile status
-    @enum.unique
-    class Status(enum.Enum):
-        """
-        Tile status codes
-        """
-        unknown = 1 # we have never attempted to get this tile, so we know nothing about it
-        unavailable = 2 # we know for a fact that the SRTM data set does not include this tile
-        available = 3 # we know for a fact that the SRTM data set includes this tile
-        cached = 4 # we have a local copy of this tile
 
 
 # end of file

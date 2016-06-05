@@ -19,6 +19,7 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
 
     # types
     from .SRTMMosaic import SRTMMosaic as mosaic
+    from .SRTMAvailability import SRTMAvailability as availability
 
     # user configurable state
     region = isce.properties.array()
