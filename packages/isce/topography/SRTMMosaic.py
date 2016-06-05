@@ -21,22 +21,54 @@ class SRTMMosaic(list):
 
 
     # interface
-    def checkAvailability(self, localstore):
+    def cover(self, region):
         """
-        Update the status of all tiles that are available in the {localstore}
+        Make sure this mosaic covers the {region} of interest
         """
-        # go through each of my tiles
-        for tile in self:
-            # if the filename is present in the localstore
-            if tile.filename in localstore:
-                # mark the tile as locally cached
-                tile.isCached = True
+        # if this is an empty region
+        if not region:
+            # give me a trivial shape
+            self.shape = (0,0)
+            # and reset my NW corner
+            self.nw = (None, None)
+            # all done
+            return
+
+        # we line up the grid in "book order": NW to SE, with the first row W to E, which means
+        # that we must treat lats and lons differently; so unpack them
+        lats, lons = zip(*region)
+
+        # the northernmost latitude
+        latN = math.floor(max(lats))
+        # the southernmost latitude
+        latS = math.floor(min(lats))
+        # the easternmost longitude
+        lonE = math.floor(max(lons))
+        # the westernmost longitude
+        lonW = math.floor(min(lons))
+
+        # save my NW corner
+        self.nw = (latN, lonW)
+        # set up my shape
+        self.shape = (latN - latS + 1, lonE - lonW + 1)
+        # get me resolution
+        resolution = self.resolution
+
+        # remove everything
+        self.clear()
+        # build the grid
+        self.extend(
+            # by adding tiles
+            self.tile(point=point, resolution=resolution)
+            # at the specified point
+            for point in itertools.product(range(latN, latS-1, -1), range(lonW, lonE+1)))
+
         # all done
         return
 
 
     # meta-methods
-    def __init__(self, region=[], hires=True, **kwds):
+    def __init__(self, region=[], resolution=True, **kwds):
         """
         Create a grid of SRTM tiles that cover the bounding box of the {region} of interest
 
@@ -45,10 +77,10 @@ class SRTMMosaic(list):
         """
         # chain up
         super().__init__(**kwds)
-
+        # set my resolution
+        self.resolution = resolution # arcseconds per pixel
         # figure out the region of interest
-        self.cover(region=region, hires=hires)
-
+        self.cover(region=region)
         # all done
         return
 
@@ -83,54 +115,13 @@ class SRTMMosaic(list):
         return super().__getitem__(offset)
 
 
-    # implementation details
-    def cover(self, region, hires):
-        """
-        Make sure this mosaic covers the region of interest
-        """
-        # if this is an empty region
-        if not region:
-            # give me a trivial shape
-            self.shape = (0,0)
-            # and reset my NW corner
-            self.nw = (None, None)
-            # all done
-            return
-
-        # we line up the grid in "book order": NW to SE, with the first row W to E, which means
-        # that we must treat lats and lons differently; so unpack them
-        lats, lons = zip(*region)
-
-        # the northernmost latitude
-        latN = math.floor(max(lats))
-        # the southernmost latitude
-        latS = math.floor(min(lats))
-        # the easternmost longitude
-        lonE = math.floor(max(lons))
-        # the westernmost longitude
-        lonW = math.floor(min(lons))
-
-        # save my NW corner
-        self.nw = (latN, lonW)
-        # set up my shape
-        self.shape = (latN - latS + 1, lonE - lonW + 1)
-
-        # build the grid
-        self.extend(
-            # by adding tiles
-             self.tile(point=point, hires=hires)
-            # at the specified point
-            for point in itertools.product(range(latN, latS-1, -1), range(lonW, lonE+1)))
-
-        # all done
-        return
-
-
     # private data
     # the (lat, lon) of the tile at the NW corner of the mosaic
     nw = None
     # the shape of the mosaic
     shape = None
+    # the encoding of the mosaic resolution
+    resolution = None
 
 
 # end of file

@@ -45,24 +45,6 @@ class SRTMTile:
 
 
     @property
-    def filename(self):
-        """
-        The canonical name for the file that contains the tile grid
-        """
-        # easy...
-        return self._filenameTemplate.format(self)
-
-
-    @property
-    def uriUSGS(self):
-        """
-        Build the address for this tile at the USGS data store
-        """
-        # easy...
-        return self._usgs.format(self)
-
-
-    @property
     def isCached(self):
         """
         Check whether this tile is marked as locally cached
@@ -85,13 +67,13 @@ class SRTMTile:
 
 
     # meta-methods
-    def __init__(self, point, hires=True, status=None, **kwds):
+    def __init__(self, point, resolution=1, status=None, **kwds):
         # chain up
         super().__init__(**kwds)
         # record the reference pixel
         self.point = point
         # and the resolution
-        self.resolution = 1 if hires else 3 # arcseconds per pixel
+        self.resolution = resolution # arcseconds per pixel
         # deduce the status of the tile; see the enum definition below
         self.status = self.Status.unknown if status is None else status
         # all done
@@ -101,12 +83,6 @@ class SRTMTile:
     # private data
     # cache for the canonical name
     _name = None
-
-    # constants
-    # the template for the URI of the datastore at the USGS
-    _usgs = 'http://e4ftl01.cr.usgs.gov/SRTM/SRTMGL{0.resolution}.003/2000.02.11/'
-    # the tile URI template: tile name and resolution
-    _filenameTemplate = "{0.name}.SRTMGL{0.resolution}.hgt.zip"
 
 
     # tile status

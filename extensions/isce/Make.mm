@@ -11,6 +11,7 @@ include isce.def
 PACKAGE = extensions
 # the module
 MODULE = isce
+
 # build a python extension
 include std-pythonmodule.def
 
@@ -21,13 +22,12 @@ PROJ_SRCS = \
     exceptions.cc \
     image.cc \
     metadata.cc \
+    srtm.cc \
+
 # the private build space
 PROJ_TMPDIR = $(BLD_TMPDIR)/${PROJECT}/extensions/isce
 # my dependencies
 PROJ_LIBRARIES += -lisce -ljournal $(LCXX_FORTRAN)
-
-# register the dependence on {libisce} so I get recompiled when it changes
-PROJ_OTHER_DEPENDENCIES = $(BLD_LIBDIR)/libisce.$(EXT_SO)
 
 # the pile of things to clean
 PROJ_CLEAN += \

@@ -24,8 +24,8 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
     region = isce.properties.array()
     region.doc = 'a cloud of (lat,lon) pairs that specifies of the region of interest'
 
-    hires = isce.properties.bool(default=True)
-    hires.doc = 'select the model resolution'
+    resolution = isce.properties.int(default=1)
+    resolution.doc = 'the resolution of the data set in pixels per arc-second; either 1 or 3'
 
     pool = isce.properties.int(default=8)
     pool.doc = 'the maximum number of simultaneous connections to the remote data store'
@@ -52,9 +52,9 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
         channel.line('region of interest: {}'.format(region))
 
         # build a mosaic that covers my region
-        mosaic = self.mosaic(region=self.region, hires=self.hires)
+        mosaic = self.mosaic(region=self.region, resolution=self.resolution)
         # check the status of its tiles
-        mosaic.checkAvailability(localstore=self.cache)
+        self.checkAvailability(mosaic=mosaic)
 
         # separate the tiles into two categories: the ones we have
         cached = {}
@@ -63,14 +63,18 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
 
         # go through the tiles
         for tile in mosaic:
+            # get the tile name
+            name = tile.name
+            # form the filename
+            filename = self.filename(tile=tile)
             # check whether the file is present in the cache
             if tile.isCached:
                 # add to the pile of tiles we already have
-                cached[tile.filename] = tile.name
+                cached[filename] = name
             # otherwise
             else:
                 # add it to the pile of tiles we have to download
-                get[tile.filename] = tile.name
+                get[filename] = name
 
         # show me
         channel.line('  necessary:')
@@ -98,9 +102,9 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
         channel = isce.journal.info(name='isce.dem')
 
         # build a mosaic that covers my region
-        mosaic = self.mosaic(region=self.region, hires=self.hires)
+        mosaic = self.mosaic(region=self.region, resolution=self.resolution)
         # check the status of its tiles
-        mosaic.checkAvailability(localstore=self.cache)
+        mosaic.checkAvailability(mosaic=mosaic)
 
         # build the archive uri
         archive = self.srtm.format(resolution)
@@ -143,38 +147,78 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
 
 
     # implementation details
-    def _mosaic(self):
+    def checkAvailability(self, mosaic):
         """
-        Build a mosaic of SRTM tiles that cover the bounding box of the points in my {region} of
-        interest
+        Update the status of all tiles that are available in the {localstore}
         """
-        # get the cloud of (lat, lon) pairs that define the region of interest
-        region = self.region
-        # make a mosaic
-        mosaic = self.srtmMosaic(region=region)
-        # all done
-        return mosaic
+        # grab the local store
+        cache = self.cache
+        # get the availability map
+        map = self.availabilityMap
 
-        # otherwise, compute the north-south and east-west ranges that cover all the points in
-        # my region; this is accomplished by finding the smallest and largest coördinate along
-        # each axis; in order to handle negative numbers correctly, we use {math.floor} to
-        # compute the integer part; we add one to the upper limits so that we can form the
-        # sequence of values using {range}
-        limits = tuple((math.floor(min(axis)), math.floor(max(axis))+1) for axis in zip(*region))
-        # the limits form a grid whose shape is given by
-        shape = tuple(high - low for low, high in limits)
-        # and whose contents are all pairs of values in the range of each axis
-        contents = itertools.product(*(range(*axis) for axis in limits))
-        # build the grid
-        mosaic = isce.geometry.grid(shape=shape)
-        # populate it
-        mosaic.extend(contents)
+        # go through each of my tiles
+        for tile in mosaic:
+            # if the filename is present in the localstore
+            if self.filename(tile=tile) in cache:
+                # mark the tile as locally cached
+                tile.isCached = True
+        # all done
+        return
+
+
+    def filename(self, tile):
+        """
+        The canonical name for the file that contains the tile grid
+        """
+        # easy...
+        return self._filenameTemplate.format(srtm=self, tile=tile)
+
+
+    def uriUSGS(self, tile):
+        """
+        Build the address for this tile at the USGS data store
+        """
+        # easy...
+        return self._usgs.format(self)
+
+
+    @property
+    def availabilityMap(self):
+        """
+        Fetch the SRTM tile availability map
+        """
+        # check whether i have done this before
+        map = self._availabilityMap
+        # and if i have
+        if map is not None:
+            # all done
+            return map
+
+        # otherwise, form the uri to the map
+        uri = self.cache.uri / self._availabilityMapTemplate.format(srtm=self)
+        # grab the factory
+        from .SRTMAvailabilityMap import SRTMAvailabilityMap as factory
+        # build it
+        map = factory(uri)
+        # cache it
+        self._availabilityMap = map
         # and return it
-        return mosaic
+        return map
 
 
     # private data
-    cache = None
+    cache = None # the filesystem node with my local store
+
+    # storage for my properties
+    _availabilityMap = None
+
+    # constants
+    # the availability map filename
+    _availabilityMapTemplate = 'srtmgl{srtm.resolution}.map'
+    # the tile URI template: tile name and resolution
+    _filenameTemplate = "{tile.name}.SRTMGL{tile.resolution}.hgt.zip"
+    # the template for the URI of the datastore at the USGS
+    _usgs = 'http://e4ftl01.cr.usgs.gov/SRTM/SRTMGL{tile.resolution}.003/2000.02.11/'
 
 
 # end of file

@@ -24,8 +24,8 @@ class SRTM(isce.panel(), family='isce.actions.srtm'):
     region = isce.properties.array()
     region.doc = 'an array of (lat, lon) pairs of interest'
 
-    hires = isce.properties.bool(default=True)
-    hires.doc = 'use the high resolution data set'
+    resolution = isce.properties.int(default=1)
+    resolution.doc = 'the resolution of the data set in pixels per arc-second; either 1 or 3'
 
     force = isce.properties.bool(default=False)
     force.doc = 'perform the requested action unconditionally'
@@ -85,7 +85,7 @@ class SRTM(isce.panel(), family='isce.actions.srtm'):
         # pass on the region
         srtm.region = self.region
         # and the desired resolution
-        srtm.hires = self.hires
+        srtm.resolution = self.resolution
 
         # all done
         return

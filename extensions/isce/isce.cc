@@ -15,6 +15,9 @@
 #include "metadata.h"
 // image
 #include "image.h"
+// srtm
+#include "srtm.h"
+
 
 // put everything in my private namespace
 namespace isce {
@@ -31,14 +34,38 @@ namespace isce {
             {
                 image::newImage_float__name__,
                 image::newImage_float,
-                METH_VARARGS, image::newImage_float__doc__
+                METH_VARARGS,
+                image::newImage_float__doc__
             },
-
             // methods for image views
             {
                 image::newView_float__name__,
                 image::newView_float,
-                METH_VARARGS, image::newView_float__doc__
+                METH_VARARGS,
+                image::newView_float__doc__
+            },
+
+            // srtm methods
+            {
+                // constructor
+                srtm::availabilityMap__name__,
+                srtm::availabilityMap,
+                METH_VARARGS,
+                srtm::availabilityMap__doc__
+            },
+            {
+                // read access
+                srtm::availabilityMapGet__name__,
+                srtm::availabilityMapGet,
+                METH_VARARGS,
+                srtm::availabilityMapGet__doc__
+            },
+            {
+                // write access
+                srtm::availabilityMapSet__name__,
+                srtm::availabilityMapSet,
+                METH_VARARGS,
+                srtm::availabilityMapSet__doc__
             },
 
             // sentinel

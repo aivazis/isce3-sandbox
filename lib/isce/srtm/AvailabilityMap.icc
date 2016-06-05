@@ -1,0 +1,50 @@
+// -*- C++ -*-
+//
+// michael a.g. aïvázis <michael.aivazis@para-sim.com>
+// (c) 2003-2016 all rights reserved
+//
+
+// code guard
+#if !defined(isce_srtm_AvailabilityMap_icc)
+#error This header file contains implementation details of class isce::srtm::Image
+#endif
+
+
+// meta-methods
+isce::srtm::AvailabilityMap::
+AvailabilityMap(uri_type uri) :
+    _tile { {360u, 180u}, {1u, 0u} },
+    _map { map(uri, _tile) }
+{}
+
+
+// interface
+// grant write access to the tile status at {index}
+auto &
+isce::srtm::AvailabilityMap::
+operator[](const index_type & index)
+{
+    // get my tile to compute the offset
+    auto offset = _tile[index];
+    // get the buffer of my mapping and convert it into a grid of chars
+    char * buffer = static_cast<char *>(_map.buffer());
+    // dereference and return the value
+    return buffer[offset];
+}
+
+
+// grant read access to the tile status at {index}
+auto
+isce::srtm::AvailabilityMap::
+operator[](const index_type & index) const
+{
+    // get my tile to compute the offset
+    auto offset = _tile[index];
+    // get the buffer of my mapping and convert it into a grid of chars
+    char * buffer = static_cast<char *>(_map.buffer());
+    // dereference and return the value
+    return buffer[offset];
+}
+
+
+// end of file

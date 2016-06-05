@@ -7,6 +7,9 @@
 
 include isce.def
 
+# stuff to clean
+PROJ_CLEAN += *.map
+
 all: test clean
 
 test: sanity low-level srtm
