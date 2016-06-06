@@ -30,13 +30,21 @@ public:
 
     // interface
 public:
+    // size
+    auto size() const;
+
+    // read and write access using offsets
+    inline auto & operator[](size_type offset);
+    inline auto operator[](size_type offset) const;
+
+    // read and write access using indices
     inline auto & operator[](const index_type &index);
     inline auto operator[](const index_type & index) const;
 
     // implementation details
     // helpers
 private:
-    direct_type map(uri_type uri, const tile_type & tile);
+    static direct_type map(uri_type uri, const tile_type & tile);
 
     // data
 private:

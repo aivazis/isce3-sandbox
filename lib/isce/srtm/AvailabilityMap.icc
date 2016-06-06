@@ -19,13 +19,21 @@ AvailabilityMap(uri_type uri) :
 
 
 // interface
-// grant write access to the tile status at {index}
+// size
+auto
+isce::srtm::AvailabilityMap::
+size() const
+{
+    // my tile knows
+    return _tile.size();
+}
+
+
+// grant write access to the tile status at {offset}
 auto &
 isce::srtm::AvailabilityMap::
-operator[](const index_type & index)
+operator[](size_type offset)
 {
-    // get my tile to compute the offset
-    auto offset = _tile[index];
     // get the buffer of my mapping and convert it into a grid of chars
     char * buffer = static_cast<char *>(_map.buffer());
     // dereference and return the value
@@ -36,14 +44,36 @@ operator[](const index_type & index)
 // grant read access to the tile status at {index}
 auto
 isce::srtm::AvailabilityMap::
-operator[](const index_type & index) const
+operator[](size_type offset) const
 {
-    // get my tile to compute the offset
-    auto offset = _tile[index];
     // get the buffer of my mapping and convert it into a grid of chars
     char * buffer = static_cast<char *>(_map.buffer());
     // dereference and return the value
     return buffer[offset];
+}
+
+
+// grant write access to the tile status at {index}
+auto &
+isce::srtm::AvailabilityMap::
+operator[](const index_type & index)
+{
+    // get my tile to compute the offset
+    auto offset = _tile[index];
+    // and delegate
+    return (*this)[offset];
+}
+
+
+// grant read access to the tile status at {index}
+auto
+isce::srtm::AvailabilityMap::
+operator[](const index_type & index) const
+{
+    // get my tile to compute the offset
+    auto offset = _tile[index];
+    // and delegate
+    return (*this)[offset];
 }
 
 

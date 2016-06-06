@@ -9,6 +9,7 @@
 
 // externals
 #include <Python.h>
+#include <pyre/journal.h>
 // support
 #include <isce/srtm.h>
 // my declarations
@@ -51,6 +52,83 @@ availabilityMap(PyObject *, PyObject * args)
 
     // dress it up and return it
     return PyCapsule_New(map, availabilityMap_capsule, freeAvailabilityMap);
+}
+
+
+// summary
+const char * const
+isce::extension::srtm::
+availabilityMapSummary__name__ = "srtmAvailabilityMapSummary";
+
+const char * const
+isce::extension::srtm::
+availabilityMapSummary__doc__ = "build a summary of the status of SRTM data tiles";
+
+PyObject *
+isce::extension::srtm::
+availabilityMapSummary(PyObject *, PyObject * args)
+{
+    // storage
+    size_t range;
+    PyObject * capsule;
+    // parse the arguments
+    int ok = PyArg_ParseTuple(args,
+                              "O!k:srtmAvailabilityMapSummary",
+                              &PyCapsule_Type, &capsule, &range);
+    // if something went wrong
+    if (!ok) {
+        // complain
+        return 0;
+    }
+    // if the capsule is not valid
+    if (!PyCapsule_IsValid(capsule, availabilityMap_capsule)) {
+        // set the error string
+        PyErr_SetString(PyExc_TypeError, "invalid matrix capsule");
+        // and complain
+        return 0;
+    }
+
+    // grab the map
+    auto & map =
+        * static_cast<isce::srtm::map_t *>(PyCapsule_GetPointer(capsule, availabilityMap_capsule));
+
+    // allocate storage for the use count; make sure it is initialized to all zeroes
+    size_t table[range] = {};
+
+    // visit the table
+    for (size_t slot=0; slot < map.size(); ++slot) {
+        // and hold breath and jump...
+        size_t value = map[slot];
+
+#if defined(DEBUG_CHECK_BOUNDS)
+        // make sure the value is within the range
+        if (value >= range) {
+            // open a channel
+            pyre::journal::firewall_t firewall("isce.grid.bounds");
+            // complain
+            firewall
+                << pyre::journal::at(__HERE__)
+                << "index error: out of range: " << value << " > " << range-1
+                << pyre::journal::endl;
+
+        }
+#endif
+        // and again
+        ++table[value];
+    }
+
+    // build the result
+    PyObject * result = PyTuple_New(range);
+    // visit the table
+    for (size_t slot=0; slot<range; ++slot) {
+        // make an int to hold the frequency of this status
+        PyObject * item = PyLong_FromLong(table[slot]);
+        // attach it to the tuple
+        PyTuple_SET_ITEM(result, slot, item);
+    }
+
+    // all done
+    return result;
 }
 
 
@@ -115,7 +193,7 @@ availabilityMapGet(PyObject *, PyObject * args)
 
     // make a channel
     pyre::journal::debug_t channel("isce.srtm");
-    // show me what's about to happend
+    // show me what's about to happen
     channel
         << pyre::journal::at(__HERE__)
         << "tile@(" << lat << "," << lon << ") <- "
@@ -188,7 +266,7 @@ availabilityMapSet(PyObject *, PyObject * args)
 
     // make a channel
     pyre::journal::debug_t channel("isce.srtm");
-    // show me what's about to happend
+    // show me what's about to happen
     channel
         << pyre::journal::at(__HERE__)
         << "tile@(" << lat << "," << lon << ") <- "

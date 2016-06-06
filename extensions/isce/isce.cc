@@ -67,6 +67,13 @@ namespace isce {
                 METH_VARARGS,
                 srtm::availabilityMapSet__doc__
             },
+            {
+                // write access
+                srtm::availabilityMapSummary__name__,
+                srtm::availabilityMapSummary,
+                METH_VARARGS,
+                srtm::availabilityMapSummary__doc__
+            },
 
             // sentinel
             { 0, 0, 0, 0 }

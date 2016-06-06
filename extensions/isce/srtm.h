@@ -22,6 +22,11 @@ namespace isce {
             extern const char * const availabilityMap__doc__;
             PyObject * availabilityMap(PyObject *, PyObject *);
 
+            // srtm availability map: summary
+            extern const char * const availabilityMapSummary__name__;
+            extern const char * const availabilityMapSummary__doc__;
+            PyObject * availabilityMapSummary(PyObject *, PyObject *);
+
             // srtm availability map: read acces
             extern const char * const availabilityMapGet__name__;
             extern const char * const availabilityMapGet__doc__;

@@ -21,6 +21,7 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
     from .SRTMMosaic import SRTMMosaic as mosaic
     from .SRTMAvailability import SRTMAvailability as availability
 
+
     # user configurable state
     region = isce.properties.array()
     region.doc = 'a cloud of (lat,lon) pairs that specifies of the region of interest'
@@ -61,7 +62,12 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
         channel.line('{}    globe: {} tiles'.format(margin, len(globe)))
 
         # do the sync
-        return map.sync(cache=contents, mosaic=globe, channel=channel)
+        map.sync(cache=contents, mosaic=globe, channel=channel)
+        # ask for a summary
+        map.summary(channel=channel)
+
+        # all done
+        return
 
 
     @isce.export
@@ -204,7 +210,7 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
         contents = self._localstoreContents
         # and if i have
         if contents is not None:
-            # all donre
+            # all done
             return contents
         # otherwise, get my cache
         cache = self.cache

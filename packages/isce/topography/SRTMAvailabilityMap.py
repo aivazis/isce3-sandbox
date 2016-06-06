@@ -25,7 +25,7 @@ class SRTMAvailabilityMap:
         Sync my contents with the contents of the local {cache} for the tiles in {mosaic}
         """
         # make a channel
-        channel = isce.journal.info(self.pyre_family()) if channel is None else channel
+        channel = self._channel if channel is None else channel
         # setup the margin
         margin = '  '*indent
 
@@ -56,6 +56,40 @@ class SRTMAvailabilityMap:
         return
 
 
+    def summary(self, channel=None, indent=1):
+        """
+        Produce a tile availability summary
+        """
+        # make a channel
+        channel = self._channel if channel is None else channel
+        # setup the margin
+        margin = '  '*indent
+        # sign in
+        channel.line('{}tile availability summary:'.format(margin))
+
+        # get my map
+        map = self.map
+        # and compute the range of status values
+        range = len(self.availability)
+        # build the summary
+        frequencies = isce.extensions.isce.srtmAvailabilityMapSummary(map, range)
+
+        # display the table: go through the status codes
+        for status in self.availability:
+            # label
+            label = status.name
+            # compute the count
+            count = frequencies[status.value]
+            # why not do it right...
+            plural = '' if count == 1 else 's'
+            # show me
+            channel.line('{}  {}: {} tile{}'.format(margin, label, count, plural))
+
+        # all done
+        return frequencies
+
+
+    # individual tile status access
     def check(self, tile):
         """
         Check the availability of the given tile
@@ -88,6 +122,10 @@ class SRTMAvailabilityMap:
         self.uri = uri
         # make the capsule
         self.map = isce.extensions.isce.srtmAvailabilityMap(str(uri))
+
+        # make a default channel
+        self._channel = isce.journal.info("isce.topography.srtm")
+
         # all done
         return
 
