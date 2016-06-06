@@ -57,7 +57,7 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
         channel.line('{}   cached: {} tiles'.format(margin, len(contents)))
 
         # build a mosaic over the entire globe
-        globe = self.mosaic(region=[(-90,-180), (90,180)], resolution=self.resolution)
+        globe = self.mosaic(region=[(-90,-180), (89,179)], resolution=self.resolution)
         # show me
         channel.line('{}    globe: {} tiles'.format(margin, len(globe)))
 

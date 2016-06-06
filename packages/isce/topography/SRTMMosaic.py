@@ -38,14 +38,17 @@ class SRTMMosaic(list):
         # that we must treat lats and lons differently; so unpack them
         lats, lons = zip(*region)
 
+        # compute the corners of the bounding box, taking care to project the values inside the
+        # valid map region
+
         # the northernmost latitude
-        latN = math.floor(max(lats))
+        latN = self.projectLatitude(lat=max(lats))
         # the southernmost latitude
-        latS = math.floor(min(lats))
+        latS = self.projectLatitude(lat=min(lats))
         # the easternmost longitude
-        lonE = math.floor(max(lons))
+        lonE = self.projectLongitude(lon=max(lons))
         # the westernmost longitude
-        lonW = math.floor(min(lons))
+        lonW = self.projectLongitude(lon=min(lons))
 
         # save my NW corner
         self.nw = (latN, lonW)
@@ -92,6 +95,10 @@ class SRTMMosaic(list):
         # unpack the {point} and convert it into a tile spec
         lat, lon = map(math.floor, point)
 
+        # project inside the valid region
+        lat = self.projectLatitude(lat)
+        lon = self.projectLongitude(lon)
+
         # my NW corner tile is at grid (0,0); get its (lat, lon)
         latNW, lonNW = self.nw
         # my shape
@@ -113,6 +120,23 @@ class SRTMMosaic(list):
         offset = row * cols + col
         # and fetch the tile
         return super().__getitem__(offset)
+
+
+    # implementation details
+    def projectLatitude(self, lat):
+        """
+        Project {lat} inside the valid map latitude values
+        """
+        # the range is [-90, 89]
+        return min(89, max(-90, math.floor(lat)))
+
+
+    def projectLongitude(self, lon):
+        """
+        Project {lon} inside the valid map longitude values
+        """
+        # the range is [-90, 89]
+        return min(179, max(-180, math.floor(lon)))
 
 
     # private data
