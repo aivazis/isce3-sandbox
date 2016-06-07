@@ -47,8 +47,8 @@ class SRTMAvailabilityMap:
 
             # if the file is marked as cached in the map but it's not in the store contents
             if status is self.availability.cached and not isCached:
-                # update the map
-                self.mark(tile=tile, status=self.availability.unknown)
+                # downgrade it to available but not cached
+                self.mark(tile=tile, status=self.availability.available)
                 # and show me
                 channel.line('{}tile {tile.name!r} has disappeared'.format(margin, tile=tile))
 
