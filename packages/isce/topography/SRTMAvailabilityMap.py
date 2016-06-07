@@ -29,6 +29,9 @@ class SRTMAvailabilityMap:
         # setup the margin
         margin = '  '*indent
 
+        # sign in
+        channel.line('{}updating the availability map'.format(margin))
+
         # now visit all the tiles in the globe
         for tile in mosaic:
             # check whether the tile exists in the local store
@@ -42,9 +45,9 @@ class SRTMAvailabilityMap:
                 # adjust the tile status
                 tile.status = self.availability.cached
                 # mark it in the map
-                self.updateMap(tile=tile)
+                self.update(tile=tile)
                 # and show me
-                channel.line('{}marked tile {tile.name!r} as locally available'.format(
+                channel.line('{}  marked tile {tile.name!r} as locally available'.format(
                     margin, tile=tile))
 
             # if the file was marked as cached in the map but it's not in the store contents
@@ -52,22 +55,22 @@ class SRTMAvailabilityMap:
                 # downgrade it to available but not cached
                 tile.status = self.availability.available
                 # update the map
-                self.updateMap(tile=tile)
+                self.update(tile=tile)
                 # and show me
-                channel.line('{}tile {tile.name!r} has disappeared'.format(margin, tile=tile))
+                channel.line('{}  tile {tile.name!r} has disappeared'.format(margin, tile=tile))
 
         # all done
         return
 
 
-    def summary(self, channel=None, indent=1):
+    def summary(self, channel=None, dent=0):
         """
         Produce a tile availability summary
         """
         # make a channel
         channel = self._channel if channel is None else channel
         # setup the margin
-        margin = '  '*indent
+        margin = '  '*dent
         # sign in
         channel.line('{}tile availability summary:'.format(margin))
 
@@ -110,7 +113,7 @@ class SRTMAvailabilityMap:
         return status
 
 
-    def updateMap(self, tile):
+    def update(self, tile):
         """
         Adjust the status of the given tile
         """
@@ -119,7 +122,7 @@ class SRTMAvailabilityMap:
         # get the status value
         value = tile.status.value
         # set the status in my map and return it
-        return isce.extensions.isce.srtmAvailabilityMapSet(self.map, index, status.value)
+        return isce.extensions.isce.srtmAvailabilityMapSet(self.map, index, value)
 
 
     # meta-methods

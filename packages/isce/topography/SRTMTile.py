@@ -47,28 +47,6 @@ class SRTMTile:
         return name
 
 
-    @property
-    def isCached(self):
-        """
-        Check whether this tile is marked as locally cached
-        """
-        # check my status
-        return self.status == self.availability.cached
-
-
-    @isCached.setter
-    def isCached(self, flag):
-        """
-        Set whether this tile is marked as locally cached
-        """
-        # if we know for sure
-        if flag is True:
-            # update my status
-            self.status = self.availability.cached
-        # all done
-        return
-
-
     # meta-methods
     def __init__(self, point, resolution=1, status=None, **kwds):
         # chain up

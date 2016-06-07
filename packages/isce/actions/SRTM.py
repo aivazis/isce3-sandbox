@@ -56,7 +56,7 @@ class SRTM(isce.panel(), family='isce.actions.srtm'):
         # get my data store manager
         srtm = self.srtm
         # and ask it to make a plan
-        status = srtm.sync(channel=channel)
+        status = srtm.sync(channel=channel, dent=1)
         # flush the channel
         channel.log()
         # and return the status code
@@ -70,10 +70,12 @@ class SRTM(isce.panel(), family='isce.actions.srtm'):
         """
         # pick a channel
         channel = plexus.info
+        # sign in
+        channel.line('making a work plan')
         # get my data store manager
         srtm = self.srtm
         # and ask it to make a plan
-        status = srtm.plan(channel=channel)
+        status = srtm.plan(channel=channel, dent=1)
         # flush the channel
         channel.log()
         # and return the status code
@@ -88,12 +90,18 @@ class SRTM(isce.panel(), family='isce.actions.srtm'):
         The {region} of interest is specified as a cloud of (lat, lon) pairs. This command
         computes the bounding box the points, and downloads all the tiles necessary to cover it
         """
-        # grab the error channel
-        error = plexus.error
-        # complain
-        error.log('download: not implemented yet')
-        # all done
-        return
+        # pick a channel
+        channel = plexus.info
+        # sign in
+        channel.line('retrieving tiles')
+        # get my data store manager
+        srtm = self.srtm
+        # and ask it to make a plan
+        status = srtm.download(channel=channel)
+        # flush the channel
+        channel.log()
+        # and return the status code
+        return status
 
 
     # meta-methods

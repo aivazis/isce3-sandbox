@@ -29,21 +29,22 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
     resolution = isce.properties.int(default=1)
     resolution.doc = 'the resolution of the data set in pixels per arc-second; either 1 or 3'
 
-    pool = isce.properties.int(default=8)
+    pool = isce.properties.int(default=10)
     pool.doc = 'the maximum number of simultaneous connections to the remote data store'
 
 
     # protocol obligations
     @isce.export
-    def sync(self, channel=None, indent=1):
+    def sync(self, channel=None, dent=0):
         """
         Ensure that the availability map reflects the contents of the local store accurately
         """
         # make a channel
         channel = isce.journal.info(self.pyre_family()) if channel is None else channel
         # compute the margin
-        margin = '  '*indent
-        # sign in
+        margin = '  '*dent
+
+        # show me where the local store is
         channel.line('{}local cache: {.cache.uri}'.format(margin, self))
 
         # get the map
@@ -53,8 +54,12 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
 
         # get the contents of the local store as a set of tile names
         contents = self.localstoreContents
+        # count them
+        count = len(contents)
+        # why not do it right...
+        plural = '' if count == 1 else 's'
         # show me
-        channel.line('{}   cached: {} tiles'.format(margin, len(contents)))
+        channel.line('{}  present: {} tile{}'.format(margin, count, plural))
 
         # build a mosaic over the entire globe
         globe = self.mosaic(region=[(-90,-180), (89,179)], resolution=self.resolution)
@@ -64,39 +69,39 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
         # do the sync
         map.sync(cache=contents, mosaic=globe, channel=channel)
         # ask for a summary
-        map.summary(channel=channel)
+        map.summary(channel=channel, dent=dent)
 
         # all done
         return
 
 
     @isce.export
-    def plan(self, channel=None, indent=1):
+    def plan(self, channel=None, dent=0):
         """
         Describe the work required to generate the specified DEM
         """
         # make a channel
         channel = isce.journal.info(self.pyre_family()) if channel is None else channel
         # compute the margin
-        margin = '  '*indent
-        # sign in
-        channel.line("plan:")
-        channel.line("{}cache: '{.cache.uri}'".format(margin, self))
-
-        # get the map
-        map = self.availabilityMap
-        # show me
-        channel.line('{}map: {.uri.name}'.format(margin, map))
+        margin = '  '*dent
 
         # get my region
         region = self.region
-        # make some space
+        # and show it to me
         channel.line('{}region of interest: {}'.format(margin, region))
 
         # build a mosaic that covers my region
         mosaic = self.mosaic(region=self.region, resolution=self.resolution)
         # show me
         channel.line('{}mosaic: {}x{} grid of tiles'.format(margin, *mosaic.shape))
+
+        # show me where the local store is
+        channel.line("{}cache: '{.cache.uri}'".format(margin, self))
+
+        # get the map
+        map = self.availabilityMap
+        # show me
+        channel.line('{}map: {.uri.name}'.format(margin, map))
 
         # check the status of its tiles
         summary = self.checkAvailability(mosaic=mosaic)
@@ -111,7 +116,7 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
         # and now the status piles
         for status in self.availability:
             # show me the code and the tiles
-            channel.line('{}{:>11}: {}'.format(
+            channel.line('{}  {:>11}: {}'.format(
                 margin,
                 status.name,
                 ", ".join(tile.name for tile in summary[status])))
@@ -121,26 +126,50 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
 
 
     @isce.export
-    def download(self, force=False, dry=False):
+    def download(self, channel=None, dent=1, force=False, dry=False):
         """
         Retrieve the tiles necessary to cover the convex hull of my {region}
         """
         # make a timer
-        timer = isce.executive.newTimer(name='isce.dem.download')
+        timer = isce.executive.newTimer(name=self.pyre_family())
         # and a channel
-        channel = isce.journal.info(name='isce.dem')
+        channel = isce.journal.info(self.pyre_family()) if channel is None else channel
+        # compute the margin
+        margin = '  '*dent
 
         # build a mosaic that covers my region
         mosaic = self.mosaic(region=self.region, resolution=self.resolution)
         # check the status of its tiles
-        mosaic.checkAvailability(mosaic=mosaic)
+        summary = self.checkAvailability(mosaic=mosaic)
 
         # build the archive uri
-        archive = self.srtm.format(resolution)
+        archive = self.uriUSGS()
+        # get my local store
+        cache = self.cache
+        # and the availability map
+        map = self.availabilityMap
+
         # make a pile of workers
         workers = {}
+        # check in
+        channel.line('{}downloading:'.format(margin))
         # go through the tile URIs
-        for uri in uris:
+        for tile in mosaic:
+            # if the tile is locally cached
+            if tile.status is self.availability.cached:
+                # tell me
+                channel.line('{}  skipping {tile.name}; {tile.status.name}'.format(
+                    margin, tile=tile))
+                # skip it
+                continue
+            # if the tile is known to not exist
+            if tile.status is self.availability.unavailable:
+                # skip it
+                continue
+
+            # for the tile uri
+            uri = self.filename(tile=tile)
+
             # spawn a worker
             pid = os.fork()
             # add his id to the pile
@@ -152,13 +181,15 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
                 # open the url
                 response = urllib.request.urlopen(archive+uri)
                 # grab the bytes
-                content = response.read()
-                # open the destination file
-                tile = open(uri, 'wb')
-                # save
-                tile.write(content)
+                contents = response.read()
+                # create the destination file
+                cache.write(name=uri, contents=contents, mode='wb')
+                # update the tile status
+                tile.status = self.availability.cached
+                # update the map
+                map.update(tile=tile)
                 # show me
-                channel.log('got {!r} ({:.3f} sec)'.format(uri, timer.stop().read()))
+                channel.log('{}  got {!r} ({:.3f} sec)'.format(margin, uri, timer.stop().read()))
                 # this worker is done
                 raise SystemExit(0)
 
@@ -168,8 +199,6 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
             pid, status = os.wait()
             # show me
             channel.line('worker {}: tile {!r}, status {}'.format(pid, workers[pid], status))
-        # when they are all done, flush
-        channel.log()
 
         # all done
         return
@@ -259,12 +288,12 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
         return self._filenameTemplate.format(srtm=self, tile=tile)
 
 
-    def uriUSGS(self, tile):
+    def uriUSGS(self):
         """
         Build the address for this tile at the USGS data store
         """
         # easy...
-        return self._usgs.format(self)
+        return self._usgs.format(srtm=self)
 
 
     # private data
@@ -282,7 +311,7 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
     # the pattern for matching valid tile names in the local store
     _filenamePattern = '(?P<name>(N|S)\d{{2}}(E|W)\d{{3}})\.SRTMGL{srtm.resolution}.hgt.zip'
     # the template for the URI of the datastore at the USGS
-    _usgs = 'http://e4ftl01.cr.usgs.gov/SRTM/SRTMGL{tile.resolution}.003/2000.02.11/'
+    _usgs = 'http://e4ftl01.cr.usgs.gov/SRTM/SRTMGL{srtm.resolution}.003/2000.02.11/'
 
 
 # end of file
