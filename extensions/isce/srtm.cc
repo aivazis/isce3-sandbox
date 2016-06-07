@@ -92,8 +92,10 @@ availabilityMapSummary(PyObject *, PyObject * args)
     auto & map =
         * static_cast<isce::srtm::map_t *>(PyCapsule_GetPointer(capsule, availabilityMap_capsule));
 
-    // allocate storage for the use count; make sure it is initialized to all zeroes
-    size_t table[range] = {};
+    // allocate storage for the use count
+    size_t * table = new size_t[range];
+    // make sure it is initialized to all zeroes
+    for (size_t slot = 0; slot < range; ++slot) { table[slot] = 0; }
 
     // visit the table
     for (size_t slot=0; slot < map.size(); ++slot) {
@@ -126,6 +128,9 @@ availabilityMapSummary(PyObject *, PyObject * args)
         // attach it to the tuple
         PyTuple_SET_ITEM(result, slot, item);
     }
+
+    // clean up
+    delete [] table;
 
     // all done
     return result;
