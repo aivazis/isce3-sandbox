@@ -34,21 +34,25 @@ class SRTMAvailabilityMap:
             # check whether the tile exists in the local store
             isCached = tile.name in cache
             # fetch the map status of this tile
-            status = self.check(tile=tile)
+            status = self.getTileAvailability(tile=tile)
 
             # do the update
             # if the file is in the local store but the map doesn't know it
             if isCached and status is not self.availability.cached:
+                # adjust the tile status
+                tile.status = self.availability.cached
                 # mark it in the map
-                self.mark(tile=tile, status=self.availability.cached)
+                self.updateMap(tile=tile)
                 # and show me
                 channel.line('{}marked tile {tile.name!r} as locally available'.format(
                     margin, tile=tile))
 
-            # if the file is marked as cached in the map but it's not in the store contents
+            # if the file was marked as cached in the map but it's not in the store contents
             if status is self.availability.cached and not isCached:
                 # downgrade it to available but not cached
-                self.mark(tile=tile, status=self.availability.available)
+                tile.status = self.availability.available
+                # update the map
+                self.updateMap(tile=tile)
                 # and show me
                 channel.line('{}tile {tile.name!r} has disappeared'.format(margin, tile=tile))
 
@@ -90,7 +94,7 @@ class SRTMAvailabilityMap:
 
 
     # individual tile status access
-    def check(self, tile):
+    def getTileAvailability(self, tile):
         """
         Check the availability of the given tile
         """
@@ -98,18 +102,22 @@ class SRTMAvailabilityMap:
         index = tile.point
         # get the status from my map
         value = isce.extensions.isce.srtmAvailabilityMapGet(self.map, index)
-        # convert it into an availability code and return it
-        return tuple(self.availability)[value]
+        # convert it into an availability code
+        status = tuple(self.availability)[value]
+        # mark the tile
+        tile.status = status
+        # and return the code
+        return status
 
 
-    def mark(self, tile, status):
+    def updateMap(self, tile):
         """
         Adjust the status of the given tile
         """
         # get its location
         index = tile.point
         # get the status value
-        value = status.value
+        value = tile.status.value
         # set the status in my map and return it
         return isce.extensions.isce.srtmAvailabilityMapSet(self.map, index, status.value)
 

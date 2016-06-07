@@ -8,7 +8,7 @@
 # get the package
 import isce
 # externals
-import itertools, math, os, urllib.request
+import collections, itertools, math, os, urllib.request
 
 
 # the digital elevation model protocol
@@ -71,56 +71,50 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
 
 
     @isce.export
-    def plan(self, channel=None):
+    def plan(self, channel=None, indent=1):
         """
         Describe the work required to generate the specified DEM
         """
         # make a channel
         channel = isce.journal.info(self.pyre_family()) if channel is None else channel
+        # compute the margin
+        margin = '  '*indent
         # sign in
-        channel.line('cache:')
-        channel.line('\n'.join(self.cache.dump(indent=2)))
+        channel.line("plan:")
+        channel.line("{}cache: '{.cache.uri}'".format(margin, self))
+
+        # get the map
+        map = self.availabilityMap
+        # show me
+        channel.line('{}map: {.uri.name}'.format(margin, map))
 
         # get my region
         region = self.region
         # make some space
-        channel.line('region of interest: {}'.format(region))
+        channel.line('{}region of interest: {}'.format(margin, region))
 
         # build a mosaic that covers my region
         mosaic = self.mosaic(region=self.region, resolution=self.resolution)
-        # check the status of its tiles
-        self.checkAvailability(mosaic=mosaic)
-
-        # separate the tiles into two categories: the ones we have
-        cached = {}
-        # and the ones we need
-        get = {}
-
-        # go through the tiles
-        for tile in mosaic:
-            # get the tile name
-            name = tile.name
-            # form the filename
-            filename = self.filename(tile=tile)
-            # check whether the file is present in the cache
-            if tile.isCached:
-                # add to the pile of tiles we already have
-                cached[filename] = name
-            # otherwise
-            else:
-                # add it to the pile of tiles we have to download
-                get[filename] = name
-
         # show me
-        channel.line('  necessary:')
-        channel.line('    {}'.format(", ".join(tile.name for tile in mosaic)))
-        channel.line('  cached:')
-        channel.line('    {}'.format(", ".join(cached.keys())))
-        channel.line('  download:')
-        channel.line('    {}'.format(", ".join(get.keys())))
+        channel.line('{}mosaic: {}x{} grid of tiles'.format(margin, *mosaic.shape))
 
-        # flush
-        channel.log()
+        # check the status of its tiles
+        summary = self.checkAvailability(mosaic=mosaic)
+
+        # mark the section
+        channel.line('{}tiles:'.format(margin))
+        # show me the necessary ones
+        channel.line('{}  necessary: {}'.format(margin, ", ".join(tile.name for tile in mosaic)))
+
+        # mark the section
+        channel.line('{}status:'.format(margin))
+        # and now the status piles
+        for status in self.availability:
+            # show me the code and the tiles
+            channel.line('{}{:>11}: {}'.format(
+                margin,
+                status.name,
+                ", ".join(tile.name for tile in summary[status])))
 
         # all done
         return
@@ -242,19 +236,19 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
         """
         Update the status of all tiles that are available in the {localstore}
         """
-        # grab the local store
-        cache = self.cache
+        # the summary dictionary: map status codes to a list of tiles
+        summary = collections.defaultdict(list)
         # get the availability map
         map = self.availabilityMap
 
         # go through each of my tiles
         for tile in mosaic:
-            # if the filename is present in the localstore
-            if self.filename(tile=tile) in cache:
-                # mark the tile as locally cached
-                tile.isCached = True
+            # check it against the availability map
+            status = map.getTileAvailability(tile)
+            # place it in the right pile
+            summary[status].append(tile)
         # all done
-        return
+        return summary
 
 
     def filename(self, tile):
