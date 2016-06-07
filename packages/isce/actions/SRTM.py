@@ -14,6 +14,18 @@ import isce
 class SRTM(isce.panel(), family='isce.actions.srtm'):
     """
     Manage the local cache of SRTM elevation tiles
+
+    The SRTM tiles necessary to assemble digital elevation models are kept in a local
+    cache. Subsequent processing that requires these tiles can be serviced from your disk,
+    saving a trip to the USGS server.
+
+    You can get information about your local store by issuing the 'sync' command, which
+    will tell you where the store is and generate a report of its current contents.
+
+    If you know your region of interest, you can ask for a work plan, to get a feeling for
+    which tiles cover it and their status. You can also download them to avoid network
+    traffic during later processing. Regions of interest are formed by computing the
+    bounding box of a list of (lat, lon) pairs.
     """
 
 
