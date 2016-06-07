@@ -10,6 +10,7 @@
 // externals
 #include <Python.h>
 #include <pyre/journal.h>
+#include <valarray>
 // support
 #include <isce/srtm.h>
 // my declarations
@@ -93,13 +94,11 @@ availabilityMapSummary(PyObject *, PyObject * args)
         * static_cast<isce::srtm::map_t *>(PyCapsule_GetPointer(capsule, availabilityMap_capsule));
 
     // allocate storage for the use count
-    size_t * table = new size_t[range];
-    // make sure it is initialized to all zeroes
-    for (size_t slot = 0; slot < range; ++slot) { table[slot] = 0; }
+    std::valarray<int> table(range);
 
     // visit the table
     for (size_t slot=0; slot < map.size(); ++slot) {
-        // and hold breath and jump...
+        // get the status
         size_t value = map[slot];
 
 #if defined(DEBUG_CHECK_BOUNDS)
@@ -115,7 +114,8 @@ availabilityMapSummary(PyObject *, PyObject * args)
 
         }
 #endif
-        // and again
+
+        // update the frequency count
         ++table[value];
     }
 
@@ -128,9 +128,6 @@ availabilityMapSummary(PyObject *, PyObject * args)
         // attach it to the tuple
         PyTuple_SET_ITEM(result, slot, item);
     }
-
-    // clean up
-    delete [] table;
 
     // all done
     return result;
