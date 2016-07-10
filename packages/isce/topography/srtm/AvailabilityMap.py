@@ -10,13 +10,13 @@ import isce
 
 
 # the tile availability mpa
-class SRTMAvailabilityMap:
+class AvailabilityMap:
     """
     The tile availability map
     """
 
     # types
-    from .SRTMAvailability import SRTMAvailability as availability
+    from .Availability import Availability as availability
 
 
     # interface

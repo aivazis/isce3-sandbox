@@ -11,13 +11,13 @@ import enum
 
 
 # declaration
-class SRTMTile:
+class Tile:
     """
     Encapsulation of an SRTM tile
     """
 
     # types
-    from .SRTMAvailability import SRTMAvailability as availability
+    from .Availability import Availability as availability
 
     # public data
     point = None      # a (lat, lon) pair that locates the SW corner of the tile

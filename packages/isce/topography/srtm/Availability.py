@@ -12,7 +12,7 @@ import enum
 
 # tile status
 @enum.unique
-class SRTMAvailability(enum.Enum):
+class Availability(enum.Enum):
     """
     Tile status codes
     """

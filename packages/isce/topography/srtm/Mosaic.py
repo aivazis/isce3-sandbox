@@ -11,13 +11,13 @@ import itertools, math
 import isce
 
 # declaration
-class SRTMMosaic(list):
+class Mosaic(list):
     """
     A grid of SRTM tiles
     """
 
     # types
-    from .SRTMTile import SRTMTile as tile
+    from .Tile import Tile as tile
 
 
     # interface

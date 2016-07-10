@@ -18,8 +18,8 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
     """
 
     # types
-    from .SRTMMosaic import SRTMMosaic as mosaic
-    from .SRTMAvailability import SRTMAvailability as availability
+    from .Mosaic import Mosaic as mosaic
+    from .Availability import Availability as availability
 
 
     # user configurable state
@@ -254,7 +254,7 @@ class SRTM(isce.component, family='isce.topography.srtm', implements=isce.topogr
         # otherwise, form the uri to the map
         uri = self.cache.uri / self._availabilityMapTemplate.format(srtm=self)
         # grab the factory
-        from .SRTMAvailabilityMap import SRTMAvailabilityMap as factory
+        from .AvailabilityMap import AvailabilityMap as factory
         # build it
         map = factory(uri)
         # and return it
