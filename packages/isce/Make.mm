@@ -7,7 +7,7 @@
 # project defaults
 include isce.def
 # the package name
-PACKAGE = reservoir
+PACKAGE = isce
 # clean up
 PROJ_CLEAN += $(EXPORT_MODULEDIR)
 
