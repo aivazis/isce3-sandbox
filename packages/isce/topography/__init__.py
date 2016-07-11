@@ -19,7 +19,7 @@ def srtm():
     Component that assembles digital elevation models from SRTM tiles
     """
     # grab the factory
-    from .srtm.SRTM import SRTM
+    from .srtm3.SRTM import SRTM
     # and return it
     return SRTM
 

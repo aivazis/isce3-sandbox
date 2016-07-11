@@ -11,7 +11,7 @@ PACKAGE = topography
 
 # my subdirectories
 RECURSE_DIRS = \
-    srtm \
+    srtm3 \
 
 # the python modules
 EXPORT_PYTHON_MODULES = \

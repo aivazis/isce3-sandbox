@@ -7,7 +7,7 @@
 # project defaults
 include isce.def
 # package name
-PACKAGE = topography/srtm
+PACKAGE = topography/srtm3
 
 # the python modules
 EXPORT_PYTHON_MODULES = \
