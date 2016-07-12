@@ -27,6 +27,7 @@ EXPORT_LIBS = $(PROJ_DLL)
 # the package headers
 EXPORT_PKG_HEADERS = \
     AvailabilityMap.h AvailabilityMap.icc \
+    Tile.h Tile.icc \
 
 # the standard targets
 all: export

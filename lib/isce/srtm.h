@@ -11,6 +11,7 @@
 // externals
 #include <stdexcept>
 #include <string>
+#include <arpa/inet.h>
 // support
 #include <pyre/journal.h>
 
@@ -26,6 +27,7 @@ namespace isce {
 
         // forward declarations of the srtm api classes
         class AvailabilityMap;
+        class Tile;
     }
 }
 
@@ -33,21 +35,29 @@ namespace isce {
 #include "grid.h"
 // the object model
 #include "srtm/AvailabilityMap.h"
+#include "srtm/Tile.h"
 
 // namespace additions
 namespace isce {
     namespace srtm {
         // tile availability map
         typedef AvailabilityMap map_t;
+        // access to individual tile data
+        typedef Tile tile_t;
     }
 }
 
 
 // the implementations of the inlines
-// index
+// the availability map
 #define isce_srtm_AvailabilityMap_icc
 #include "srtm/AvailabilityMap.icc"
 #undef isce_srtm_AvailabilityMap_icc
+
+// the srtm tiles
+#define isce_srtm_Tile_icc
+#include "srtm/Tile.icc"
+#undef isce_srtm_Tile_icc
 
 
 #endif

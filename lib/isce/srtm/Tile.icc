@@ -1,0 +1,80 @@
+// -*- C++ -*-
+//
+// michael a.g. aïvázis <michael.aivazis@para-sim.com>
+// (c) 2003-2016 all rights reserved
+//
+
+// code guard
+#if !defined(isce_srtm_Tile_icc)
+#error This header file contains implementation details of class isce::srtm::Tile
+#endif
+
+
+// meta-methods
+isce::srtm::Tile::
+Tile(const void * rawdata, int arcsecondsPerPixel) :
+    _tile{ {3600/arcsecondsPerPixel+1, 3600/arcsecondsPerPixel+1}, {1, 0} },
+    _data{ static_cast<const data_type *>(rawdata) }
+{
+    // make a channel
+    pyre::journal::debug_t channel("isce.srtm");
+    // and if it is active
+    if (channel) {
+        // show me
+        channel
+            << pyre::journal::at(__HERE__)
+            << "buffer: " << _data << pyre::journal::newline
+            << "sizeof(data_type): " << sizeof(data_type)
+            << pyre::journal::endl;
+    }
+}
+
+
+// interface
+const isce::srtm::Tile::tile_type &
+isce::srtm::Tile::
+tile() const {
+    // easy enough...
+    return _tile;
+}
+
+
+isce::srtm::Tile::data_type
+isce::srtm::Tile::
+get(index_type index) const {
+    // compute the offset
+    auto offset = _tile[index];
+    // and get the value; don't forget that the SRTM payload is in network order, which may be
+    // different from the endianness of the current host
+    data_type value = ::ntohs(_data[offset]);
+
+    // make a channel
+    pyre::journal::debug_t channel("isce.srtm");
+    // and if it is active
+    if (channel) {
+        // show me
+        channel
+            << pyre::journal::at(__HERE__)
+            << "data[ (" << index[0] << ", " << index[1] << ") ]"
+            << " = "
+            << "*(" << _data << " + " << offset*sizeof(data_type) << ")"
+            << " = "
+            << value
+            << pyre::journal::endl;
+    }
+
+    // get and return the data stored at that location
+    return value;
+}
+
+
+// syntactic sugar
+isce::srtm::Tile::data_type
+isce::srtm::Tile::
+operator[](index_type index) const {
+    // delegate to the method
+    return get(index);
+}
+
+
+// end of file
