@@ -16,6 +16,7 @@
 // my declarations
 #include "srtm.h"
 
+// tile availability map
 // the capsule marker
 const char * const
 isce::extension::srtm::
@@ -284,13 +285,12 @@ availabilityMapSet(PyObject *, PyObject * args)
     return Py_None;
 }
 
-
-// helpers
+// destructor
 void
 freeAvailabilityMap(PyObject * capsule)
 {
     // get the capsule signature
-    const char * capsule_sig = isce::extension::srtm::availabilityMap_capsule;
+    const char * capsule_sig = isce::extension::srtm::tile_capsule;
     // bail out if the capsule is not valid
     if (!PyCapsule_IsValid(capsule, capsule_sig)) return;
     // grab the map
@@ -298,6 +298,178 @@ freeAvailabilityMap(PyObject * capsule)
         static_cast<isce::srtm::map_t *>(PyCapsule_GetPointer(capsule, capsule_sig));
     // deallocate
     delete map;
+    // and return
+    return;
+}
+
+
+// srtm tiles
+// the capsule marker
+const char * const
+isce::extension::srtm::
+tile_capsule = "srtmTile_capsule";
+
+// tile destructor
+static void freeTile(PyObject *);
+
+// tile constructor
+const char * const
+isce::extension::srtm::
+tile__name__ = "srtmTile";
+
+const char * const
+isce::extension::srtm::
+tile__doc__ = "access the elevation data in a given SRTM tile";
+
+PyObject *
+isce::extension::srtm::
+tile(PyObject *, PyObject * args)
+{
+    // the tile resolution
+    int resolution = 1; // in arcseconds per pixel
+    // the raw tile data
+    PyObject * bytes = 0;
+
+    // parse the arguments
+    int ok = PyArg_ParseTuple(
+                              args,
+                              "O!i:srtmTile",
+                              &PyBytes_Type, &bytes,
+                              &resolution);
+    // if something went wrong
+    if (!ok) {
+        // complain
+        return 0;
+    }
+
+    // get the underlying data
+    const void * const rawdata = PyBytes_AsString(bytes);
+    // grab the tile
+    isce::srtm::tile_t * tile = new isce::srtm::tile_t(rawdata, resolution);
+
+    // dress it up and return it
+    return PyCapsule_New(tile, tile_capsule, freeTile);
+}
+
+// shape info
+const char * const
+isce::extension::srtm::
+tileShape__name__ = "srtmTileShape";
+
+const char * const
+isce::extension::srtm::
+tileShape__doc__ = "get the shape of the tile";
+
+PyObject *
+isce::extension::srtm::
+tileShape(PyObject *, PyObject * args)
+{
+    // storage
+    PyObject * capsule;
+    // parse the arguments
+    int ok = PyArg_ParseTuple(args,
+                              "O!:srtmTileShape",
+                               &PyCapsule_Type, &capsule);
+    // if something went wrong
+    if (!ok) {
+        // complain
+        return 0;
+    }
+    // if the capsule is not valid
+    if (!PyCapsule_IsValid(capsule, tile_capsule)) {
+        // set the error string
+        PyErr_SetString(PyExc_TypeError, "invalid tile capsule");
+        // and complain
+        return 0;
+    }
+
+    // grab the tile
+    auto & tile =
+        * static_cast<isce::srtm::tile_t *>(PyCapsule_GetPointer(capsule, tile_capsule));
+
+    // make an index
+    auto shape = tile.tile().shape();
+
+    // the result
+    PyObject * result = PyTuple_New(2);
+    // move the values
+    PyTuple_SET_ITEM(result, 0, PyLong_FromLong(shape[0]));
+    PyTuple_SET_ITEM(result, 1, PyLong_FromLong(shape[1]));
+    // all done
+    return result;
+}
+
+// read access
+const char * const
+isce::extension::srtm::
+tileGet__name__ = "srtmTileGet";
+
+const char * const
+isce::extension::srtm::
+tileGet__doc__ = "get the elevation at a given (i,j) in the tile";
+
+PyObject *
+isce::extension::srtm::
+tileGet(PyObject *, PyObject * args)
+{
+    // storage
+    int i, j;
+    PyObject * capsule;
+    // parse the arguments
+    int ok = PyArg_ParseTuple(args,
+                                  "O!(ii):srtmTileGet",
+                                  &PyCapsule_Type, &capsule,
+                                  &i, &j);
+    // if something went wrong
+    if (!ok) {
+        // complain
+        return 0;
+    }
+    // if the capsule is not valid
+    if (!PyCapsule_IsValid(capsule, tile_capsule)) {
+        // set the error string
+        PyErr_SetString(PyExc_TypeError, "invalid tile capsule");
+        // and complain
+        return 0;
+    }
+
+    // grab the tile
+    auto & tile =
+        * static_cast<isce::srtm::tile_t *>(PyCapsule_GetPointer(capsule, tile_capsule));
+
+    // make an index
+    isce::srtm::tile_t::index_type index { i, j};
+
+    // get the value
+    auto value = tile[index];
+
+    // make a channel
+    pyre::journal::debug_t channel("isce.srtm");
+    // show me what's about to happen
+    channel
+        << pyre::journal::at(__HERE__)
+        << "tile@(" << i << "," << j << ") <- "
+        << value
+        << pyre::journal::endl;
+
+    // dress it up and return it
+    return PyLong_FromLong(value);
+}
+
+
+// helpers
+void
+freeTile(PyObject * capsule)
+{
+    // get the capsule signature
+    const char * capsule_sig = isce::extension::srtm::tile_capsule;
+    // bail out if the capsule is not valid
+    if (!PyCapsule_IsValid(capsule, capsule_sig)) return;
+    // grab the tile
+    isce::srtm::tile_t * tile =
+        static_cast<isce::srtm::tile_t *>(PyCapsule_GetPointer(capsule, capsule_sig));
+    // deallocate
+    delete tile;
     // and return
     return;
 }

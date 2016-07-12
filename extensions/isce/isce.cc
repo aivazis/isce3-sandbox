@@ -47,34 +47,55 @@ namespace isce {
 
             // srtm methods
             {
-                // constructor
+                // availability map constructor
                 srtm::availabilityMap__name__,
                 srtm::availabilityMap,
                 METH_VARARGS,
                 srtm::availabilityMap__doc__
             },
             {
-                // read access
+                // availability map read access
                 srtm::availabilityMapGet__name__,
                 srtm::availabilityMapGet,
                 METH_VARARGS,
                 srtm::availabilityMapGet__doc__
             },
             {
-                // write access
+                // availability map write access
                 srtm::availabilityMapSet__name__,
                 srtm::availabilityMapSet,
                 METH_VARARGS,
                 srtm::availabilityMapSet__doc__
             },
             {
-                // write access
+                // availability map status summary
                 srtm::availabilityMapSummary__name__,
                 srtm::availabilityMapSummary,
                 METH_VARARGS,
                 srtm::availabilityMapSummary__doc__
             },
 
+            {
+                // tile constructor
+                srtm::tile__name__,
+                srtm::tile,
+                METH_VARARGS,
+                srtm::tile__doc__
+            },
+            {
+                // tile shape
+                srtm::tileShape__name__,
+                srtm::tileShape,
+                METH_VARARGS,
+                srtm::tileShape__doc__
+            },
+            {
+                // tile read access
+                srtm::tileGet__name__,
+                srtm::tileGet,
+                METH_VARARGS,
+                srtm::tileGet__doc__
+            },
             // sentinel
             { 0, 0, 0, 0 }
         };
