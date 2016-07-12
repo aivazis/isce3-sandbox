@@ -24,10 +24,11 @@ public:
 
     // meta-methods
 public:
-    Image(uri_t source,           // the name of the file
-          tile_type tile,         // the image shape and memory layout
-          offset_type offset = 0, // the offset from the beginning of the file to the image data
-          bool writable = false); // access policy
+    inline Image(
+                 uri_t source,           // the name of the file
+                 tile_type tile,         // the image shape and memory layout
+                 offset_type offset = 0, // the offset to the actual image data
+                 bool writable = false); // access policy
 
     // interface
     inline pixel_type get(index_type index) const;

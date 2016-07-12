@@ -24,7 +24,7 @@ Image(uri_t source, tile_type tile, offset_type offset, bool writable) :
 template <typename pixel>
 pixel
 isce::image::Image<pixel>::
-get(tile_t::index_type index) const {
+get(index_type index) const {
     // compute the offset
     auto offset = _tile[index];
 

@@ -23,8 +23,9 @@ public:
 
     // meta-methods
 public:
-    View(const image_type & image,   // the underlying image
-         tile_type tile);            // the view shape and memory layout
+    inline View(
+                const image_type & image,   // the underlying image
+                tile_type tile);            // the view shape and memory layout
 
     // interface
     inline pixel_type get(index_type index) const;
