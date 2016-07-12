@@ -14,6 +14,7 @@ EXPORT_PYTHON_MODULES = \
     SRTM.py \
     Availability.py \
     AvailabilityMap.py \
+    Grid.py \
     Mosaic.py \
     Tile.py \
     __init__.py
