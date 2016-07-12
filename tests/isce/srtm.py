@@ -12,7 +12,7 @@ Sanity check: verify that the SRTM component is accessible
 
 def test():
     # get the component
-    from isce.topography.SRTM import SRTM
+    from isce.topography.srtm3.SRTM import SRTM
     # build an instance of the archive accessor
     srtm = SRTM(name='srtm')
 
