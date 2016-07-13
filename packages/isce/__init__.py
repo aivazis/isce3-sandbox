@@ -15,6 +15,8 @@ from pyre import (
     executive,
     # miscellaneous packages
     geometry, patterns, primitives, timers, tracking, units,
+    # support for asynchrony
+    nexus,
     # plexus support
     action, command, panel, plexus, application
     )
