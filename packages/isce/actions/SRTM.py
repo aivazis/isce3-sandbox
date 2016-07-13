@@ -55,7 +55,7 @@ class SRTM(isce.panel(), family='isce.actions.srtm'):
         channel.line('syncing the local availability map')
         # get my data store manager
         srtm = self.srtm
-        # and ask it to make a plan
+        # and ask it to synchronize the availability map with the contents of the archive
         status = srtm.sync(channel=channel, dent=1)
         # flush the channel
         channel.log()
@@ -96,7 +96,7 @@ class SRTM(isce.panel(), family='isce.actions.srtm'):
         channel.line('retrieving tiles')
         # get my data store manager
         srtm = self.srtm
-        # and ask it to make a plan
+        # and ask it to download the relevant tiles
         status = srtm.download(channel=channel)
         # flush the channel
         channel.log()
