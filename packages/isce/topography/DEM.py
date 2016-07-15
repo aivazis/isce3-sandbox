@@ -27,7 +27,7 @@ class DEM(isce.protocol, family='isce.topography'):
         Supply a default DEM archive
         """
         # the default is
-        from .srtm3.SRTM import SRTM as default
+        from .srtm3 import archive as default
         # so return it
         return default
 

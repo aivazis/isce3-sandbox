@@ -12,16 +12,16 @@ import isce
 from .DEM import DEM as archive
 
 
-# SRTM support
+# SRTMv3 support
 @isce.foundry(implements=archive)
 def srtm():
     """
     Component that assembles digital elevation models from SRTM tiles
     """
     # grab the factory
-    from .srtm3.SRTM import SRTM
+    from . import srtm3
     # and return it
-    return SRTM
+    return srtm3.archive
 
 
 # end of file
