@@ -46,7 +46,7 @@ get(index_type index) const {
     auto offset = _tile[index];
     // and get the value; don't forget that the SRTM payload is in network order, which may be
     // different from the endianness of the current host
-    data_type value = ::ntohs(_data[offset]);
+    data_type value = ntohs(_data[offset]);
 
     // make a channel
     pyre::journal::debug_t channel("isce.srtm");
