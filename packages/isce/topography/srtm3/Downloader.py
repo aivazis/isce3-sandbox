@@ -6,6 +6,8 @@
 #
 
 
+# externals
+import urllib.error
 # base class
 from pyre.nexus.Crew import Crew
 
@@ -25,9 +27,12 @@ class Downloader(Crew):
         """
         Download a tile
         """
-        # sign in
+        # grab a journal channel
+        channel = self.info
         # my tasks are tiles
         tile = task
+        # sign in
+        channel.log("{.pid}: fetching tile {.name}".format(self, tile))
         # alias the task availability enum
         codes = self.tilecodes
         # grab the availability map
@@ -37,41 +42,37 @@ class Downloader(Crew):
 
         # if the tile is known to not exist
         if tile.status is codes.unavailable:
-            print("{.pid}: tile {.name} is unavailable".format(self, tile))
+            # tell me
+            channel.log("{.pid}: tile {.name} is unavailable".format(self, tile))
             # not much else to do
             return 0
 
         # if the tile is already cached locally
         if tile.status is codes.cached:
-            print("{.pid}: tile {.name} is already cached".format(self, tile))
+            # tell me
+            channel.log("{.pid}: tile {.name} is already cached".format(self, tile))
             # all done
             return 0
 
-        # otherwise, gingerly...
-        try:
-            # go get it
-            data = tile.download()
-        # if anything goes wrong
-        except Exception as error:
-            # NYI
-            print("tile {.name}: {}".format(tile, error))
-            raise
-
-        # update the map
+        # fetch the tile
+        data = tile.download()
+        # update the map wih what we know at this point
         map.update(tile=tile)
 
         # if the status is now {unavailable}
         if tile.status is codes.unavailable:
-            print("{.pid}: tile {.name} is unavailable".format(self, tile))
+            # tell me
+            channel.log("{.pid}: tile {.name} is unavailable".format(self, tile))
             # we are done
             return 0
 
-        # otherwise, cache it
+        # otherwise, we have tile data; cache it
         tile.write(cache=self.cache, contents=data)
         # and update the map once more
         map.update(tile=tile)
 
-        print("{.pid}: tile {.name} is now cached".format(self, tile))
+        # tell me
+        channel.log("{.pid}: tile {.name} is now cached".format(self, tile))
 
         # indicate success
         return 0
