@@ -15,8 +15,14 @@ def test():
     import isce.topography.srtm3
     # build a tile
     tile = isce.topography.srtm3.tile(point=(34,-118))
-    # get the data
-    contents = tile.download()
+    # attempt to
+    try:
+        # get the data
+        contents = tile.download()
+    # if we failed because we didn't present authentication credentials
+    except tile.AuthenticationError:
+        # no worries
+        return
     # check that the tile is available
     assert tile.status is tile.availability.available
 

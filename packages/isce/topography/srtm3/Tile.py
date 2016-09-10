@@ -16,6 +16,8 @@ class Tile:
     Encapsulation of an SRTMv3 tile
     """
 
+    # error
+    from .exceptions import AuthenticationError
     # types
     from .Grid import Grid as grid
     from .Availability import Availability as availability
@@ -79,8 +81,16 @@ class Tile:
             response = urllib.request.urlopen(uri)
         # if something went wrong
         except urllib.error.HTTPError as error:
+            # get the error code
+            code = error.getcode()
+            # 401 means that the user has not obtained authentication credentials with the archive
+            if code == 401:
+                # make a report
+                msg = "please provide your Earthdata credentials"
+                # and complain
+                raise self.AuthenticationError(reason=msg)
             # 404 means the tile is not available in the dataset
-            if error.getcode() == 404:
+            if code == 404:
                 # update my status
                 self.status = self.availability.unavailable
                 # and return an empty byte stream

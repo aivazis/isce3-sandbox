@@ -13,7 +13,7 @@ from pyre.nexus.Crew import Crew
 
 
 # the task that fetches tiles from the SRTM archive
-class Downloader(Crew):
+class Retriever(Crew):
     """
     Download tiles from the SRTM archive
     """
@@ -46,7 +46,6 @@ class Downloader(Crew):
             channel.log("{.pid}: tile {.name} is unavailable".format(self, tile))
             # not much else to do
             return 0
-
         # if the tile is already cached locally
         if tile.status is codes.cached:
             # tell me
@@ -56,7 +55,16 @@ class Downloader(Crew):
 
         # fetch the tile
         data = tile.download()
-        # update the map wih what we know at this point
+
+        # if the status is {unknown}, something went wrong during our interaction with the archive
+        if tile.status is codes.unknown:
+            # tell me
+            channel.line("{.pid}: could not fetch tile {.name}".format(self, tile))
+            channel.log("  perhaps you are not authorized to access the data archive")
+            # and bail
+            return 0
+
+        # update the map with what we know at this point
         map.update(tile=tile)
 
         # if the status is now {unavailable}

@@ -26,12 +26,27 @@ class SRTM(isce.panel(), family='isce.actions.srtm'):
     which tiles cover it and their status. You can also download them to avoid network
     traffic during later processing. Regions of interest are formed by computing the
     bounding box of a list of (lat, lon) pairs.
+
+    You must have an account with Earthdata in order to retrieve tiles that are not in the
+    local store. Visit
+
+        https://urs.earthdata.nasa.gov/users/new
+
+    to get one. For your convenience, you can store your credentials by issuing the 'auth'
+    command so that you don't have to supply them on the command line every time you need to
+    access the archive.
     """
 
 
     # user configurable state
     srtm = isce.topography.archive(default=isce.topography.srtm())
     srtm.doc = 'the elevation model archive manager'
+
+    username = isce.properties.str(default=None)
+    username.doc = 'your Earthdata user name'
+
+    password = isce.properties.str(default=None)
+    password.doc = 'your Earthdata password'
 
     region = isce.properties.array()
     region.doc = 'an array of (lat, lon) pairs of interest'
@@ -41,6 +56,26 @@ class SRTM(isce.panel(), family='isce.actions.srtm'):
 
     force = isce.properties.bool(default=False)
     force.doc = 'perform the requested action unconditionally'
+
+
+    # commands
+    @isce.export(tip="store Earthdata credentials")
+    def auth(self, plexus, **kwds):
+        """
+        Collect and store Earthdata login credentials for use during subsequent tile requests
+        """
+        # get a channel
+        channel = plexus.info
+        # show me
+        channel.line('storing authentication credentials')
+        # get my data store manager
+        srtm = self.srtm
+        # and ask it to process the user's credentials
+        srtm.authenticate(credentials=(self.username, self.password), channel=channel)
+        # flush
+        channel.log()
+        # and return the status code
+        return 0
 
 
     # commands
@@ -97,7 +132,7 @@ class SRTM(isce.panel(), family='isce.actions.srtm'):
         # get my data store manager
         srtm = self.srtm
         # and ask it to download the relevant tiles
-        status = srtm.download(channel=channel)
+        status = srtm.download(channel=channel, credentials=(self.username, self.password))
         # flush the channel
         channel.log()
         # and return the status code

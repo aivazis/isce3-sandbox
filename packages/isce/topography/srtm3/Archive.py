@@ -8,7 +8,7 @@
 # get the package
 import isce
 # externals
-import collections, functools, os
+import collections, functools, getpass, os, pickle, urllib.request
 
 
 # the digital elevation model protocol
@@ -17,6 +17,8 @@ class Archive(isce.component, family='isce.topography.srtm', implements=isce.top
     Accessor for the SRTM data archive
     """
 
+    # errors
+    from .exceptions import AuthenticationError
     # types
     from .Mosaic import Mosaic as mosaic
     from .Availability import Availability as availability
@@ -37,6 +39,55 @@ class Archive(isce.component, family='isce.topography.srtm', implements=isce.top
 
 
     # protocol obligations
+    @isce.export
+    def authenticate(self, credentials, channel=None):
+        """
+        Retrieve and store the user's authentication credentials
+        """
+        # unpack
+        username, password = credentials
+        # if the user did not supply a username
+        if username is None:
+            # ask for it
+            username = input("username: ")
+
+        # if the user did not supply a password
+        if password is None:
+            # ask for it
+            password = getpass.getpass("password: ")
+
+        # get my cache
+        cache = self.cache
+        # attempt to
+        try:
+            # grab the credential database
+            authdb = cache[self._authdb]
+        # if it doesn't exist
+        except cache.NotFoundError:
+            # make it
+            authdb = cache.write(name=self._authdb, contents='')
+            # and make an empty credentials database
+            db = {}
+        # if it does
+        else:
+            # attempt to
+            try:
+                # pull in its contents
+                db = pickle.load(authdb.open(mode="rb"))
+            # if something goes wrong
+            except EOFError:
+                # no worries: make an empty db
+                db = {}
+
+        # store the credentials
+        db[username] = password
+        # and persist
+        pickle.dump(db, authdb.open(mode="wb"))
+
+        # all done
+        return
+
+
     @isce.export
     def sync(self, channel=None, dent=0):
         """
@@ -129,7 +180,7 @@ class Archive(isce.component, family='isce.topography.srtm', implements=isce.top
 
 
     @isce.export
-    def download(self, channel=None, dent=1, force=False, dry=False):
+    def download(self, credentials, channel=None, dent=1, force=False, dry=False):
         """
         Retrieve the tiles necessary to cover the convex hull of my {region}
         """
@@ -141,20 +192,22 @@ class Archive(isce.component, family='isce.topography.srtm', implements=isce.top
         team = self.team
         # adjust the desired number of workers
         team.size = self.pool
-        # the node with my local tile archive
+        # grab the node with my local tile archive
         cache = self.cache
         # and the tile availability map
         availability = self.availabilityMap
-        # pull the crew type
-        from .Downloader import Downloader
+
+        # prep the {urllib} support
+        self.installCredentials(credentials=credentials)
+
+        # otherwise, pull the crew type
+        from .Retriever import Retriever
         # attach it
-        team.crew = functools.partial(Downloader, map=availability, cache=cache)
+        team.crew = functools.partial(Retriever, map=availability, cache=cache)
         # assemble the work plan
         team.execute(workplan=set(mosaic))
         # and fetch the tiles
         team.run()
-
-        print("NYI: task execution statistics")
         # all done
         return 0
 
@@ -183,7 +236,7 @@ class Archive(isce.component, family='isce.topography.srtm', implements=isce.top
                 # skip it
                 continue
 
-            # for the tile uri
+            # form the tile uri
             uri = tile.filename
 
             # spawn a worker
@@ -294,6 +347,103 @@ class Archive(isce.component, family='isce.topography.srtm', implements=isce.top
         return summary
 
 
+    def installCredentials(self, credentials):
+        """
+        Prepare to access the SRTM data archive
+        """
+        # unpack
+        username, password = credentials
+        # if i have both
+        if username and password:
+            # install them and return
+            return self.urllibPrep(username=username, password=password)
+
+        # otherwise, get my cache
+        cache = self.cache
+        # and attempt to
+        try:
+            # find the authentication database
+            authdb = cache[self._authdb]
+        # if not there
+        except cache.NotFoundError:
+            # build a description
+            msg = "missing authentication database; please provide your Earthdata credentials"
+            # and complain
+            raise self.AuthenticationError(reason=msg)
+
+        # now, try to
+        try:
+            # load its contents
+            db = pickle.load(authdb.open(mode="rb"))
+        # if this fails
+        except EOFError:
+            # build a description
+            msg = "corrupt authentication database; please provide your Earthdata credentials"
+            # and complain
+            raise self.AuthenticationError(reason=msg)
+
+        # if it's empty
+        if not db:
+            # build a description
+            msg = "empty authentication database; please provide your Earthdata credentials"
+            # and complain
+            raise self.AuthenticationError(reason=msg)
+
+        # if i have a specific username
+        if username:
+            # and it has a matching password
+            try:
+                # get it
+                password = db[username]
+            # if not
+            except KeyError:
+                # build a description
+                msg = "no matching password for {!r}".format(username)
+                # and complain
+                raise self.AuthenticationError(reason=msg)
+            # install and return
+            return self.urllibPrep(username=username, password=password)
+
+        # if the database contains more than one username
+        if len(db) > 1:
+            # build a description of what went wrong
+            msg = "the authentication database contains multiple usernames; please pick one"
+            # and complain
+            raise self.AuthenticationError(reason=msg)
+
+        # if there is only one, it must be the right one
+        for username, password in db.items():
+            # install and return
+            return self.urllibPrep(username=username, password=password)
+
+        # if we get this far, something went wrong...
+        msg = "unknown error; please contact the developers"
+        # and complain
+        raise self.AuthenticationError(reason=msg)
+
+
+    def urllibPrep(self, username, password):
+        """
+        Prepare the {urllib} machinery for the interaction with the SRTM data archive
+        """
+        # the location of the user profile
+        realm = "http://urs.earthdata.nasa.gov"
+        # make a cookie processor
+        baker = urllib.request.HTTPCookieProcessor()
+        # make a password manager
+        pm = urllib.request.HTTPPasswordMgrWithPriorAuth()
+        # install the user credentials
+        pm.add_password(None, realm, username, password, is_authenticated=True)
+        # build the authentication processor
+        auth = urllib.request.HTTPBasicAuthHandler(pm)
+        # chain them together
+        opener = urllib.request.build_opener(auth, baker)
+        # and install them
+        urllib.request.install_opener(opener)
+        # all done
+        return
+
+
     # private data
     cache = None # the filesystem node with my local store
 
@@ -302,6 +452,8 @@ class Archive(isce.component, family='isce.topography.srtm', implements=isce.top
     _localstoreContents = None
 
     # constants
+    # the authentication database file name
+    _authdb = 'auth.db'
     # the availability map filename
     _availabilityMapTemplate = 'srtmgl{srtm.resolution}.map'
     # the pattern for matching valid tile names in the local store

@@ -14,10 +14,11 @@ EXPORT_PYTHON_MODULES = \
     Archive.py \
     Availability.py \
     AvailabilityMap.py \
-    Downloader.py \
     Grid.py \
     Mosaic.py \
+    Retriever.py \
     Tile.py \
+    exceptions.py \
     __init__.py
 
 # standard targets

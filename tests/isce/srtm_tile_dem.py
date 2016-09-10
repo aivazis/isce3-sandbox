@@ -21,8 +21,15 @@ def test():
     # get the cwd
     cwd = fs[fs.STARTUP_DIR]
 
-    # cache the compressed stream
-    contents = tile.read(cache=cwd)
+    # attempt to
+    try:
+        # read the compressed stream
+        contents = tile.read(cache=cwd)
+    # the file may not be here since the SRTM data archive now requires authentication
+    except cwd.NotFoundError:
+        # no worries
+        return
+
     # decompress
     hgt = tile.decompress(contents=contents)
 
