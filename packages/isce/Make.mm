@@ -21,6 +21,7 @@ RECURSE_DIRS = \
 
 # the list of python modules
 EXPORT_PYTHON_MODULES = \
+    exceptions.py \
     version.py \
     __init__.py
 

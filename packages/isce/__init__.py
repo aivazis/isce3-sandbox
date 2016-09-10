@@ -30,6 +30,7 @@ home, prefix, defaults = package.layout()
 
 # export my parts
 from . import (
+    exceptions,     # version info
     version,        # version info
     extensions,     # my extension module
 
