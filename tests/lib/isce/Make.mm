@@ -8,7 +8,6 @@
 include isce.def
 # my subdirectories
 RECURSE_DIRS = \
-    grid \
     image \
 
 # the standard targets
