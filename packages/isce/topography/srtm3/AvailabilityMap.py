@@ -5,11 +5,13 @@
 # (c) 2003-2016 all rights reserved
 #
 
-# get the package
+# the package
 import isce
+# the extension module with the low level functions
+import isce.extensions.isce as libisce
 
 
-# the tile availability mpa
+# the tile availability map
 class AvailabilityMap:
     """
     The tile availability map
@@ -79,7 +81,7 @@ class AvailabilityMap:
         # and compute the range of status values
         range = len(self.availability)
         # build the summary
-        frequencies = isce.extensions.isce.srtmAvailabilityMapSummary(map, range)
+        frequencies = libisce.srtmAvailabilityMapSummary(map, range)
 
         # display the table: go through the status codes
         for status in self.availability:
@@ -104,7 +106,7 @@ class AvailabilityMap:
         # get its location
         index = tile.point
         # get the status from my map
-        value = isce.extensions.isce.srtmAvailabilityMapGet(self.map, index)
+        value = libisce.srtmAvailabilityMapGet(self.map, index)
         # convert it into an availability code
         status = tuple(self.availability)[value]
         # mark the tile
@@ -122,7 +124,7 @@ class AvailabilityMap:
         # get the status value
         value = tile.status.value
         # set the status in my map and return it
-        return isce.extensions.isce.srtmAvailabilityMapSet(self.map, index, value)
+        return libisce.srtmAvailabilityMapSet(self.map, index, value)
 
 
     # meta-methods
@@ -131,8 +133,8 @@ class AvailabilityMap:
         super().__init__(**kwds)
         # save my path
         self.uri = uri
-        # make the capsule
-        self.map = isce.extensions.isce.srtmAvailabilityMap(str(uri))
+        # convert the path into a string and make the capsule
+        self.map = libisce.srtmAvailabilityMap(str(uri))
 
         # make a default channel
         self._channel = isce.journal.info("isce.topography.srtm")

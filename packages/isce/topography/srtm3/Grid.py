@@ -7,7 +7,7 @@
 
 
 # support
-import isce
+import isce.extensions.isce as libisce
 
 
 # declaration
@@ -30,6 +30,8 @@ class Grid:
     def __init__(self, hgt, resolution, **kwds):
         # chain up
         super().__init__(**kwds)
+        # save a reference to the byte stream so that the tile has a valid buffer to visit
+        self.data = hgt
         # the capsule
         self.raw = isce.extensions.isce.srtmTile(hgt, resolution)
         # all done

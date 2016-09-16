@@ -183,6 +183,9 @@ class Archive(isce.component, family='isce.topography.srtm', implements=isce.top
     def download(self, credentials, channel=None, dent=1, force=False, dry=False):
         """
         Retrieve the tiles necessary to cover the convex hull of my {region}
+
+        Tile retrieval happens in parallel: the archive manager assembles a pool of workers
+        that make independent attempts to contact the USGS data archive.
         """
         # build a mosaic that covers my region
         mosaic = self.mosaic(region=self.region, resolution=self.resolution)
