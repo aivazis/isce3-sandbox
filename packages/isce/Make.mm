@@ -50,6 +50,9 @@ export:: version.py export-python-modules
 	BLD_ACTION="export" $(MM) recurse
 	@$(RM) version.py
 
+revision:: version.py export-python-modules
+	@$(RM) version.py
+
 live: live-python-modules
 	BLD_ACTION="live" $(MM) recurse
 
