@@ -13,8 +13,7 @@
 // meta-methods
 isce::srtm::AvailabilityMap::
 AvailabilityMap(uri_type uri) :
-    _tile { {360u, 180u}, {1u, 0u} },
-    _map { map(uri, _tile) }
+    _grid { uri, {{360u, 180u}, {1u, 0u}} }
 {}
 
 
@@ -25,7 +24,7 @@ isce::srtm::AvailabilityMap::
 size() const
 {
     // my tile knows
-    return _tile.size();
+    return _grid.shape().size();
 }
 
 
@@ -34,22 +33,18 @@ auto &
 isce::srtm::AvailabilityMap::
 operator[](size_type offset)
 {
-    // get the buffer of my mapping and convert it into a grid of chars
-    char * buffer = static_cast<char *>(_map.buffer());
-    // dereference and return the value
-    return buffer[offset];
+    // ask my grid
+    return _grid[offset];
 }
 
 
-// grant read access to the tile status at {index}
+// grant read access to the tile status at {offset}
 auto
 isce::srtm::AvailabilityMap::
 operator[](size_type offset) const
 {
-    // get the buffer of my mapping and convert it into a grid of chars
-    char * buffer = static_cast<char *>(_map.buffer());
-    // dereference and return the value
-    return buffer[offset];
+    // ask my grid
+    return _grid[offset];
 }
 
 
@@ -58,10 +53,8 @@ auto &
 isce::srtm::AvailabilityMap::
 operator[](const index_type & index)
 {
-    // get my tile to compute the offset
-    auto offset = _tile[index];
-    // and delegate
-    return (*this)[offset];
+    // ask my grid
+    return _grid[index];
 }
 
 
@@ -70,10 +63,8 @@ auto
 isce::srtm::AvailabilityMap::
 operator[](const index_type & index) const
 {
-    // get my tile to compute the offset
-    auto offset = _tile[index];
-    // and delegate
-    return (*this)[offset];
+    // ask my grid
+    return _grid[index];
 }
 
 

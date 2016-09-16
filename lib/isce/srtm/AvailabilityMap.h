@@ -6,7 +6,7 @@
 
 // code guard
 #if !defined(isce_srtm_AvailabilityMap_h)
-#define isce_srtm_MemoryMap_h
+#define isce_srtm_AvailabilityMap_h
 
 
 // declaration
@@ -14,15 +14,18 @@
 class isce::srtm::AvailabilityMap {
     // types
 public:
-    typedef isce::grid::direct_t direct_type;
-    typedef direct_type::uri_type uri_type;
-    typedef direct_type::size_type size_type;
-
-    // for my tile
+    // for my shape
     typedef std::array<size_t, 2> rep_type;
-    typedef isce::grid::index_t<rep_type> index_type;
-    typedef isce::grid::layout_t<rep_type> layout_type;
-    typedef isce::grid::tile_t<index_type, layout_type> tile_type;
+    typedef pyre::geometry::index_t<rep_type> index_type;
+    typedef pyre::geometry::order_t<rep_type> order_type;
+    typedef pyre::geometry::tile_t<index_type, order_type> shape_type;
+    // for my grid
+    typedef unsigned char cell_type;
+    typedef pyre::geometry::directgrid_t<cell_type, shape_type> grid_type;
+    // dependent types
+    typedef grid_type::uri_type uri_type;
+    typedef grid_type::size_type size_type;
+
 
     // meta-methods
 public:
@@ -31,7 +34,7 @@ public:
     // interface
 public:
     // size
-    auto size() const;
+    inline auto size() const;
 
     // read and write access using offsets
     inline auto & operator[](size_type offset);
@@ -41,15 +44,9 @@ public:
     inline auto & operator[](const index_type &index);
     inline auto operator[](const index_type & index) const;
 
-    // implementation details
-    // helpers
-private:
-    static direct_type map(uri_type uri, const tile_type & tile);
-
     // data
 private:
-    tile_type _tile;
-    direct_type _map;
+    grid_type _grid;
 };
 
 #endif

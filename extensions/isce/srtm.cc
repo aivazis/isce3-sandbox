@@ -342,9 +342,12 @@ tile(PyObject *, PyObject * args)
         return 0;
     }
 
-    // get the underlying data
+    // get the underlying data...
+
+    // N.B.: the python tile must guarantee that the bytes live at least as long as the capsule
+    // itself; otherwise, the view constructed by srtm::tile_t looks over bad memory
     const void * const rawdata = PyBytes_AsString(bytes);
-    // grab the tile
+    // make a tile
     isce::srtm::tile_t * tile = new isce::srtm::tile_t(rawdata, resolution);
 
     // dress it up and return it
@@ -388,7 +391,7 @@ tileShape(PyObject *, PyObject * args)
         * static_cast<isce::srtm::tile_t *>(PyCapsule_GetPointer(capsule, tile_capsule));
 
     // make an index
-    auto shape = tile.tile().shape();
+    auto shape = tile.shape().shape();
 
     // the result
     PyObject * result = PyTuple_New(2);
@@ -438,7 +441,7 @@ tileGet(PyObject *, PyObject * args)
         * static_cast<isce::srtm::tile_t *>(PyCapsule_GetPointer(capsule, tile_capsule));
 
     // make an index
-    isce::srtm::tile_t::index_type index { i, j};
+    isce::srtm::tile_t::index_type index {i, j};
 
     // get the value
     auto value = tile[index];

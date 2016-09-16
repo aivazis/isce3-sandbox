@@ -16,30 +16,32 @@ public:
     // the payload type
     typedef int16_t data_type;
 
-    // my shape specification
     // storage for my indices
     typedef std::array<int, 2> rep_type;
-    // my tile parts
-    typedef isce::grid::index_t<rep_type> index_type;
-    typedef isce::grid::layout_t<rep_type> layout_type;
-    typedef isce::grid::tile_t<index_type, layout_type> tile_type;
+    // my shape specification
+    typedef pyre::geometry::index_t<rep_type> index_type;
+    typedef pyre::geometry::order_t<rep_type> order_type;
+    typedef pyre::geometry::tile_t<index_type, order_type> shape_type;
+    // my storage type
+    typedef pyre::memory::constview_t storage_type;
+    // my grid
+    typedef pyre::geometry::grid_t<data_type, shape_type, storage_type> grid_type;
 
     // meta-methods
 public:
     inline Tile(const void * rawdata, int arcsecondsPerPixel=1);
 
     // interface
-    inline const tile_type & tile() const;
-    inline data_type get(index_type index) const;
+    inline auto shape() const;
+    inline auto get(index_type index) const;
 
     // syntactic sugar
-    inline data_type operator[](index_type index) const;
+    inline auto operator[](index_type index) const;
 
     // implementation details
 private:
     // data members
-    tile_type _tile;
-    const data_type * const _data; // tiles are views on foreign data; they don't own any memory
+    grid_type _grid;
 
     // disable copy semantics
 private:

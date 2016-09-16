@@ -10,9 +10,7 @@ include isce.def
 PACKAGE = srtm
 
 # the sources
-PROJ_SRCS = \
-    AvailabilityMap.cc \
-
+PROJ_SRCS =
 # the products
 PROJ_SAR = $(BLD_LIBDIR)/lib$(PROJECT).$(EXT_SAR)
 PROJ_DLL = $(BLD_LIBDIR)/lib$(PROJECT).$(EXT_SO)
@@ -28,10 +26,11 @@ EXPORT_LIBS = $(PROJ_DLL)
 EXPORT_PKG_HEADERS = \
     AvailabilityMap.h AvailabilityMap.icc \
     Tile.h Tile.icc \
+    public.h
 
 # the standard targets
 all: export
 
-export:: $(PROJ_DLL) export-package-headers export-libraries
+export:: export-package-headers
 
 # end of file

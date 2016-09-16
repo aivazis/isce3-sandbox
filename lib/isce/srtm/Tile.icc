@@ -13,8 +13,11 @@
 // meta-methods
 isce::srtm::Tile::
 Tile(const void * rawdata, int arcsecondsPerPixel) :
-    _tile{ {3600/arcsecondsPerPixel+1, 3600/arcsecondsPerPixel+1}, {1, 0} },
-    _data{ static_cast<const data_type *>(rawdata) }
+    _grid {
+        // the tile
+        {{3600/arcsecondsPerPixel+1, 3600/arcsecondsPerPixel+1}, {1, 0}},
+        // the storage
+        { rawdata } }
 {
     // make a channel
     pyre::journal::debug_t channel("isce.srtm");
@@ -23,7 +26,7 @@ Tile(const void * rawdata, int arcsecondsPerPixel) :
         // show me
         channel
             << pyre::journal::at(__HERE__)
-            << "buffer: " << _data << pyre::journal::newline
+            << "buffer: " << rawdata << pyre::journal::newline
             << "sizeof(data_type): " << sizeof(data_type)
             << pyre::journal::endl;
     }
@@ -31,22 +34,20 @@ Tile(const void * rawdata, int arcsecondsPerPixel) :
 
 
 // interface
-const isce::srtm::Tile::tile_type &
+auto
 isce::srtm::Tile::
-tile() const {
+shape() const {
     // easy enough...
-    return _tile;
+    return _grid.shape();
 }
 
 
-isce::srtm::Tile::data_type
+auto
 isce::srtm::Tile::
 get(index_type index) const {
-    // compute the offset
-    auto offset = _tile[index];
     // and get the value; don't forget that the SRTM payload is in network order, which may be
     // different from the endianness of the current host
-    data_type value = ntohs(_data[offset]);
+    data_type value = ntohs(_grid[index]);
 
     // make a channel
     pyre::journal::debug_t channel("isce.srtm");
@@ -55,9 +56,7 @@ get(index_type index) const {
         // show me
         channel
             << pyre::journal::at(__HERE__)
-            << "data[ (" << index[0] << ", " << index[1] << ") ]"
-            << " = "
-            << "*(" << _data << " + " << offset*sizeof(data_type) << ")"
+            << "data[ (" << index << ") ]"
             << " = "
             << value
             << pyre::journal::endl;
@@ -69,7 +68,7 @@ get(index_type index) const {
 
 
 // syntactic sugar
-isce::srtm::Tile::data_type
+auto
 isce::srtm::Tile::
 operator[](index_type index) const {
     // delegate to the method
