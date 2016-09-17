@@ -8,7 +8,7 @@
 # publish my parts
 from . import (
     # get the isce extension
-    isce
+    isce as libisce
     )
 
 # end of file

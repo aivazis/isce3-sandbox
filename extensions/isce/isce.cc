@@ -13,8 +13,6 @@
 // administrivia
 #include "exceptions.h"
 #include "metadata.h"
-// image
-#include "image.h"
 // srtm
 #include "srtm.h"
 
@@ -29,21 +27,6 @@ namespace isce {
             { copyright__name__, copyright, METH_VARARGS, copyright__doc__ },
             // the version
             { version__name__, version, METH_VARARGS, version__doc__ },
-
-            // methods for images
-            {
-                image::newImage_float__name__,
-                image::newImage_float,
-                METH_VARARGS,
-                image::newImage_float__doc__
-            },
-            // methods for image views
-            {
-                image::newView_float__name__,
-                image::newView_float,
-                METH_VARARGS,
-                image::newView_float__doc__
-            },
 
             // srtm methods
             {

@@ -9,6 +9,8 @@
 
 // portability
 #include <portinfo>
+// externals
+#include <numeric>
 // support
 #include <isce/image.h>
 
@@ -47,7 +49,10 @@ int main() {
     // show me
     channel
         << pyre::journal::at(__HERE__)
-        << "image[ (" << index << ") ] = " << image[index]
+        << "image:" << pyre::journal::newline
+        << "   shape: (" << image.shape().shape() << ")" << pyre::journal::newline
+        << "   order: (" << image.shape().order() << ")" << pyre::journal::newline
+        << "  mapped: " << image.data()
         << pyre::journal::endl;
 
     // all done

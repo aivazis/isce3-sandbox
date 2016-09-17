@@ -9,22 +9,10 @@ include isce.def
 
 # the pile of tests
 TESTS = \
-    tile \
-    tile-band \
-    tile-line \
-    tile-pixel \
-    tile-order \
-    tile-slice \
-    tile-maps \
-    direct-create \
-    direct-map \
-    direct-instantiate \
     image \
-    view \
-
-# tests that should fail because their access patterns are prohibited
-SHOULD_FAIL = \
-    direct-clone \
+    image-data \
+    image-set \
+    image-get \
 
 all: test clean
 
@@ -37,7 +25,7 @@ test: $(TESTS)
 
 # build
 PROJ_CLEAN += $(TESTS) image.dat
-PROJ_LIBRARIES = -lisce -ljournal
+PROJ_LIBRARIES = -lpyre -ljournal
 LIBRARIES = $(PROJ_LIBRARIES) $(EXTERNAL_LIBS)
 
 %: %.cc

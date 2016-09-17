@@ -20,8 +20,9 @@ PROJ_CLEAN += $(EXPORT_INCDIR)/$(PACKAGE)
 # what to export
 # the package headers
 EXPORT_PKG_HEADERS = \
+    DirectImage.h DirectImage.icc \
     Image.h Image.icc \
-    View.h View.icc \
+    public.h
 
 
 # the standard targets

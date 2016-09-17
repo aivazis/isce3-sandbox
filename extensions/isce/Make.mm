@@ -20,14 +20,13 @@ PROJ_LCXX_LIBPATH=$(BLD_LIBDIR)
 # the list of extension source files
 PROJ_SRCS = \
     exceptions.cc \
-    image.cc \
     metadata.cc \
     srtm.cc \
 
 # the private build space
 PROJ_TMPDIR = $(BLD_TMPDIR)/${PROJECT}/extensions/isce
 # my dependencies
-PROJ_LIBRARIES += -lisce -ljournal $(LCXX_FORTRAN)
+PROJ_LIBRARIES += -ljournal $(LCXX_FORTRAN)
 
 # the pile of things to clean
 PROJ_CLEAN += \

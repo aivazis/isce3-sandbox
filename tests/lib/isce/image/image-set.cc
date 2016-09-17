@@ -9,6 +9,8 @@
 
 // portability
 #include <portinfo>
+// externals
+#include <numeric>
 // support
 #include <isce/image.h>
 
@@ -40,15 +42,25 @@ int main() {
     // make an image
     image_t image {name, shape};
 
-    // my favorite place
-    index_t index {1, 1, 1};
     // make channel
     pyre::journal::debug_t channel("isce.image");
-    // show me
-    channel
-        << pyre::journal::at(__HERE__)
-        << "image[ (" << index << ") ] = " << image[index]
-        << pyre::journal::endl;
+    // loop over the image
+    for (auto idx : image.shape()) {
+        // reduce the index
+        auto v = std::accumulate(idx.begin(), idx.end(), 1, std::multiplies<pixel_t>());
+        // and store the value
+        image[idx] = v;
+        // if the channel is active
+        if (channel) {
+            // show me
+            channel
+                << pyre::journal::at(__HERE__)
+                << "image[" << idx << "] = " << image[idx]
+                << pyre::journal::newline;
+        }
+    }
+    // flush
+    channel << pyre::journal::endl;
 
     // all done
     return 0;

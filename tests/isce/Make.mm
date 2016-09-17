@@ -19,8 +19,6 @@ sanity:
 
 low-level:
 	${PYTHON} ./extension.py
-	${PYTHON} ./extension_image.py
-	${PYTHON} ./extension_view.py
 
 srtm:
 	${PYTHON} ./srtm.py
