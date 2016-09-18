@@ -26,7 +26,7 @@ PROJ_SRCS = \
 # the private build space
 PROJ_TMPDIR = $(BLD_TMPDIR)/${PROJECT}/extensions/isce
 # my dependencies
-PROJ_LIBRARIES += -ljournal $(LCXX_FORTRAN)
+PROJ_LIBRARIES += -lisce -lpyre -ljournal $(LCXX_FORTRAN)
 
 # the pile of things to clean
 PROJ_CLEAN += \

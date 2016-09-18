@@ -25,7 +25,7 @@ test: $(TESTS)
 
 # build
 PROJ_CLEAN += $(TESTS) image.dat
-PROJ_LIBRARIES = -lpyre -ljournal
+PROJ_LIBRARIES = -lisce -lpyre -ljournal
 LIBRARIES = $(PROJ_LIBRARIES) $(EXTERNAL_LIBS)
 
 %: %.cc

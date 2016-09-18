@@ -10,6 +10,8 @@
 
 // support
 #include <pyre/journal.h>
+// my version
+#include "version.h"
 // my packages
 #include "image.h"
 

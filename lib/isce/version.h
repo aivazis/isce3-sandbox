@@ -6,12 +6,18 @@
 
 // code guard
 #if !defined(isce_version_h)
-#define isce_version_h
+#define isce_iversion_h
 
-// forward declarations
+// support
+#include <array>
+
+// my declarations
 namespace isce {
-    // constants
-    const char * version = "2.0";
+    // my version is an array of three integers
+    typedef std::array<int, 3> version_t;
+
+    // access to the version number of the {isce} library
+    version_t version();
 }
 
 #endif
