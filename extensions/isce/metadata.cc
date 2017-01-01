@@ -28,7 +28,7 @@ isce::extension::
 copyright(PyObject *, PyObject *)
 {
     // get the copyright note
-    const char * const copyright_note = "isce: (c) 2013-2016 california institute of technology";
+    const char * const copyright_note = "isce: (c) 2003-2017 california institute of technology";
     // convert it into a python string and return it
     return Py_BuildValue("s", copyright_note);
 }
