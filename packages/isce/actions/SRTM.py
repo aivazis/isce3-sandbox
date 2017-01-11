@@ -39,8 +39,8 @@ class SRTM(isce.panel(), family='isce.actions.srtm'):
 
 
     # user configurable state
-    srtm = isce.topography.archive(default=isce.topography.srtm())
-    srtm.doc = 'the elevation model archive manager'
+    srtm = isce.topography.dem(default=isce.topography.srtm())
+    srtm.doc = 'the digital elevation model assembler'
 
     username = isce.properties.str(default=None)
     username.doc = 'your Earthdata user name'
@@ -151,16 +151,16 @@ class SRTM(isce.panel(), family='isce.actions.srtm'):
 
         # establish the location of the data store
         # the default location of the data set is derived from the manager family name
-        cache = srtm.pyre_familyFragments()
+        family = srtm.pyre_familyFragments()
         # if the store manager has the proper pedigree
-        if cache:
+        if family:
             # derive the location of the data store from its name by dropping the package name
-            uri = isce.primitives.path(cache[1:])
+            uri = isce.primitives.path(family[1:])
             # access it; careful not to look too deeply just in case there is a lot of data
             # cached here
-            topostore = pfs['etc'].mkdir(uri).discover(levels=1)
+            cache = pfs['etc'].mkdir(uri).discover(levels=1)
             # attach it
-            srtm.cache = topostore
+            srtm.cache = cache
 
         # pass on the region
         srtm.region = self.region

@@ -10,9 +10,9 @@ import isce
 
 
 # the digital elevation model protocol
-class DEM(isce.protocol, family='isce.topography'):
+class DEM(isce.protocol, family='isce.topography.dem'):
     """
-    Requirements for accessors of digital elevation model archives
+    Requirements for components that assemble digital elevation models
     """
 
     # user configurable state
@@ -27,7 +27,7 @@ class DEM(isce.protocol, family='isce.topography'):
         Supply a default DEM archive
         """
         # the default is
-        from .srtm3 import archive as default
+        from .srtm3 import srtm as default
         # so return it
         return default
 

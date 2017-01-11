@@ -14,7 +14,7 @@ def test():
     # get the component
     import isce.topography.srtm3
     # build an instance of the archive accessor
-    srtm = isce.topography.srtm3.archive(name='srtm')
+    srtm = isce.topography.srtm3.srtm(name='srtm')
 
     # assemble its configuration
     doc = '\n'.join(srtm.pyre_showConfiguration())

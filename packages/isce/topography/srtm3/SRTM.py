@@ -12,7 +12,8 @@ import collections, functools, getpass, os, pickle, urllib.request
 
 
 # the digital elevation model protocol
-class Archive(isce.component, family='isce.topography.srtm', implements=isce.topography.archive):
+class SRTM(isce.component,
+           family='isce.topography.dem.srtm', implements=isce.topography.dem):
     """
     Accessor for the SRTM data archive
     """
@@ -40,7 +41,7 @@ class Archive(isce.component, family='isce.topography.srtm', implements=isce.top
 
     # protocol obligations
     @isce.export
-    def authenticate(self, credentials, channel=None):
+    def authenticate(self, credentials=None, channel=None):
         """
         Retrieve and store the user's authentication credentials
         """
@@ -180,7 +181,7 @@ class Archive(isce.component, family='isce.topography.srtm', implements=isce.top
 
 
     @isce.export
-    def download(self, credentials, channel=None, dent=1, force=False, dry=False):
+    def download(self, credentials=None, channel=None, dent=1, force=False, dry=False):
         """
         Retrieve the tiles necessary to cover the convex hull of my {region}
 
@@ -200,6 +201,8 @@ class Archive(isce.component, family='isce.topography.srtm', implements=isce.top
         # and the tile availability map
         availability = self.availabilityMap
 
+        # normalize the credentials
+        credentials = credentials or (None, None)
         # prep the {urllib} support
         self.installCredentials(credentials=credentials)
 

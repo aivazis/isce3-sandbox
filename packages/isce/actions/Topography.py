@@ -18,8 +18,8 @@ class Topography(isce.panel(), family='isce.actions.dem'):
 
 
     # user configurable state
-    archive = isce.topography.archive()
-    archive.doc = 'the elevation model archive manager'
+    dem = isce.topography.dem()
+    dem.doc = 'the digital elevation model assembler'
 
     region = isce.properties.array()
     region.doc = 'an array of (lat, lon) pairs of interest'
@@ -33,15 +33,18 @@ class Topography(isce.panel(), family='isce.actions.dem'):
         """
         Download digital elevation models from an archive
         """
+        # pick a channel
+        channel = plexus.info
         # get the archive accessor
-        archive = self.archive
+        dem = self.dem
         # configure it
-        archive.region = self.region
-        archive.cache = isce.primitives.path('etc', 'topography')
+        dem.region = self.region
         # and ask it to do the work
-        archive.download()
+        status = dem.download(channel=channel)
+        # flush the channel
+        channel.log()
         # all done
-        return
+        return status
 
 
     @isce.export(tip="stitch together all necessary tiles to form the elevation model")
@@ -53,6 +56,35 @@ class Topography(isce.panel(), family='isce.actions.dem'):
         error = plexus.error
         # complain
         error.log('stitch: not implemented yet')
+        # all done
+        return
+
+
+    # meta methods
+    def __init__(self, plexus, **kwds):
+        # chain up
+        super().__init__(plexus=plexus, **kwds)
+
+        # get my dem assembler
+        dem = self.dem
+
+        # pass on the region setting
+        dem.region = self.region
+
+        # grab the plexus private file space
+        pfs = plexus.pfs
+        # by convention, the location of the data cache is derived from the assmebler family
+        # name by dropping it package name; get the family name
+        family = dem.pyre_familyFragments()
+        # if there is one
+        if family:
+            # derive the location of the data store
+            uri = isce.primitives.path(family[1:])
+            # access it, gingerly; there may be a lot of files here
+            cache = pfs['etc'].mkdir(uri).discover(levels=1)
+            # attach it
+            dem.cache = cache
+
         # all done
         return
 

@@ -6,7 +6,7 @@
 #
 
 # grant access to the package parts
-from .Archive import Archive as archive
+from .SRTM import SRTM as srtm
 from .Tile import Tile as tile
 
 

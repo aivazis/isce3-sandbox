@@ -11,12 +11,12 @@ PACKAGE = topography/srtm3
 
 # the python modules
 EXPORT_PYTHON_MODULES = \
-    Archive.py \
     Availability.py \
     AvailabilityMap.py \
     Grid.py \
     Mosaic.py \
     Retriever.py \
+    SRTM.py \
     Tile.py \
     exceptions.py \
     __init__.py
