@@ -31,6 +31,7 @@ class SRTM(isce.component,
 
     resolution = isce.properties.int(default=1)
     resolution.doc = 'the resolution of the data set in pixels per arc-second; either 1 or 3'
+    resolution.validators = isce.constraints.isMember(1,3)
 
     team = isce.nexus.team()
     team.doc = 'the manager of the distributed pool of workers'
