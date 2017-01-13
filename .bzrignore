@@ -1,1 +1,12 @@
-auto
+doc/**/auto
+doc/**/*.aux
+doc/**/*.bbl
+doc/**/*.blg
+doc/**/*.log
+doc/**/*.nav
+doc/**/*.out
+doc/**/*.pdf
+doc/**/*.snm
+doc/**/*.toc
+doc/**/*.vrb
+
