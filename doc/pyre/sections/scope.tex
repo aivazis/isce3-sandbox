@@ -5,15 +5,45 @@
 % (c) 2003-2017 all rights reserved
 %
 
-\section{case study}
-\subsection{description}
-
+% -----------------------------------
 \begin{frame}
+%
+  \frametitle{Outline}
+%
+  \begin{itemize}
+%
+  \item We will write a \pyre\ application that stitches together a digital elevation model
+    (\dem) by downloading tiles from the \srtm\ archive
+%
+    \begin{itemize}
+    \item become familiar with components, and their properties and behaviors
+    \item describe the configuration process from the end user's point of view
+    \item build a simple pyre application that instantiates and exercises a component
+    \item gradually transform the app into a capability that is integrated into an open ended
+      environment
+    \end{itemize}
+%
+  \item Much of the code in these examples is lifted straight out of the \isce\ 3.0 source
+    code.
+%
+  \item As we go along, we will introduce notation that makes it possible to discuss
+    application architecture without the complexity of having to show actual source code. The
+    notation is inspired by \uml\cite{uml-2005}, but is significantly simpler.
+%
+  \end{itemize}
+%
+\end{frame}
+
+% -----------------------------------
+\begin{frame}[t]
   \frametitle{Case study: assembling a digital elevation model}
 %
   % \vskip -5ex
+  We will write an application that stitches together a \dem\ for some region of interest. For
+  this example, we will use the \srtm\ archive. The basic idea is very simple:
+
 %
-  \begin{columns}[c]
+  \begin{columns}
     \begin{column}{.4\textwidth}
       \only<1>{
         \begin{center}
@@ -39,21 +69,23 @@
     %
     \begin{column}{.5\textwidth}
       \begin{itemize}
-      \item<1-> Given a region of the planet
-      \item<2-> pick a few points
-      \item<3-> compute their bounding box
-      \item<4-> tile the box
-      \item<5-> stitch the digital elevation model
+      \item<2-> the user picks a few points in a region of interest
+      \item<3-> we compute an axis-aligned bounding box
+      \item<4-> fill the box with $1\si{\degree} \times 1\si{\degree}$ tiles
+      \item<5-> download the \dem\ tiles from the \srtm\ data store
+      \item<6-> stitch the \dem\ together
       \end{itemize}
     \end{column}
     %
   \end{columns}
+
+  \only<7->{A key aspect of the process is to identify which decisions are best left to the end
+    user, and therefore become configuration options for our app.}
+
 %
 \end{frame}
 
 %-----------------------------------
-\subsection{outline}
-
 \begin{frame}
 %
   \frametitle{Outline of the implementation}

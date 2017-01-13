@@ -8,88 +8,11 @@
 \section{components}
 \subsection{basics}
 
-\begin{frame}
-%
-  \frametitle{Components and protocols}
-%
-  \begin{itemize}
-%
-    \item a design pattern that enables the assembly of applications out of interchangeable
-      parts, under the control of the {\em end user}
-      \begin{itemize}
-      \item {\em protocols} are abstract specifications of application requirements
-      \item {\em components} are concrete implementations that satisfy requirements
-      \end{itemize}
-%
-    \item inversion of control:
-      \begin{itemize}
-      \item the binding of implementations to specifications happens at runtime, under the
-        control of the end user
-      \end{itemize}
-%
-    \item the user
-      \begin{itemize}
-      \item controls the application state through configuration files, the user interface, the
-        command line
-      \item specifies components using simple URIs
-      \end{itemize}
-%
-    \item the goal is to isolate contributors from each other as much as possible, and provide
-      a coherent and usable strategy for composing non-trivial applications
-%
-  \end{itemize}
-%
-\end{frame}
-
-%-----------------------------------
-\begin{frame}
-%
-  \frametitle{Components}
-  %
-  \begin{center}
-    \includegraphics[width=1.0\textwidth]{component-package}
-  \end{center}
-  %
-\end{frame}
-
-%-----------------------------------
-\begin{frame}
-%
-  \frametitle{Components}
-  %
-  \begin{center}
-    \includegraphics[width=1.0\textwidth]{component-package-explained}
-  \end{center}
-  %
-\end{frame}
-
-%-----------------------------------
-\begin{frame}
-%
-  \frametitle{Components}
-  %
-  \begin{center}
-    \includegraphics[width=1.0\textwidth]{component-base}
-  \end{center}
-  %
-\end{frame}
-
-%-----------------------------------
-\begin{frame}
-%
-  \frametitle{Components}
-  %
-  \begin{center}
-    \includegraphics[width=1.0\textwidth]{component-inheritance}
-  \end{center}
-  %
-\end{frame}
-
 % --------------------------------------
 % components:
 \begin{frame}
 %
-  \frametitle{Components}
+  \frametitle{Extending object oriented ideas}
 %
   \begin{itemize}
 %
@@ -105,25 +28,68 @@
     \item allow you to call functions that get easy access to this state
     \end{itemize}
 %
-  \item \emph{components} are classes that specifically grant access to some of their state to
-    the end user
+  \item these ideas have been around for a while\cite{simula,eiffel}, and have been
+    explored extensively and formalized\cite{meyer-97}
+%
+  \item \pyre\ \emph{components} are classes that specifically grant access to some of their
+    state to the end user
     \begin{itemize}
     \item the public data are the \emph{properties} of the component
     \end{itemize}
 %
-  \item rule 1: components have properties
+  \item the notion is quite old\cite{mcilroy-69} and the terms heavily overloaded; \pyre\
+    components are an evolution of these ideas
 %
   \end{itemize}
 %
 \end{frame}
 
+% --------------------------------------
+\begin{frame}
+%
+  \frametitle{Components and protocols}
+%
+  \begin{itemize}
+%
+  \item together, they form a design pattern that enables the assembly of applications out of
+    interchangeable parts, under the control of the {\em end user}
+      \begin{itemize}
+      \item {\em protocols} are abstract specifications of application requirements
+      \item {\em components} are concrete implementations that satisfy requirements
+      \end{itemize}
+%
+    \item protocols make it possible to write applications without any {\em a priori} knowledge
+      of implementation specifics
+%
+    \item inversion of control\cite{johnson-88}:
+      \begin{itemize}
+      \item the binding of actual implementations to the application requirements happens at
+        runtime, under the control of the end user
+      \end{itemize}
+%
+    \item in \pyre, the user
+      \begin{itemize}
+      \item controls the application state through configuration files, the user interface, the
+        command line
+      \item specifies components using simple URIs
+      \end{itemize}
+%
+    \item the goal is to isolate contributors from each other as much as possible, and provide
+      a coherent and usable strategy for composing non-trivial applications
+%
+  \end{itemize}
+%
+\end{frame}
+
+\subsection{design}
 %-----------------------------------
 \begin{frame}
 %
-  \frametitle{Components}
+  \frametitle{SRTM - the module}
   %
   \begin{center}
-    \includegraphics[width=1.0\textwidth]{component-inheritance-explained}
+    \only<1>{\includegraphics[width=1.0\textwidth]{component-package}}
+    \only<2>{\includegraphics[width=1.0\textwidth]{component-package-explained}}
   \end{center}
   %
 \end{frame}
@@ -131,10 +97,12 @@
 %-----------------------------------
 \begin{frame}
 %
-  \frametitle{Components}
+  \frametitle{SRTM - pedigree}
   %
   \begin{center}
-    \includegraphics[width=1.0\textwidth]{component-family}
+    \only<1>{\includegraphics[width=1.0\textwidth]{component-base}}
+    \only<2>{\includegraphics[width=1.0\textwidth]{component-inheritance}}
+    \only<3>{\includegraphics[width=1.0\textwidth]{component-inheritance-explained}}
   \end{center}
   %
 \end{frame}
@@ -142,10 +110,11 @@
 %-----------------------------------
 \begin{frame}
 %
-  \frametitle{Components}
+  \frametitle{SRTM - family}
   %
   \begin{center}
-    \includegraphics[width=1.0\textwidth]{component-family-explained}
+    \only<1>{\includegraphics[width=1.0\textwidth]{component-family}}
+    \only<2>{\includegraphics[width=1.0\textwidth]{component-family-explained}}
   \end{center}
   %
 \end{frame}
@@ -153,21 +122,11 @@
 %-----------------------------------
 \begin{frame}
 %
-  \frametitle{Components}
+  \frametitle{SRTM - protocol}
   %
   \begin{center}
-    \includegraphics[width=1.0\textwidth]{component-implements}
-  \end{center}
-  %
-\end{frame}
-
-%-----------------------------------
-\begin{frame}
-%
-  \frametitle{Components}
-  %
-  \begin{center}
-    \includegraphics[width=1.0\textwidth]{component-implements-explained}
+    \only<1>{\includegraphics[width=1.0\textwidth]{component-implements}}
+    \only<2>{\includegraphics[width=1.0\textwidth]{component-implements-explained}}
   \end{center}
   %
 \end{frame}
@@ -182,7 +141,7 @@
 %
   \item \pyre\ components are evolved python objects
     \begin{itemize}
-    \item the factories have family names, the instances have names
+    \item the classes have family names, the instances have names
     \item these names are unique strings in hierarchical namespaces delimited by periods
     \item collections of components form packages \emph{implicitly}, based on the topmost level
       in their namespace
@@ -199,7 +158,8 @@
     \begin{itemize}
     \item a requirement for supporting user interfaces
     \item intuitive syntax for the command line
-    \item simple configuration files inspired by the Microsoft Windows \identifier{.ini} format
+    \item simple configuration files in a variety of formats: \identifier{XML}, Microsoft
+      Windows \identifier{.ini}, native \identifier{.pfg}
     \end{itemize}
 %
   \item configuration is automatically handled by the framework and requires no explicit
