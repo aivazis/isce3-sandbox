@@ -16,6 +16,8 @@
 %
   \begin{itemize}
 %
+  \item most of the \pyre\ services are organized using \emph{objects}
+%
   \item informally, \emph{classes} are software specifications that establish a relationship
     between \emph{state} and \emph{behavior}
     \begin{itemize}
@@ -26,10 +28,12 @@
     \begin{itemize}
     \item that grant access to this state
     \item allow you to call functions that get easy access to this state
+    \item it is worth remembering that python classes are themselves live objects: they
+      are instances of their \emph{type}
     \end{itemize}
 %
-  \item these ideas have been around for a while\cite{simula,eiffel}, and have been
-    explored extensively and formalized\cite{meyer-97}
+  \item these ideas have been around for a while\supercite{dahl-66,eiffel}, and have been
+    explored extensively and formalized\supercite{meyer-97}
 %
   \item \pyre\ \emph{components} are classes that specifically grant access to some of their
     state to the end user
@@ -37,45 +41,8 @@
     \item the public data are the \emph{properties} of the component
     \end{itemize}
 %
-  \item the notion is quite old\cite{mcilroy-69} and the terms heavily overloaded; \pyre\
+  \item the notion is quite old\supercite{mcilroy-69} and the terms heavily overloaded; \pyre\
     components are an evolution of these ideas
-%
-  \end{itemize}
-%
-\end{frame}
-
-% --------------------------------------
-\begin{frame}
-%
-  \frametitle{Components and protocols}
-%
-  \begin{itemize}
-%
-  \item together, they form a design pattern that enables the assembly of applications out of
-    interchangeable parts, under the control of the {\em end user}
-      \begin{itemize}
-      \item {\em protocols} are abstract specifications of application requirements
-      \item {\em components} are concrete implementations that satisfy requirements
-      \end{itemize}
-%
-    \item protocols make it possible to write applications without any {\em a priori} knowledge
-      of implementation specifics
-%
-    \item inversion of control\cite{johnson-88}:
-      \begin{itemize}
-      \item the binding of actual implementations to the application requirements happens at
-        runtime, under the control of the end user
-      \end{itemize}
-%
-    \item in \pyre, the user
-      \begin{itemize}
-      \item controls the application state through configuration files, the user interface, the
-        command line
-      \item specifies components using simple URIs
-      \end{itemize}
-%
-    \item the goal is to isolate contributors from each other as much as possible, and provide
-      a coherent and usable strategy for composing non-trivial applications
 %
   \end{itemize}
 %
@@ -85,85 +52,63 @@
 %-----------------------------------
 \begin{frame}
 %
-  \frametitle{SRTM - the module}
-  %
+  \frametitle{SRTM -- the module}
+%
   \begin{center}
     \only<1>{\includegraphics[width=1.0\textwidth]{component-package}}
     \only<2>{\includegraphics[width=1.0\textwidth]{component-package-explained}}
   \end{center}
-  %
+%
 \end{frame}
 
 %-----------------------------------
 \begin{frame}
 %
-  \frametitle{SRTM - pedigree}
-  %
+  \frametitle{SRTM -- pedigree}
+%
   \begin{center}
     \only<1>{\includegraphics[width=1.0\textwidth]{component-base}}
     \only<2>{\includegraphics[width=1.0\textwidth]{component-inheritance}}
     \only<3>{\includegraphics[width=1.0\textwidth]{component-inheritance-explained}}
   \end{center}
-  %
+%
 \end{frame}
 
 %-----------------------------------
-\begin{frame}
+\begin{frame}[fragile]
 %
-  \frametitle{SRTM - family}
-  %
-  \begin{center}
-    \only<1>{\includegraphics[width=1.0\textwidth]{component-family}}
-    \only<2>{\includegraphics[width=1.0\textwidth]{component-family-explained}}
-  \end{center}
-  %
-\end{frame}
-
-%-----------------------------------
-\begin{frame}
+  \frametitle{Component declaration}
 %
-  \frametitle{SRTM - protocol}
-  %
-  \begin{center}
-    \only<1>{\includegraphics[width=1.0\textwidth]{component-implements}}
-    \only<2>{\includegraphics[width=1.0\textwidth]{component-implements-explained}}
-  \end{center}
-  %
-\end{frame}
-
-% --------------------------------------
-% recap
-\begin{frame}
-%
-  \frametitle{Recap: what we know so far}
-%
+  \vskip -3ex
   \begin{itemize}
 %
-  \item \pyre\ components are evolved python objects
-    \begin{itemize}
-    \item the classes have family names, the instances have names
-    \item these names are unique strings in hierarchical namespaces delimited by periods
-    \item collections of components form packages \emph{implicitly}, based on the topmost level
-      in their namespace
-    \end{itemize}
+  \item the instruction
+    \begin{center}
+      \includegraphics[height=10ex]{srtm-pedigree}
+    \end{center}
 %
-  \item components have properties that are under the control of the \emph{user}
-    \begin{itemize}
-    \item they look and behave like regular attributes
-    \item they are \emph{typed} to enable conversions from strings
-    \item they have default values and other metadata
-    \end{itemize}
+  \item implies that instead of
 %
-  \item configuration is partly about assigning values to component properties
-    \begin{itemize}
-    \item a requirement for supporting user interfaces
-    \item intuitive syntax for the command line
-    \item simple configuration files in a variety of formats: \identifier{XML}, Microsoft
-      Windows \identifier{.ini}, native \identifier{.pfg}
-    \end{itemize}
+    \begin{ipython}{}
+class SRTM:
+    """
+    Access the SRTM data archive to download tiles and produce
+    a digital elevation model for a specified region of interest
+    """
+    \end{ipython}
 %
-  \item configuration is automatically handled by the framework and requires no explicit
-    involvement on the part of the component author
+  \item we have to import the \isce\ package and derive from \class{isce.component}:
+    \begin{ipython}{}
+# support
+import isce
+
+# the srtm component
+class SRTM(isce.component):
+    """
+    Access the SRTM data archive to download tiles and produce
+    a digital elevation model for a specified region of interest
+    """
+    \end{ipython}
 %
   \end{itemize}
 %
@@ -242,6 +187,105 @@ x = A * cos(ω * t)
 %
     if the units in the argument to \function{cos} do not cancel, leaving a pure
     \keyword{float} behind, an exception is raised; \identifier{x} has dimensions of meters
+%
+  \end{itemize}
+%
+\end{frame}
+
+%-----------------------------------
+\begin{frame}
+%
+  \frametitle{SRTM -- family}
+%
+  \begin{center}
+    \only<1>{\includegraphics[width=1.0\textwidth]{component-family}}
+    \only<2>{\includegraphics[width=1.0\textwidth]{component-family-explained}}
+  \end{center}
+%
+\end{frame}
+
+%-----------------------------------
+\begin{frame}
+%
+  \frametitle{SRTM - protocol}
+%
+  \begin{center}
+    \only<1>{\includegraphics[width=1.0\textwidth]{component-implements}}
+    \only<2>{\includegraphics[width=1.0\textwidth]{component-implements-explained}}
+  \end{center}
+%
+\end{frame}
+
+% --------------------------------------
+% recap
+\begin{frame}
+%
+  \frametitle{Recap: what we know so far}
+%
+  \begin{itemize}
+%
+  \item \pyre\ components are evolved python objects
+    \begin{itemize}
+    \item the classes have family names, the instances have names
+    \item these names are unique strings in hierarchical namespaces delimited by periods
+    \item collections of components form packages \emph{implicitly}, based on the topmost level
+      in their namespace
+    \end{itemize}
+%
+  \item components have properties that are under the control of the \emph{user}
+    \begin{itemize}
+    \item they look and behave like regular attributes
+    \item they are \emph{typed} to enable conversions from strings
+    \item they have default values and other metadata
+    \end{itemize}
+%
+  \item configuration is partly about assigning values to component properties
+    \begin{itemize}
+    \item a requirement for supporting user interfaces
+    \item intuitive syntax for the command line
+    \item simple configuration files in a variety of formats: \identifier{XML}, Microsoft
+      Windows \identifier{.ini}, native \identifier{.pfg}
+    \end{itemize}
+%
+  \item configuration is automatically handled by the framework and requires no explicit
+    involvement on the part of the component author
+%
+  \end{itemize}
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}
+%
+  \frametitle{Components and protocols}
+%
+  \begin{itemize}
+%
+  \item a design pattern\supercite{patterns} that enables the assembly of applications out of
+    interchangeable parts, under the control of the end user
+      \begin{itemize}
+      \item \emph{protocols} are abstract specifications of application requirements
+      \item \emph{components} are concrete implementations that satisfy requirements
+      \end{itemize}
+%
+    \item protocols make it possible to write applications without any \emph{a priori} knowledge
+      of implementation specifics
+%
+    \item inversion of control\supercite{johnson-88}:
+      \begin{itemize}
+      \item the binding of actual implementations to the application requirements happens at
+        runtime, under the control of the end user
+      \end{itemize}
+%
+    \item in \pyre, the user
+      \begin{itemize}
+      \item controls the application state through configuration files, the user interface, the
+        command line
+      \item specifies components using simple URIs
+      \end{itemize}
+%
+    \item the goal is to isolate contributors from each other as much as possible, and provide
+      a coherent and usable strategy for composing non-trivial applications
 %
   \end{itemize}
 %
