@@ -145,22 +145,22 @@
     #1
   }}{#2}
 
-\lstdefinelanguage{cfg}
+\lstdefinelanguage{pfg}
 {
   sensitive=true,
   morecomment=[l]{;},
-  alsoletter={[,]},
-  keywords={\],\[},
+  alsoletter={\{,\}},
+  keywords={ \{, \} },
 }
-\lstnewenvironment{icfg}[2][]{
+\lstnewenvironment{ipfg}[2][]{
   \lstset{
-    language=cfg,
+    language=pfg,
     #1
   }}{#2}
 
-\def\cfg#1#2{
+\def\pfg#1#2{
   \lstinputlisting[%
-  language=cfg,
+  language=pfg,
   escapeinside={\;@}{@},#1]
   {#2}}
 
@@ -238,6 +238,7 @@
 \def\class#1{\mbox{\tt #1}}
 \def\component#1{\mbox{\tt #1}}
 \def\protocol#1{\mbox{\tt #1}}
+\def\trait#1{\mbox{\tt #1}}
 \def\function#1{\mbox{\tt #1}}
 \def\method#1{\mbox{\tt #1}}
 \def\identifier#1{\mbox{\tt #1}}

@@ -56,7 +56,7 @@
 %
   \begin{center}
     \only<1>{\includegraphics[width=1.0\textwidth]{component-package}}
-    \only<2>{\includegraphics[width=1.0\textwidth]{component-package-explained}}
+    \only<2->{\includegraphics[width=1.0\textwidth]{component-package-explained}}
   \end{center}
 %
 \end{frame}
@@ -116,6 +116,97 @@ class SRTM(isce.component):
 
 % --------------------------------------
 % properties
+\begin{frame}[fragile]
+%
+  \frametitle{Specifying the tile resolution}
+%
+  \begin{itemize}
+%
+  \item version 3 \srtm\ tiles come in two resolutions
+%
+    \begin{ipython}[firstnumber=4]{}
+# the srtm component
+class SRTM(isce.component):
+    """
+    Access the SRTM data archive to download tiles and produce
+    a digital elevation model for a specified region of interest
+    """
+
+    # user configurable state
+    resolution = 1 # arc seconds per pixel
+
+    \end{ipython}
+%
+  \item how do we read the value of \trait{resolution} from a configuration file?
+%
+    \begin{ipfg}{}
+      srtm:
+          resolution = 1 ; arc seconds per pixel
+    \end{ipfg}
+%
+    or, equivalently, from the command line of some driver script?
+%
+    \begin{ish}{}
+      dem.py --srtm.resolution=1
+    \end{ish}
+%
+  \item and resolve conflicts when different sources specify different values?
+%
+  \end{itemize}
+%
+\end{frame}
+
+% --------------------------------------
+% properties
+\begin{frame}
+%
+  \frametitle{Components have properties}
+%
+  \begin{center}
+    \only<1>{\includegraphics[width=1.0\textwidth]{component-properties}}
+    \only<2->{\includegraphics[width=1.0\textwidth]{component-properties-explained}}
+  \end{center}
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}[fragile]
+%
+  \frametitle{Adding properties to a component}
+%
+  \begin{itemize}
+%
+  \item the instruction
+%
+    \begin{center}
+      \includegraphics[height=10ex]{srtm-resolution}
+    \end{center}
+%
+  \item it implies the following modification to the \class{SRTM} declaration:
+%
+    \begin{ipython}[firstnumber=4]{}
+# the srtm component
+class SRTM(isce.component):
+    """
+    Access the SRTM data archive to download tiles and produce
+    a digital elevation model for a specified region of interest
+    """
+
+    # user configurable state
+    resolution = isce.properties.int(default=1)
+    resolution.doc = 'the tile resolution in arc seconds per pixel'
+
+    \end{ipython}
+%
+  \item this states that \srtm\ requires that an \class{int} must be bound to the property
+    \trait{resolution} at runtime, and if no suitable biding is provided, the default value of
+    $1$ will be used
+%
+  \end{itemize}
+%
+\end{frame}
+
+% --------------------------------------
 \begin{frame}
 %
   \frametitle{Properties}
@@ -128,22 +219,22 @@ class SRTM(isce.component):
     \item the class holds the default value that gets used in case the component instance does
       not have explicit configuration
     \item each instance gets its own private value when it gets configured
-    \item identical to regular python attributes
+    \item the behavior is identical to regular python attributes
     \end{itemize}
 %
   \item there is support for
     \begin{itemize}
     \item simple types: \function{bool}, \function{int}, \function{float}, \function{str}
-    \item containers: \function{tuple}, \function{array}
-    \item higher level: \function{date}, \function{time}, \function{inputfile},
-      \function{outputfile}, \function{inet}
+    \item containers: \function{tuple}, \function{list}, \function{set}, \function{array}
+    \item higher level: \function{date}, \function{time}, \function{istream},
+      \function{ostream}, \function{inet}
     \item units: \function{dimensional}
     \item easy enough to implement your own; the requirements are very simple
     \end{itemize}
 %
   \item metadata:
     \begin{itemize}
-    \item \identifier{doc}: a simple and short documentation string
+    \item \identifier{doc} and \identifier{tip}: simple and short documentation strings
     \item \identifier{default}: the default value, in case the user doesn't supply one
     \item \identifier{converters}: a chain of preprocessors of the string representation
     \item \identifier{normalizers}: a chain of post-processors of the converted value
@@ -174,6 +265,7 @@ class SRTM(isce.component):
     \item correct arithmetic; proper handling of functions from \package{math}
     \end{itemize}
 %
+  \item consider
     \begin{ipython}{}
 from math import cos
 from pyre.units.SI import meter, second, radian
@@ -183,10 +275,10 @@ t = 1.5 * second
 ω = 4.2 * radian/second
 
 x = A * cos(ω * t)
-    \end{ipython}
+     \end{ipython}
 %
-    if the units in the argument to \function{cos} do not cancel, leaving a pure
-    \keyword{float} behind, an exception is raised; \identifier{x} has dimensions of meters
+   \item if the units in the argument to \function{cos} do not cancel, leaving a pure
+     \keyword{float} behind, an exception is raised; \identifier{x} has dimensions of meters
 %
   \end{itemize}
 %
