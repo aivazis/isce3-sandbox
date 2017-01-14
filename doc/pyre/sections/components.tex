@@ -64,7 +64,7 @@
 %-----------------------------------
 \begin{frame}
 %
-  \frametitle{SRTM -- pedigree}
+  \frametitle{Turning classes into components}
 %
   \begin{center}
     \only<1>{\includegraphics[width=1.0\textwidth]{component-base}}
@@ -122,7 +122,7 @@ class SRTM(isce.component):
 %
   \begin{itemize}
 %
-  \item version 3 \srtm\ tiles come in two resolutions
+  \item version 3 \srtm\ tiles come in two resolutions; enable the user to choose
 %
     \begin{ipython}[firstnumber=4]{}
 # the srtm component
@@ -174,6 +174,7 @@ class SRTM(isce.component):
 %
   \frametitle{Adding properties to a component}
 %
+  \vskip -4ex
   \begin{itemize}
 %
   \item the instruction
@@ -182,7 +183,7 @@ class SRTM(isce.component):
       \includegraphics[height=10ex]{srtm-resolution}
     \end{center}
 %
-  \item it implies the following modification to the \class{SRTM} declaration:
+  \item implies the following modification to the \class{SRTM} declaration:
 %
     \begin{ipython}[firstnumber=4]{}
 # the srtm component
@@ -198,9 +199,12 @@ class SRTM(isce.component):
 
     \end{ipython}
 %
-  \item this states that \srtm\ requires that an \class{int} must be bound to the property
-    \trait{resolution} at runtime, and if no suitable biding is provided, the default value of
-    $1$ will be used
+  \item why bother specifying the type of component properties?
+    \begin{itemize}
+    \item command line, configuration files, dialog boxes, web pages: they all gather
+      information from the user as strings
+    \item we need \emph{meta-data} so we can convert from strings to the intended object
+    \end{itemize}
 %
   \end{itemize}
 %
@@ -279,6 +283,66 @@ x = A * cos(ω * t)
 %
    \item if the units in the argument to \function{cos} do not cancel, leaving a pure
      \keyword{float} behind, an exception is raised; \identifier{x} has dimensions of meters
+%
+  \end{itemize}
+%
+\end{frame}
+
+%-----------------------------------
+
+\begin{frame}[fragile]
+%
+  \frametitle{A slightly more complicated example}
+%
+  \vskip -4ex
+  \begin{itemize}
+%
+  \item let's add the \trait{region} requirement
+%
+    \begin{center}
+      \includegraphics[height=15ex]{srtm-region}
+    \end{center}
+%
+  \item the \class{SRTM} declaration becomes:
+%
+    \begin{ipython}[firstnumber=4]{}
+# the srtm component
+class SRTM(isce.component):
+    """
+    Access the SRTM data archive to download tiles and produce
+    a digital elevation model for a specified region of interest
+    """
+
+    # user configurable state
+    resolution = isce.properties.int(default=1)
+    resolution.doc = 'the tile resolution in arc seconds per pixel'
+
+    region = isce.properties.array()
+    region.doc = 'a cloud of (lat,lon) pairs'
+
+    \end{ipython}
+%
+  \end{itemize}
+%
+\end{frame}
+
+%-----------------------------------
+
+\begin{frame}
+%
+  \frametitle{More notation}
+%
+  \begin{itemize}
+%
+  \item Sometimes we need to communicate the values to which properties are bound:
+
+      \includegraphics[height=20ex]{srtm-properties-bound}
+
+  \item a more compact alternative to the property declarations
+
+      \includegraphics[height=10ex]{srtm-properties-compact}
+
+    for when we don't care to show the binding slots
 %
   \end{itemize}
 %
