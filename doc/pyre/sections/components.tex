@@ -14,9 +14,10 @@
 %
   \frametitle{Extending object oriented ideas}
 %
+  \vskip -3ex
   \begin{itemize}
 %
-  \item most of the \pyre\ services are organized using \emph{objects}
+  \item most of the \pyre\ services are organized using object oriented ideas
 %
   \item informally, \emph{classes} are software specifications that establish a relationship
     between \emph{state} and \emph{behavior}
@@ -30,6 +31,13 @@
     \item allow you to call functions that get easy access to this state
     \item it is worth remembering that python classes are themselves live objects: they
       are instances of their \emph{type}
+    \end{itemize}
+%
+  \item classes are factories of instances
+    \begin{itemize}
+    \item making an instance is accomplished by invoking the class name as if it were a
+      function
+    \item the class has a lot of control over what the instance looks like
     \end{itemize}
 %
   \item these ideas have been around for a while\supercite{dahl-66,eiffel}, and have been
@@ -51,12 +59,18 @@
 %-----------------------------------
 \begin{frame}
 %
-  \frametitle{SRTM -- the module}
+  \frametitle{Physical layout of the source code}
 %
-  \begin{center}
-    \only<1>{\includegraphics[width=1.0\textwidth]{component-package}}
-    \only<2->{\includegraphics[width=1.0\textwidth]{component-package-explained}}
-  \end{center}
+  \only<1>{
+    \begin{center}
+      \includegraphics[width=0.9\textwidth]{component-package}
+    \end{center}
+  }
+  \only<2->{
+    \begin{center}
+      \includegraphics[width=0.9\textwidth]{component-package-explained}
+    \end{center}
+  }
 %
 \end{frame}
 
@@ -65,11 +79,21 @@
 %
   \frametitle{Turning classes into components}
 %
-  \begin{center}
-    \only<1>{\includegraphics[width=1.0\textwidth]{component-base}}
-    \only<2>{\includegraphics[width=1.0\textwidth]{component-inheritance}}
-    \only<3>{\includegraphics[width=1.0\textwidth]{component-inheritance-explained}}
-  \end{center}
+  \only<1>{
+    \begin{center}
+      \includegraphics[width=0.9\textwidth]{component-base}
+    \end{center}
+  }
+  \only<2>{
+    \begin{center}
+      \includegraphics[width=0.9\textwidth]{component-inheritance}
+    \end{center}
+  }
+  \only<3>{
+    \begin{center}
+      \includegraphics[width=0.9\textwidth]{component-inheritance-explained}
+    \end{center}
+  }
 %
 \end{frame}
 
@@ -153,8 +177,10 @@
 %
   \item there are two ingredients missing:
     \begin{itemize}
-    \item \trait{resolution} must become a \emph{property} of \component{SRTM}
+    \item \trait{resolution} must become a \emph{property} of \component{SRTM}, i.e.~the
+      component register it as an attribute managed by the framework
     \item \component{SRTM} and its instances need \emph{names} so the user can refer to them
+      from the user interface
     \end{itemize}
 %
   \end{itemize}
@@ -167,10 +193,16 @@
 %
   \frametitle{Components have properties}
 %
-  \begin{center}
-    \only<1>{\includegraphics[width=1.0\textwidth]{component-properties}}
-    \only<2->{\includegraphics[width=1.0\textwidth]{component-properties-explained}}
-  \end{center}
+  \only<1>{
+    \begin{center}
+      \includegraphics[width=0.9\textwidth]{component-properties}
+    \end{center}
+  }
+  \only<2->{
+    \begin{center}
+      \includegraphics[width=0.9\textwidth]{component-properties-explained}
+    \end{center}
+  }
 %
 \end{frame}
 
@@ -232,20 +264,21 @@
 %
   \item there is support for the following \emph{schemata}
     \begin{itemize}
-    \item simple types: \schema{bool}, \schema{int}, \schema{float}, \schema{decimal},
-      \schema{fraction}, \schema{str}
-    \item containers: \schema{tuple}, \schema{list}, \schema{set}, \schema{array}
-    \item higher level: \schema{date}, \schema{path}, \schema{uri}, \schema{time}, \schema{istream},
-      \schema{ostream}, \schema{inet}
+    \item simple types: \basictype{bool}, \basictype{int}, \basictype{float},
+      \basictype{decimal}, \basictype{fraction}, \basictype{str}
+    \item containers: \basictype{tuple}, \basictype{list}, \basictype{set}, \schema{array}
+    \item higher level: \basictype{date}, \schema{path}, \schema{uri}, \basictype{time},
+      \schema{istream}, \schema{ostream}, \schema{inet}
     \item units: \schema{dimensional}
     \item composites: \schema{strings}, \schema{paths}, \schema{uris}
     \item easy enough to implement your own; the requirements are very simple
     \end{itemize}
 %
-  \item metadata:
+  \item meta-data:
     \begin{itemize}
     \item \identifier{doc} and \identifier{tip}: simple and short documentation strings
     \item \identifier{default}: the default value, in case the user doesn't supply one
+    \item \identifier{aliases}: a set of alternate names for the property
     \item \identifier{converters}: a chain of preprocessors of the string representation
     \item \identifier{normalizers}: a chain of post-processors of the converted value
     \item \identifier{validators}: a tuple of predicates that get called to ensure the property
@@ -268,7 +301,7 @@
 %
   \item the value \keyword{None} is special: it means a property is uninitialized
     \begin{itemize}
-    \item recognized as either \keyword{None} or as \literal{'None'}
+    \item recognized as either the literal \keyword{None} or as the string \literal{'None'}
     \item it is a legal value for any trait
     \end{itemize}
 %
@@ -276,16 +309,17 @@
     \begin{itemize}
     \item is already its native type
     \item can be converted to this native type by the trait schema
+    \item can get through the validators without error
     \end{itemize}
 %
   \item all property types recognize and process strings
     \begin{itemize}
-    \item \schema{bool} recognizes
+    \item \basictype{bool} recognizes
       \literal{'true'}/\literal{'false'},
       \literal{'on'}/\literal{'off'},
       \literal{'yes'}/\literal{'no'} in any combination of upper case and lower case letters
-    \item \schema{int} and \schema{float} evaluate simple expressions
-    \item \schema{date} and \schema{time} let you specify a format string to use when parsing
+    \item \basictype{int} and \basictype{float} evaluate simple expressions
+    \item \basictype{date} and \basictype{time} let you specify a format string to use when parsing
       input
     \item \schema{istream} and \schema{ostream} interpret strings as filenames and open an
       associated stream
@@ -297,7 +331,7 @@
     \begin{ipython}[gobble=2]{}
       srtm.resolution = "3600 / {tile.width}"
     \end{ipython}
-    so arithmetic can be done in configuration files -- and the command line
+    arithmetic can be done in configuration files -- and the command line
 %
   \end{itemize}
 %
@@ -312,7 +346,8 @@
   \vskip -4ex
   \begin{itemize}
 %
-  \item there are three basic container types: \schema{tuple}, \schema{list} and \schema{set}
+  \item there are three basic container types: \basictype{tuple}, \basictype{list} and
+    \basictype{set}
 %
   \item you must supply the type of the contained item so conversions can happen correctly
 %
@@ -329,17 +364,16 @@
 %
     the code fragment
     \begin{ipython}[firstnumber=9, gobble=4]{}
-      beatles = Band(name='beatles') # more on instantiating components later on
-      print(beatles.names)
+      >>> beatles = Band(name='beatles') # more on instantiating components later on
+      >>> print(beatles.names)
     \end{ipython}
 %
     produces
 %
-    \begin{ish}[firstnumber=12]{}
-     >>>
-     ['john', 'paul', 'george', 'ringo']
-     >>>
-    \end{ish}
+    \begin{ipython}[firstnumber=11, gobble=4]{}
+      ['john', 'paul', 'george', 'ringo']
+      >>>
+    \end{ipython}
 %
     more sophisticated -- and realistic -- examples coming up
 %
@@ -366,6 +400,7 @@
     \item full support for all SI base and derived units
     \item all common abbreviations and names from alternative systems of units
     \item correct arithmetic; proper handling of functions from \package{math}
+    \item distributive on containers: \literal{[1,2,3]*m -> [1*m,2*m,3*m]}
     \end{itemize}
 %
   \item consider
@@ -381,7 +416,7 @@
      \end{ipython}
 %
    \item an exception is raised if the units in the argument to \function{cos} do not cancel,
-     leaving a pure \keyword{float} behind; \identifier{x} has dimensions of meters
+     leaving a pure \basictype{float} behind; \identifier{x} has dimensions of meters
 %
    \item there is some control over the printing value
 %
@@ -511,19 +546,90 @@
 %
 \end{frame}
 
-% --------------------------------------
-\subsection{behaviors}
-
 %-----------------------------------
 \subsection{names}
+\begin{frame}[fragile]
+%
+  \frametitle{The names of things}
+%
+  \begin{itemize}
+%
+  \item in order to connect components to configurations, component authors and end
+    users have to agree on the names of things
+%
+  \item classes already have names
+    \begin{itemize}
+    \item but the python runtime environment uses these for internal purposes
+    \item not end-user friendly
+    \end{itemize}
+%
+  \item python instances are not automatically assigned anything meaningful
+    \begin{itemize}
+    \item typically, their \function{id} is related to their location in memory
+    \item not end-user friendly
+    \item not persistent across program invocations
+    \end{itemize}
+%
+  \item the current solution is to place the burden on the component developer to design
+    rational namespaces that are meaningful and easy to remember
+    \begin{itemize}
+    \item admittedly, not an easy problem
+    \item but forces some design issues to the forefront, so overall a good thing\texttrademark
+    \end{itemize}
+%
+  \item all names are optional
+    \begin{itemize}
+    \item public versus private
+    \item if an entity doesn't have a name, it's functional but not configurable
+    \end{itemize}
+%
+  \item component instances may be given unique names during instantiation
+%
+  \item component classes may be given unique family names during declaration
+%
+  \item namespace management: components belong to packages
+%
+  \end{itemize}
+%
+\end{frame}
+
+%-----------------------------------
 \begin{frame}
 %
-  \frametitle{SRTM -- family}
+  \frametitle{Public components and their instances}
 %
-  \begin{center}
-    \only<1>{\includegraphics[width=1.0\textwidth]{component-family}}
-    \only<2>{\includegraphics[width=1.0\textwidth]{component-family-explained}}
-  \end{center}
+    \only<1>{
+      \begin{center}
+        \includegraphics[width=0.9\textwidth]{component-family}
+      \end{center}
+    }
+    \only<2>{
+      \begin{center}
+        \includegraphics[width=0.9\textwidth]{component-family-explained}
+      \end{center}
+    }
+    \only<3>{
+      \begin{center}
+        \includegraphics[width=0.9\textwidth]{component-instance}
+      \end{center}
+    }
+    \only<4>{
+      \begin{center}
+        \includegraphics[width=0.9\textwidth]{component-instance-explained}
+      \end{center}
+    }
+    \only<5>{
+      \begin{center}
+        \includegraphics[width=0.9\textwidth]{component-config}
+      \end{center}
+    }
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}
+%
+  \frametitle{Configuration -- \identifier{pfg}}
 %
 \end{frame}
 
@@ -570,6 +676,16 @@
 \end{frame}
 
 % --------------------------------------
+\subsection{behaviors}
+
+\begin{frame}
+%
+  \frametitle{Behaviors}
+%
+%
+\end{frame}
+
+% --------------------------------------
 \subsection{protocols}
 \begin{frame}
 %
@@ -612,12 +728,30 @@
 %
   \frametitle{SRTM - protocol}
 %
-  \begin{center}
-    \only<1>{\includegraphics[width=1.0\textwidth]{component-implements}}
-    \only<2>{\includegraphics[width=1.0\textwidth]{component-implements-explained}}
-  \end{center}
+  \only<1>{
+    \begin{center}
+      \includegraphics[width=0.9\textwidth]{component-implements}
+    \end{center}
+  }
+  \only<2>{
+    \begin{center}
+      \includegraphics[width=0.9\textwidth]{component-implements-explained}
+    \end{center}
+  }
 %
 \end{frame}
+
+%-----------------------------------
+\begin{frame}
+%
+  \frametitle{Fully decorated component class}
+%
+    \begin{center}
+      \includegraphics[width=0.9\textwidth]{component-decorated}
+    \end{center}
+%
+\end{frame}
+
 
 %%% Local Variables:
 %%% mode: latex

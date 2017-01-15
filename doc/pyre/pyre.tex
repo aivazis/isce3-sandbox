@@ -39,14 +39,6 @@
   \maketitle
 \end{frame}
 
-% place the logo on the title area of each slide
-\addtobeamertemplate{frametitle}{}{%
-  \begin{tikzpicture}[remember picture,overlay]
-    \node[anchor=north east,yshift=-.5em] at (current page.north east) {%
-      \includegraphics[scale=0.15]{figures/pyre-logo.pdf}};
-  \end{tikzpicture}
-}
-
 % the sections
 \input{intro}
 \input{components}
