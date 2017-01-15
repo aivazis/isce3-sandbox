@@ -60,6 +60,7 @@
 \definecolor{pml@componentcolor}{rgb}{0.0, 0.2, 0.4}
 \definecolor{pml@defaultvaluecolor}{rgb}{0.48, 0.47, 0.38}
 \definecolor{pml@protocolcolor}{rgb}{0.1367, 0.4766, 0.7031}
+\definecolor{pml@pyrebuiltincolor}{rgb}{0.50, 0.50, 0.19}
 \definecolor{pml@schemacolor}{rgb}{0.50, 0.50, 0.19}
 \definecolor{pml@traitcolor}{rgb}{0.1367, 0.4766, 0.7031}
 
@@ -172,6 +173,26 @@
   escapeinside={\;@}{@},#1]
   {#2}}
 
+\lstdefinelanguage{cfg}
+{
+  sensitive=true,
+  morecomment=[l]{;},
+  alsoletter={[,]},
+  keywords={\],\[},
+}
+
+\lstnewenvironment{icfg}[2][]{
+  \lstset{
+    language=cfg,
+    #1
+  }}{#2}
+
+\def\cfg#1#2{
+  \lstinputlisting[%
+  language=cfg,
+  escapeinside={\;@}{@},#1]
+  {#2}}
+
 % references
 \usepackage[numbers]{natbib}
 \bibliographystyle{unsrtnat}
@@ -244,6 +265,7 @@
 \def\operator#1{\mbox{\tt #1}}
 \def\package#1{\mbox{\tt #1}}
 \def\protocol#1{\mbox{\tt #1}}
+\def\pyrebuiltin#1{\mbox{\color{pml@pyrebuiltincolor}\tt #1}}
 \def\schema#1{\mbox{\color{pml@schemacolor}\tt #1}}
 \def\srcfile#1{\mbox{\tt #1}}
 \def\trait#1{\mbox{\color{pml@traitcolor}\tt #1}}

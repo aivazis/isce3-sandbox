@@ -120,7 +120,7 @@
           """
     \end{ipython}
 %
-  \item we have to import the \isce\ package and derive from \class{isce.component}:
+  \item we have to import the \isce\ package and derive from \pyrebuiltin{isce.component}:
     \begin{ipython}[gobble=6]{}
       # support
       import isce
@@ -627,9 +627,73 @@
 \end{frame}
 
 % --------------------------------------
-\begin{frame}
+\begin{frame}[fragile]
 %
-  \frametitle{Configuration -- \identifier{pfg}}
+  \frametitle{Configuration --- \identifier{pfg}}
+%
+  \begin{itemize}
+%
+    \item \pyre\ loads configuration files whose name matches the name of a package automatically
+%
+    \item here is a sample configuration file in the native \identifier{pfg} format
+%
+      \begin{ipfg}[gobble=6]{}
+        ; override the defaults in the component source code
+        isce.topography.dem.srtm:
+            region = [] ; empty, by default
+            resolution = 1 ; arc seconds per pixel
+
+        ; for an instance named la
+        la:
+            region = {regions.LA}
+
+        ; for an instance named greece
+        greece:
+            resolution = 3
+            region = {regions.Greece}
+
+        ; region aliases
+        regions:
+            LA = (33.3,-118.4), (35.7,-116.8)
+            Greece = (41,26), (39,19), (34,24), (36,29)
+      \end{ipfg}
+%
+    \item note that whitespace is significant: indentation captures the hierarchy
+%
+  \end{itemize}
+%
+\end{frame}
+
+\begin{frame}[fragile]
+%
+  \frametitle{Configuration --- \identifier{cfg}}
+%
+  \begin{itemize}
+%
+    \item here is the same configuration file in the alternative \identifier{cfg} format
+%
+      \begin{icfg}[gobble=6]{}
+        ; override the defaults in the component source code
+        [ isce.topography.dem.srtm ]
+        region = [] ; empty, by default
+        resolution = 1 ; arc seconds per pixel
+
+        ; for an instance named la
+        [ la ]
+        region = {regions.LA}
+
+        ; for an instance named greece
+        [ greece ]
+        resolution = 3
+        region = {regions.Greece}
+
+        ; region aliases
+        [ regions ]
+        LA = (33.3,-118.4), (35.7,-116.8)
+        Greece = (41,26), (39,19), (34,24), (36,29)
+      \end{icfg}
+%
+  \end{itemize}
 %
 \end{frame}
 
