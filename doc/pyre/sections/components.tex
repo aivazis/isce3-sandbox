@@ -48,7 +48,6 @@
 %
 \end{frame}
 
-\subsection{design}
 %-----------------------------------
 \begin{frame}
 %
@@ -89,25 +88,25 @@
 %
   \item implies that instead of
 %
-    \begin{ipython}{}
-class SRTM:
-    """
-    Access the SRTM data archive to download tiles and produce
-    a digital elevation model for a specified region of interest
-    """
+    \begin{ipython}[gobble=6]{}
+      class SRTM:
+          """
+          Access the SRTM data archive to download tiles and produce
+          a digital elevation model for a specified region of interest
+          """
     \end{ipython}
 %
   \item we have to import the \isce\ package and derive from \class{isce.component}:
-    \begin{ipython}{}
-# support
-import isce
+    \begin{ipython}[gobble=6]{}
+      # support
+      import isce
 
-# the srtm component
-class SRTM(isce.component):
-    """
-    Access the SRTM data archive to download tiles and produce
-    a digital elevation model for a specified region of interest
-    """
+      # the srtm component
+      class SRTM(isce.component):
+          """
+          Access the SRTM data archive to download tiles and produce
+          a digital elevation model for a specified region of interest
+          """
     \end{ipython}
 %
   \end{itemize}
@@ -115,26 +114,28 @@ class SRTM(isce.component):
 \end{frame}
 
 % --------------------------------------
+\subsection{properties}
+
 % properties
 \begin{frame}[fragile]
 %
   \frametitle{Specifying the tile resolution}
+  \vskip -3ex
 %
   \begin{itemize}
 %
   \item version 3 \srtm\ tiles come in two resolutions; enable the user to choose
 %
-    \begin{ipython}[firstnumber=4]{}
-# the srtm component
-class SRTM(isce.component):
-    """
-    Access the SRTM data archive to download tiles and produce
-    a digital elevation model for a specified region of interest
-    """
+    \begin{ipython}[firstnumber=4, gobble=6]{}
+      # the srtm component
+      class SRTM(isce.component):
+          """
+          Access the SRTM data archive to download tiles and produce
+          a digital elevation model for a specified region of interest
+          """
 
-    # user configurable state
-    resolution = 1 # arc seconds per pixel
-
+          # user configurable state
+          resolution = 1 # arc seconds per pixel
     \end{ipython}
 %
   \item how do we read the value of \trait{resolution} from a configuration file?
@@ -150,7 +151,11 @@ class SRTM(isce.component):
       dem.py --srtm.resolution=1
     \end{ish}
 %
-  \item and resolve conflicts when different sources specify different values?
+  \item there two ingredients missing:
+    \begin{itemize}
+    \item \trait{resolution} must become a \emph{property} of \component{SRTM}
+    \item \component{SRTM} and its instances need \emph{names} so the user can refer to them
+    \end{itemize}
 %
   \end{itemize}
 %
@@ -172,7 +177,7 @@ class SRTM(isce.component):
 % --------------------------------------
 \begin{frame}[fragile]
 %
-  \frametitle{Adding properties to a component}
+  \frametitle{Property declarations}
 %
   \vskip -4ex
   \begin{itemize}
@@ -183,20 +188,19 @@ class SRTM(isce.component):
       \includegraphics[height=10ex]{srtm-resolution}
     \end{center}
 %
-  \item implies the following modification to the \class{SRTM} declaration:
+  \item implies the following modification to the \component{SRTM} declaration:
 %
-    \begin{ipython}[firstnumber=4]{}
-# the srtm component
-class SRTM(isce.component):
-    """
-    Access the SRTM data archive to download tiles and produce
-    a digital elevation model for a specified region of interest
-    """
+    \begin{ipython}[firstnumber=4, gobble=6]{}
+      # the srtm component
+      class SRTM(isce.component):
+          """
+          Access the SRTM data archive to download tiles and produce
+          a digital elevation model for a specified region of interest
+          """
 
-    # user configurable state
-    resolution = isce.properties.int(default=1)
-    resolution.doc = 'the tile resolution in arc seconds per pixel'
-
+          # user configurable state
+          resolution = isce.properties.int(default=1)
+          resolution.doc = 'the tile resolution in arc seconds per pixel'
     \end{ipython}
 %
   \item why bother specifying the type of component properties?
@@ -226,13 +230,15 @@ class SRTM(isce.component):
     \item the behavior is identical to regular python attributes
     \end{itemize}
 %
-  \item there is support for
+  \item there is support for the following \emph{schemata}
     \begin{itemize}
-    \item simple types: \function{bool}, \function{int}, \function{float}, \function{str}
-    \item containers: \function{tuple}, \function{list}, \function{set}, \function{array}
-    \item higher level: \function{date}, \function{time}, \function{istream},
-      \function{ostream}, \function{inet}
-    \item units: \function{dimensional}
+    \item simple types: \schema{bool}, \schema{int}, \schema{float}, \schema{decimal},
+      \schema{fraction}, \schema{str}
+    \item containers: \schema{tuple}, \schema{list}, \schema{set}, \schema{array}
+    \item higher level: \schema{date}, \schema{path}, \schema{uri}, \schema{time}, \schema{istream},
+      \schema{ostream}, \schema{inet}
+    \item units: \schema{dimensional}
+    \item composites: \schema{strings}, \schema{paths}, \schema{uris}
     \item easy enough to implement your own; the requirements are very simple
     \end{itemize}
 %
@@ -251,16 +257,109 @@ class SRTM(isce.component):
 %
 \end{frame}
 
+%-----------------------------------
+% values
+\begin{frame}[fragile]
+%
+  \frametitle{Specifying property values}
+%
+  \vskip -4ex
+  \begin{itemize}
+%
+  \item the value \keyword{None} is special: it means a property is uninitialized
+    \begin{itemize}
+    \item recognized as either \keyword{None} or as \literal{'None'}
+    \item it is a legal value for any trait
+    \end{itemize}
+%
+  \item a property can be assigned a value that
+    \begin{itemize}
+    \item is already its native type
+    \item can be converted to this native type by the trait schema
+    \end{itemize}
+%
+  \item all property types recognize and process strings
+    \begin{itemize}
+    \item \schema{bool} recognizes
+      \literal{'true'}/\literal{'false'},
+      \literal{'on'}/\literal{'off'},
+      \literal{'yes'}/\literal{'no'} in any combination of upper case and lower case letters
+    \item \schema{int} and \schema{float} evaluate simple expressions
+    \item \schema{date} and \schema{time} let you specify a format string to use when parsing
+      input
+    \item \schema{istream} and \schema{ostream} interpret strings as filenames and open an
+      associated stream
+    \item \schema{path} and \schema{uri} have specialized parsers that convert strings to their
+      internal representations of paths
+    \end{itemize}
+%
+  \item string values may refer to other properties by name, so something like this could work
+    \begin{ipython}[gobble=2]{}
+      srtm.resolution = "3600 / {tile.width}"
+    \end{ipython}
+    so arithmetic can be done in configuration files -- and the command line
+%
+  \end{itemize}
+%
+\end{frame}
+
+%-----------------------------------
+% containers
+\begin{frame}[fragile]
+%
+  \frametitle{Containers}
+%
+  \vskip -4ex
+  \begin{itemize}
+%
+  \item there are three basic container types: \schema{tuple}, \schema{list} and \schema{set}
+%
+  \item you must supply the type of the contained item so conversions can happen correctly
+%
+  \item consider the component
+    \begin{ipython}[gobble=4]{}
+      class Band(isce.component):
+          """
+          An illustration of property containers
+          """
+
+          names = isce.properties.tuple(schema=isce.properties.str())
+          names.default = 'john, paul, george, ringo'
+    \end{ipython}
+%
+    the code fragment
+    \begin{ipython}[firstnumber=9, gobble=4]{}
+      beatles = Band(name='beatles') # more on instantiating components later on
+      print(beatles.names)
+    \end{ipython}
+%
+    produces
+%
+    \begin{ish}[firstnumber=12]{}
+     >>>
+     ['john', 'paul', 'george', 'ringo']
+     >>>
+    \end{ish}
+%
+    more sophisticated -- and realistic -- examples coming up
+%
+  \item \schema{array} passes its values through \function{eval}; it accepts any expression that
+    evaluates into an iterable without doing much error checking
+%
+  \end{itemize}
+%
+\end{frame}
+
 % --------------------------------------
 % units
 \begin{frame}[fragile]
 %
   \frametitle{Units}
 %
-  \vskip -2ex
+  \vskip -3ex
   \begin{itemize}
 %
-  \item \function{dimensional} properties have units
+  \item \schema{dimensional} properties have units
 %
   \item the low level support is in \package{pyre.units}
     \begin{itemize}
@@ -270,19 +369,72 @@ class SRTM(isce.component):
     \end{itemize}
 %
   \item consider
-    \begin{ipython}{}
-from math import cos
-from pyre.units.SI import meter, second, radian
+    \begin{ipython}[gobble=6]{}
+      from math import cos
+      from pyre.units.SI import meter, second, radian
 
-A = 2.5 * meter
-t = 1.5 * second
-ω = 4.2 * radian/second
+      A = 2.5 * meter
+      t = 1.5 * second
+      ω = 4.2 * radian/second
 
-x = A * cos(ω * t)
+      x = A * cos(ω * t)
      \end{ipython}
 %
-   \item if the units in the argument to \function{cos} do not cancel, leaving a pure
-     \keyword{float} behind, an exception is raised; \identifier{x} has dimensions of meters
+   \item an exception is raised if the units in the argument to \function{cos} do not cancel,
+     leaving a pure \keyword{float} behind; \identifier{x} has dimensions of meters
+%
+   \item there is some control over the printing value
+%
+    \begin{ipython}[firstnumber=9, gobble=6]{}
+      pretty = '{:value=.2f, base={scale}, label=cm}'.format(x, scale=meter/100)
+    \end{ipython}
+%
+  \end{itemize}
+%
+\end{frame}
+
+% --------------------------------------
+% constraints
+\begin{frame}[fragile]
+%
+  \frametitle{Constraints}
+%
+  \begin{itemize}
+%
+  \item there are only two valid values for \trait{resolution}
+%
+    \begin{ipython}[firstnumber=4, gobble=6]{}
+      # the srtm component
+      class SRTM(isce.component):
+          """
+          Access the SRTM data archive to download tiles and produce
+          a digital elevation model for a specified region of interest
+          """
+
+          # user configurable state
+          resolution = isce.properties.int(default=1)
+          resolution.doc = 'the tile resolution in arc seconds per pixel'
+          resolution.validators = isce.constraints.isMember(1, 3)
+    \end{ipython}
+%
+    any attempt to set \trait{resolution} to a value other than $1$ or $3$ will raise an
+    exception
+%
+  \item the full list of primitives are
+    \begin{itemize}
+    \item \constraint{isEqual}, \constraint{isGreater},
+      \constraint{isGreaterEqual},\constraint{isLess}, \constraint{isLessEqual}
+    \item \constraint{isPositive}, \constraint{isNegative}, \constraint{isBetween}
+    \item \constraint{isMember}, \constraint{isSubset}, \constraint{isLike}
+    \end{itemize}
+%
+  \item they can be combined using
+    \begin{itemize}
+    \item \constraint{isNot}
+    \item \constraint{isAll}, \constraint{isAny}
+    \end{itemize}
+%
+  \item easy to extend
 %
   \end{itemize}
 %
@@ -303,23 +455,23 @@ x = A * cos(ω * t)
       \includegraphics[height=15ex]{srtm-region}
     \end{center}
 %
-  \item the \class{SRTM} declaration becomes:
+  \item the \component{SRTM} declaration becomes:
 %
-    \begin{ipython}[firstnumber=4]{}
-# the srtm component
-class SRTM(isce.component):
-    """
-    Access the SRTM data archive to download tiles and produce
-    a digital elevation model for a specified region of interest
-    """
+    \begin{ipython}[firstnumber=4, gobble=6]{}
+      # the srtm component
+      class SRTM(isce.component):
+          """
+          Access the SRTM data archive to download tiles and produce
+          a digital elevation model for a specified region of interest
+          """
 
-    # user configurable state
-    resolution = isce.properties.int(default=1)
-    resolution.doc = 'the tile resolution in arc seconds per pixel'
+          # user configurable state
+          resolution = isce.properties.int(default=1)
+          resolution.doc = 'the tile resolution in arc seconds per pixel'
+          resolution.validators = isce.constraints.isMember(1, 3)
 
-    region = isce.properties.array()
-    region.doc = 'a cloud of (lat,lon) pairs'
-
+          region = isce.properties.array()
+          region.doc = 'a cloud of (lat,lon) pairs'
     \end{ipython}
 %
   \end{itemize}
@@ -331,6 +483,7 @@ class SRTM(isce.component):
 \begin{frame}
 %
   \frametitle{More notation}
+  \vskip -3ex
 %
   \begin{itemize}
 %
@@ -338,23 +491,31 @@ class SRTM(isce.component):
     property declarations
 %
     \begin{center}
-      \includegraphics[width=50ex]{srtm-properties-compact}
+      \includegraphics[height=10ex]{srtm-properties-compact}
     \end{center}
 %
 %
   \item sometimes we need to communicate the values to which properties are bound
 %
     \begin{center}
-      \includegraphics[width=50ex]{srtm-properties-bound}
+      \includegraphics[height=10ex]{srtm-properties-bound}
     \end{center}
 %
-    note the new arrow type
+  \item when we don't need the connectors, we can be more compact
+%
+    \begin{center}
+      \includegraphics[height=10ex]{srtm-properties-bound-compact}
+    \end{center}
 %
   \end{itemize}
 %
 \end{frame}
 
+% --------------------------------------
+\subsection{behaviors}
+
 %-----------------------------------
+\subsection{names}
 \begin{frame}
 %
   \frametitle{SRTM -- family}
@@ -362,18 +523,6 @@ class SRTM(isce.component):
   \begin{center}
     \only<1>{\includegraphics[width=1.0\textwidth]{component-family}}
     \only<2>{\includegraphics[width=1.0\textwidth]{component-family-explained}}
-  \end{center}
-%
-\end{frame}
-
-%-----------------------------------
-\begin{frame}
-%
-  \frametitle{SRTM - protocol}
-%
-  \begin{center}
-    \only<1>{\includegraphics[width=1.0\textwidth]{component-implements}}
-    \only<2>{\includegraphics[width=1.0\textwidth]{component-implements-explained}}
   \end{center}
 %
 \end{frame}
@@ -417,6 +566,7 @@ class SRTM(isce.component):
 \end{frame}
 
 % --------------------------------------
+\subsection{protocols}
 \begin{frame}
 %
   \frametitle{Components and protocols}
@@ -450,6 +600,18 @@ class SRTM(isce.component):
       a coherent and usable strategy for composing non-trivial applications
 %
   \end{itemize}
+%
+\end{frame}
+
+%-----------------------------------
+\begin{frame}
+%
+  \frametitle{SRTM - protocol}
+%
+  \begin{center}
+    \only<1>{\includegraphics[width=1.0\textwidth]{component-implements}}
+    \only<2>{\includegraphics[width=1.0\textwidth]{component-implements-explained}}
+  \end{center}
 %
 \end{frame}
 
