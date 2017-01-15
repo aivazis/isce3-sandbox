@@ -316,7 +316,7 @@
 %
   \item you must supply the type of the contained item so conversions can happen correctly
 %
-  \item consider the component
+  \item given the component declaration
     \begin{ipython}[gobble=4]{}
       class Band(isce.component):
           """
@@ -361,7 +361,7 @@
 %
   \item \schema{dimensional} properties have units
 %
-  \item the low level support is in \package{pyre.units}
+  \item the low level support is in \package{isce.units}
     \begin{itemize}
     \item full support for all SI base and derived units
     \item all common abbreviations and names from alternative systems of units
@@ -371,7 +371,7 @@
   \item consider
     \begin{ipython}[gobble=6]{}
       from math import cos
-      from pyre.units.SI import meter, second, radian
+      from isce.units.SI import meter, second, radian
 
       A = 2.5 * meter
       t = 1.5 * second
@@ -554,8 +554,12 @@
     \begin{itemize}
     \item a requirement for supporting user interfaces
     \item intuitive syntax for the command line
-    \item simple configuration files in a variety of formats: \identifier{XML}, Microsoft
-      Windows \identifier{.ini}, native \identifier{.pfg}
+    \item simple configuration files in a variety of formats:
+      \begin{itemize}
+      \item \identifier{pfg}: the preferred native format
+      \item \identifier{pml}: an \identifier{XML} dialect
+      \item \identifier{cfg}: a format inspired by the Microsoft Windows \identifier{.ini} format
+      \end{itemize}
     \end{itemize}
 %
   \item configuration is automatically handled by the framework and requires no explicit
