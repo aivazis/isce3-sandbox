@@ -63,14 +63,6 @@
   \end{beamercolorbox}%
 }
 
-% -- place the logo on the title area of each slide
-\addtobeamertemplate{frametitle}{}{%
-  \begin{tikzpicture}[remember picture,overlay] %
-    \node[anchor=north east,yshift=-.5em] at (current page.north east) {%
-      \includegraphics[scale=0.15]{figures/pyre-logo.pdf}};%
-  \end{tikzpicture}
-}
-
 % -- the footer
 \defbeamertemplate*{footline}{split theme}
 {%
@@ -87,7 +79,49 @@
   \vskip0pt%
 }
 
-% ------------------------------------------------------------------------------
+% -- frametitle adjustments
+
+% control whether a particular slide makes to the list of frames
+\newif\ifframeinlbf
+% true by default
+\frameinlbftrue
+
+% @ is a regular letter
+\makeatletter
+% tell beamer to produce a list of slides
+\newcommand\listofframes{\@starttoc{lbf}}
+
+% reset
+\addtobeamertemplate{frametitle}{}{%
+% -- place the logo on the title area of each slide
+  \begin{tikzpicture}[remember picture,overlay] %
+    \node[anchor=north east,yshift=-.5em] at (current page.north east) {%
+      \includegraphics[scale=0.15]{figures/pyre-logo.pdf}};%
+  \end{tikzpicture}%
+% -- if this slide is to be inserted in the list of slides
+  \ifframeinlbf
+  % -- place the title in the list of contents
+    \only<1>{%
+      \beamer@autobreakcount=0%
+      \hypertarget{\insertframetitle}{}%
+      \addcontentsline{lbf}{section}{%
+        \protect\footnotesize%
+        \protect\makebox[2em][r]{\protect\usebeamercolor[fg]{structure}\insertframenumber}%
+        \hskip 1em
+        \protect\hyperlink{\insertframetitle}{\insertframetitle}%
+        \par}%
+    }%
+  \else\fi%
+}
+
+% reset
+\makeatother
+
+%      \protect\makebox[2em][l]{\protect\usebeamercolor[fg]{structure}\insertframenumber\hfill}%
+%     %\protect\hyperlink{\insertframetitle}{\insertframetitle}%
+%      \protect\insertframetitle%
+%     \par}%
+%   %}%
 
 \mode<all>
 

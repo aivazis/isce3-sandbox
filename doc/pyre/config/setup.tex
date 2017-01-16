@@ -5,6 +5,14 @@
 % (c) 2003-2017 all rights reserved
 %
 
+% adjustments
+\makeatletter
+% where things are
+\providecommand*{\input@path}{}
+\edef\input@path{{sections/}{config/}\input@path}
+% reset
+\makeatother
+
 % language
 \usepackage[english]{babel}
 

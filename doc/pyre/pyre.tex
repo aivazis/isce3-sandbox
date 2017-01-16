@@ -5,12 +5,6 @@
 % (c) 2003-2017 all rights reserved
 %
 
-% where things are
-\makeatletter
-\providecommand*{\input@path}{}
-\edef\input@path{{sections/}{config/}\input@path}
-\makeatother
-
 % here we go
 \documentclass[10pt,compress]{beamer}
 %\geometry{paperwidth=11in,paperheight=8.5in}
@@ -18,7 +12,7 @@
 \geometry{paperwidth=140mm,paperheight=105mm}
 
 % packages, setup, macros, etc.
-\input{setup}
+\input{config/setup}
 
 % the document
 \title[pyre 1.0 -- january 2017]{pyre 1.0}
@@ -50,7 +44,15 @@
 \begin{frame}[allowframebreaks,t]
   \frametitle{References}
   \bibliographystyle{unsrtnat}
-  {\small \bibliography{sections/references}}
+  {\footnotesize \bibliography{sections/references}}
+\end{frame}
+
+% exclude from the list of frames
+\frameinlbffalse
+% list of frames
+\begin{frame}[allowframebreaks,t]
+  \frametitle{Contents}
+  \listofframes
 \end{frame}
 
 \end{document}

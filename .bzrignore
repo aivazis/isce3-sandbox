@@ -10,6 +10,7 @@ doc/**/auto
 doc/**/*.aux
 doc/**/*.bbl
 doc/**/*.blg
+doc/**/*.lbf
 doc/**/*.log
 doc/**/*.nav
 doc/**/*.out
