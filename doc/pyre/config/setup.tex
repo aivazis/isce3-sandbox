@@ -201,6 +201,15 @@
   escapeinside={\;@}{@},#1]
   {#2}}
 
+\lstnewenvironment{ipml}[2][]{
+  \lstset{
+    language=XML,
+    morecomment=[s]{<?}{?>},
+    morecomment=[s]{<!--}{-->},
+    morekeywords={encoding,name,family,property},
+    #1
+  }}{#2}
+
 % references
 \usepackage[numbers]{natbib}
 \bibliographystyle{unsrtnat}
@@ -279,9 +288,12 @@
 \def\trait#1{\mbox{\color{pml@traitcolor}\tt #1}}
 
 \def\TODO#1{{%
-    \subsubsection*{Still to do}%
-    \scriptsize\tt%
-    \begin{list}{\leftpointright}{} #1 \end{list}}}
+  \subsection{to do}%
+  \frameinlbffalse%
+  \begin{frame}[allowframebreaks]%
+    \frametitle{Still to do}%
+    \begin{itemize}#1\end{itemize}%
+  \end{frame}}}
 
 % set up the PDF options
 \hypersetup{

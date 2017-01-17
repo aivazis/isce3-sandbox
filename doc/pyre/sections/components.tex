@@ -579,7 +579,7 @@
 %
   \item all names are optional
     \begin{itemize}
-    \item public versus private
+    \item public versus private; for \pyre: end-user visible or not
     \item if an entity doesn't have a name, it's functional but not configurable
     \end{itemize}
 %
@@ -623,6 +623,48 @@
         \includegraphics[width=0.9\textwidth]{component-config}
       \end{center}
     }
+    \only<6>{
+      \begin{center}
+        \includegraphics[width=0.9\textwidth]{component-config-explained}
+      \end{center}
+    }
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}[fragile]
+%
+  \frametitle{Adding the family name}
+%
+  \vskip -3ex
+  \begin{itemize}
+%
+  \item the instruction
+%
+    \begin{center}
+      \includegraphics[height=20ex]{srtm-public}
+    \end{center}
+%
+  \item prescribes the following modifications to \component{SRTM}
+%
+    \begin{ipython}[firstnumber=4, gobble=6]{}
+      # the srtm component
+      class SRTM(isce.component, family='isce.topography.dem.srtm'):
+          """
+          Access the SRTM data archive to download tiles and produce
+          a digital elevation model for a specified region of interest
+          """
+
+          # user configurable state
+          resolution = isce.properties.int(default=1)
+          resolution.doc = 'the tile resolution in arc seconds per pixel'
+          resolution.validators = isce.constraints.isMember(1, 3)
+
+          region = isce.properties.array()
+          region.doc = 'a cloud of (lat,lon) pairs'
+    \end{ipython}
+%
+  \end{itemize}
 %
 \end{frame}
 
@@ -645,7 +687,7 @@
 
         ; for an instance named la
         la:
-            region = {regions.LA}
+            region = {regions.LA} ; a macro
 
         ; for an instance named greece
         greece:
@@ -664,6 +706,7 @@
 %
 \end{frame}
 
+% --------------------------------------
 \begin{frame}[fragile]
 %
   \frametitle{Configuration --- \identifier{cfg}}
@@ -693,6 +736,48 @@
         Greece = (41,26), (39,19), (34,24), (36,29)
       \end{icfg}
 %
+    \item no nesting
+%
+  \end{itemize}
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}[fragile]
+%
+  \frametitle{Configuration --- \identifier{pml}}
+%
+  \begin{itemize}
+%
+    \item here is the same configuration file in the alternative \identifier{pml} format
+%
+      \begin{ipml}[gobble=6]{}
+        <?xml version="1.0" encoding="utf-8"?>
+        <config>
+          <!-- override the defaults in the component source code -->
+          <component family="isce.topography.dem.srtm">
+            <bind property="region"> [] </bind>
+            <bind property="resolution"> 1 </bind>
+          </component>
+
+          <!-- for an instance named la -->
+          <component name="la">
+            <bind property="region">{regions.LA}</bind>
+          </component>
+
+          <!-- for an instance named greece -->
+          <component name="greece">
+            <bind property="resolution">3</bind>
+            <bind property="region">{regions.Greece}</bind>
+            </component>
+
+          <!-- region aliases -->
+          <bind property="regions.LA">(33.3,-118.4), (35.7,-116.8)</bind>
+          <bind property="regions.Greece">(41,26), (39,19), (34,24), (36,29)</bind>
+
+        </config>
+      \end{ipml}
+%
   \end{itemize}
 %
 \end{frame}
@@ -701,13 +786,13 @@
 % recap
 \begin{frame}
 %
-  \frametitle{Recap: what we know so far}
+  \frametitle{Waypoint: components and their properties}
 %
   \begin{itemize}
 %
   \item \pyre\ components are evolved python objects
     \begin{itemize}
-    \item the classes have family names, the instances have names
+    \item the classes have family names, the instances get names when instantiated
     \item these names are unique strings in hierarchical namespaces delimited by periods
     \item collections of components form packages \emph{implicitly}, based on the topmost level
       in their namespace
@@ -739,13 +824,77 @@
 %
 \end{frame}
 
+%-----------------------------------
+\begin{frame}
+%
+  \frametitle{Waypoint: notation for components and their properties}
+%
+    \only<1>{
+      \begin{center}
+        \includegraphics[width=0.9\textwidth]{component-wayprop-class}
+      \end{center}
+    }
+    \only<2>{
+      \begin{center}
+        \includegraphics[width=0.9\textwidth]{component-wayprop-instance}
+      \end{center}
+    }
+%
+\end{frame}
+
 % --------------------------------------
 \subsection{behaviors}
 
-\begin{frame}
+\begin{frame}[fragile]
 %
   \frametitle{Behaviors}
 %
+  \vskip -3ex
+  \begin{itemize}
+%
+    \item Component methods may be marked public
+%
+      \begin{ipython}[firstnumber=4, gobble=6]{}
+        # the srtm component
+        class SRTM(isce.component, family='isce.topography.dem.srtm'):
+  \end{ipython}
+%
+  \item here is what \component{SRTM} can do:
+%
+  \begin{ipython}[firstnumber=19, gobble=6]{}
+           @isce.export
+           def authenticate(self, ...):
+               """
+               Retrieve and store the user's authentication credentials
+               """
+
+            @isce.export
+            def plan(self, ...):
+                """
+                Describe the work required to generate the specified DEM
+                """
+
+            @isce.export
+            def download(self, ...):
+                """
+                Retrieve the tiles necessary to cover the convex hull of my {region}
+                """
+
+            @isce.export
+            def stitch(self, ...):
+                """
+                Assemble the elevation model
+                """
+    \end{ipython}
+%
+  \end{itemize}
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}
+%
+  \frametitle{}
 %
 \end{frame}
 
@@ -808,14 +957,40 @@
 %-----------------------------------
 \begin{frame}
 %
-  \frametitle{Fully decorated component class}
+  \frametitle{Fully decorated component}
 %
+  \only<1>{
     \begin{center}
       \includegraphics[width=0.9\textwidth]{component-decorated}
     \end{center}
+  }
+%
+  \only<2>{
+    \begin{center}
+      \includegraphics[width=0.9\textwidth]{component-decorated-config}
+    \end{center}
+  }
 %
 \end{frame}
 
+% --------------------------------------
+
+\TODO{
+  \item properties
+    \begin{itemize}
+    \item point out the '.'join(...) structure of names, which mimics python scopes
+    \item explain conditional assignments
+    \item syntax rules for each format
+    \item explain which files are loaded automatically
+    \item explain how \pyre\ looks for configuration files
+    \item explain priorities
+    \item
+    \end{itemize}
+%
+  \item behaviors
+%
+  \item protocols
+}
 
 %%% Local Variables:
 %%% mode: latex
