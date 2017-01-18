@@ -30,7 +30,7 @@
     \item that grant access to this state
     \item allow you to call functions that get easy access to this state
     \item it is worth remembering that python classes are themselves live objects: they
-      are instances of their \emph{type}
+      are instances of their \emph{type}; see \frameref{pyre-configurables} for an example
     \end{itemize}
 %
   \item classes are factories of instances
@@ -172,7 +172,7 @@
     or, equivalently, from the command line of some driver script?
 %
     \begin{ish}{}
-      dem.py --srtm.resolution=1
+      stitch.py --srtm.resolution=1
     \end{ish}
 %
   \item there are two ingredients missing:
@@ -239,7 +239,7 @@
     \begin{itemize}
     \item command line, configuration files, dialog boxes, web pages: they all gather
       information from the user as strings
-    \item we need \emph{meta-data} so we can convert from strings to the intended object
+    \item we need \emph{meta-data} so we can convert strings to the intended object
     \end{itemize}
 %
   \end{itemize}
@@ -552,6 +552,7 @@
 %
   \frametitle{The names of things}
 %
+  \vskip -3ex
   \begin{itemize}
 %
   \item in order to connect components to configurations, component authors and end
@@ -588,6 +589,9 @@
   \item component classes may be given unique family names during declaration
 %
   \item namespace management: components belong to packages
+    \begin{itemize}
+    \item the name is deduced from the first level of the family name
+    \end{itemize}
 %
   \end{itemize}
 %
@@ -915,13 +919,13 @@
     \item multiple implementations of components that can stitch {\dem}s together
     \end{itemize}
 %
-  \item it is natural to want to let the user pick among the alternative implementations and
-    take control of the wiring; we need
+  \item in order to let the user pick among the alternative implementations and
+    take control of the wiring we need
 %
     \begin{itemize}
     \item a way for \component{Topo} to express that it \emph{requires} a \dem\
       stitcher
-    \item to express that \component{SRTM} and its alternatives can \emph{satisfy} this
+    \item a way to indicate that \component{SRTM} and its alternatives can \emph{satisfy} this
       requirement
     \item a way for the end user to specify which alternative she prefers
     \item a way for the framework to locate, instantiate, and validate the user's choice
@@ -1042,18 +1046,6 @@
 \end{frame}
 
 % --------------------------------------
-\begin{frame}
-%
-  \frametitle{A sneak peak at \pyre\ internals}
-%
-  \vskip -3ex
-  \begin{center}
-    \includegraphics[height=0.8\textheight]{pyre-configurables}
-  \end{center}
-%
-\end{frame}
-
-% --------------------------------------
 \begin{frame}[fragile]
 %
   \frametitle{Specifying the protocol in the component declaration}
@@ -1073,10 +1065,6 @@
       # the srtm component
       class SRTM(isce.component, family='isce.topography.dem.srtm',
                   implements=isce.topography.dem):
-          """
-          Access the SRTM data archive to download tiles and produce
-          a digital elevation model for a specified region of interest
-          """
     \end{ipython}
 %
     assuming that the package \package{isce.topography} correctly encapsulates the class
@@ -1099,7 +1087,7 @@
 %-----------------------------------
 \begin{frame}
 %
-  \frametitle{Fully decorated component}
+  \frametitle{Waypoint: fully decorated component}
 %
   \only<1>{
     \begin{center}
@@ -1116,14 +1104,26 @@
 \end{frame}
 
 % --------------------------------------
+\begin{frame}
+  \label{frame:pyre-configurables}
+%
+  \frametitle{A sneak peak at \pyre\ internals}
+%
+  \vskip -3ex
+  \begin{center}
+    \includegraphics[height=0.8\textheight]{pyre-configurables}
+  \end{center}
+%
+\end{frame}
+
+% --------------------------------------
 
 \TODO{
   \item properties
     \begin{itemize}
-    \item point out the '.'join(...) structure of names, which mimics python scopes
     \item explain conditional assignments
     \item syntax rules for each format
-    \item explain which files are loaded automatically
+    \item explain which files are loaded automatically -- overview/15
     \item explain how \pyre\ looks for configuration files
     \item explain priorities
     \item
