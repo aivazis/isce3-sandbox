@@ -400,7 +400,7 @@
     \item full support for all SI base and derived units
     \item all common abbreviations and names from alternative systems of units
     \item correct arithmetic; proper handling of functions from \package{math}
-    \item distributive on containers: \literal{[1,2,3]*m -> [1*m,2*m,3*m]}
+    \item distributive over containers: \literal{[1,2,3]*m -> [1*m,2*m,3*m]}
     \end{itemize}
 %
   \item consider
@@ -902,12 +902,47 @@
 \subsection{protocols}
 \begin{frame}
 %
+  \frametitle{Wiring components to each other}
+%
+  \begin{itemize}
+%
+  \item the real power of the framework is in letting components be properties,
+    i.e.~configurable state, for other components
+%
+  \item imagine
+    \begin{itemize}
+    \item a component \component{Topo} that needs a \dem\ of a given region
+    \item multiple implementations of components that can stitch {\dem}s together
+    \end{itemize}
+%
+  \item it is natural to want to let the user pick among the alternative implementations and
+    take control of the wiring; we need
+%
+    \begin{itemize}
+    \item a way for \component{Topo} to express that it \emph{requires} a \dem\
+      stitcher
+    \item to express that \component{SRTM} and its alternatives can \emph{satisfy} this
+      requirement
+    \item a way for the end user to specify which alternative she prefers
+    \item a way for the framework to locate, instantiate, and validate the user's choice
+    \end{itemize}
+%
+  \item we must be able to translate strings to configured component instances
+%
+  \item upon reflection, the process is very similar to our treatment of the simpler types
+%
+  \end{itemize}
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}
+%
   \frametitle{Components and protocols}
 %
   \begin{itemize}
 %
-  \item a design pattern\supercite{patterns} that enables the assembly of applications out of
-    interchangeable parts, under the control of the end user
+  \item let's separate expressing the requirement from satisfying it
       \begin{itemize}
       \item \emph{protocols} are abstract specifications of application requirements
       \item \emph{components} are concrete implementations that satisfy requirements
@@ -918,8 +953,10 @@
 %
     \item inversion of control\supercite{johnson-88}:
       \begin{itemize}
-      \item the binding of actual implementations to the application requirements happens at
-        runtime, under the control of the end user
+      \item a design pattern\supercite{patterns} that enables the assembly of applications out
+        of interchangeable parts, under the control of the end user
+      \item the selection and binding of actual implementations to the application requirements
+        happens at runtime
       \end{itemize}
 %
     \item in \pyre, the user
