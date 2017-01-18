@@ -976,7 +976,7 @@
 %-----------------------------------
 \begin{frame}
 %
-  \frametitle{SRTM - protocol}
+  \frametitle{Indicating the protocol}
 %
   \only<1>{
     \begin{center}
@@ -988,6 +988,111 @@
       \includegraphics[width=0.9\textwidth]{component-implements-explained}
     \end{center}
   }
+  \only<3>{
+    \begin{center}
+      \includegraphics[width=0.9\textwidth]{component-implements-pedigree}
+    \end{center}
+  }
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}[fragile]
+%
+  \frametitle{Protocol declaration}
+%
+  \vskip -3ex
+  \begin{itemize}
+%
+  \item the \protocol{DEM} declaration is very similar to the declaration of \component{SRTM}
+%
+  \item the design decision to be made here is what should one require of \emph{all}
+    \protocol{DEM} implementors, regardless of their implementation details
+%
+      \begin{ipython}[firstnumber=4, gobble=6]{}
+        # the srtm component
+        class DEM(isce.protocol, family='isce.topography.dem'):
+            """
+            Requirements for components that assemble digital elevation models
+            """
+
+            # user configurable state
+            region = isce.properties.array()
+            region.doc = 'the specification of the region of interest'
+
+            # required behavior
+            @isce.provides
+            def plan(self, ...):
+                """
+                Describe the work required to generate the specified DEM
+                """
+
+            @isce.provides
+            def stitch(self, ...):
+                """
+                Assemble the elevation model
+                """
+    \end{ipython}
+%
+  \item it makes sense to not only require behavior, but configurable state as well, since both
+    are part of the public interface
+%
+  \end{itemize}
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}
+%
+  \frametitle{A sneak peak at \pyre\ internals}
+%
+  \vskip -3ex
+  \begin{center}
+    \includegraphics[height=0.8\textheight]{pyre-configurables}
+  \end{center}
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}[fragile]
+%
+  \frametitle{Specifying the protocol in the component declaration}
+%
+  \vskip -3ex
+  \begin{itemize}
+%
+  \item the instruction
+%
+    \begin{center}
+      \includegraphics[height=20ex]{srtm-implements}
+    \end{center}
+%
+  \item prescribes the following modification to the declaration of \component{SRTM}
+%
+    \begin{ipython}[firstnumber=4, gobble=6]{}
+      # the srtm component
+      class SRTM(isce.component, family='isce.topography.dem.srtm',
+                  implements=isce.topography.dem):
+          """
+          Access the SRTM data archive to download tiles and produce
+          a digital elevation model for a specified region of interest
+          """
+    \end{ipython}
+%
+    assuming that the package \package{isce.topography} correctly encapsulates the class
+    \class{DEM} in the symbol \identifier{dem} by a correctly structured \keyword{import}
+    statement
+%
+  \item the framework checks compliance at compile time, i.e the first time the
+    \package{SRTM.py} is imported
+%
+  \item proper namespace design simplifies how the user selects an actual implementation
+    \begin{itemize}
+      \item by enabling intuitive shorthand
+      \item more on this later
+    \end{itemize}
+%
+  \end{itemize}
 %
 \end{frame}
 
