@@ -6,9 +6,9 @@
 %
 
 \section{components}
-\subsection{basics}
 
 % --------------------------------------
+\subsection{basics}
 % components:
 \begin{frame}
 %
@@ -139,7 +139,6 @@
 
 % --------------------------------------
 \subsection{properties}
-
 % properties
 \begin{frame}[fragile]
 %
@@ -848,7 +847,6 @@
 
 % --------------------------------------
 \subsection{behaviors}
-
 \begin{frame}[fragile]
 %
   \frametitle{Behaviors}
@@ -1033,6 +1031,45 @@
 %
   \item it makes sense to not only require behavior, but configurable state as well, since both
     are part of the public interface
+%
+  \end{itemize}
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}[fragile]
+%
+  \frametitle{Default values for components}
+%
+  \vskip -3ex
+  \begin{itemize}
+%
+  \item \protocol{DEM} participates in the configuration process by providing the default
+    implementation
+%
+    \begin{ipython}[firstnumber=27, gobble=2]{}
+      # framework obligations
+      @classmethod
+      def pyre_default(cls, **kwds):
+          """
+          Supply a default DEM archive
+          """
+          # the default is
+          from .srtm3 import srtm as default
+          # so return it
+          return default
+    \end{ipython}
+%
+  \item
+    note that \function{pyre\_default} should return the component \emph{class} itself, not an
+    instance, since it is going to be invoked in every context a \dem\ stitcher is required
+    \begin{itemize}
+    \item however, in some instances, it is useful to return a singleton\supercite{patterns},
+      so the framework permits component instances as return values
+    \end{itemize}
+%
+  \item \function{pyre\_default} must be declared as a \function{classmethod}, not a regular
+    method
 %
   \end{itemize}
 %
