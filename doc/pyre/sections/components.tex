@@ -896,13 +896,6 @@
 \end{frame}
 
 % --------------------------------------
-\begin{frame}
-%
-  \frametitle{}
-%
-\end{frame}
-
-% --------------------------------------
 \subsection{protocols}
 \begin{frame}
 %
@@ -1126,12 +1119,20 @@
     \item explain which files are loaded automatically -- overview/15
     \item explain how \pyre\ looks for configuration files
     \item explain priorities
-    \item
     \end{itemize}
 %
   \item behaviors
+    \begin{itemize}
+    \item \decorator{pyre.export} vs \decorator{pyre.provides}
+    \item in protocol we don't need a body, just the comment block
+    \item existence is compatibility; we don't check signature yet
+    \item known bug: there is no useful generic property type; being addressed
+    \end{itemize}
 %
   \item protocols
+    \begin{itemize}
+    \item add \method{pyre\_default}
+    \end{itemize}
 }
 
 %%% Local Variables:
