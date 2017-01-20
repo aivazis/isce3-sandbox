@@ -177,7 +177,7 @@
   \item there are two ingredients missing:
     \begin{itemize}
     \item \trait{resolution} must become a \emph{property} of \component{SRTM}, i.e.~the
-      component register it as an attribute managed by the framework
+      component must register it as an attribute managed by the framework
     \item \component{SRTM} and its instances need \emph{names} so the user can refer to them
       from the user interface
     \end{itemize}
@@ -348,9 +348,10 @@
   \item there are three basic container types: \basictype{tuple}, \basictype{list} and
     \basictype{set}
 %
-  \item you must supply the type of the contained item so conversions can happen correctly
+  \item they are \emph{homogeneous}; further, you must supply a schema for the contained items
+    so conversions can happen correctly
 %
-  \item given the component declaration
+  \item for example, given the component declaration
     \begin{ipython}[gobble=4]{}
       class Band(isce.component):
           """
@@ -376,8 +377,8 @@
 %
     more sophisticated -- and realistic -- examples coming up
 %
-  \item \schema{array} passes its values through \function{eval}; it accepts any expression that
-    evaluates into an iterable without doing much error checking
+  \item there is also \schema{array}; it passes its values through \function{eval} and accepts
+    any expression that evaluates into an iterable without doing much error checking
 %
   \end{itemize}
 %
@@ -435,7 +436,8 @@
 %
   \begin{itemize}
 %
-  \item there are only two valid values for \trait{resolution}
+  \item there are only two valid values for \trait{resolution}, so let's inform
+    \component{SRTM}
 %
     \begin{ipython}[firstnumber=4, gobble=6]{}
       # the srtm component
@@ -457,7 +459,7 @@
   \item the full list of primitives are
     \begin{itemize}
     \item \constraint{isEqual}, \constraint{isGreater},
-      \constraint{isGreaterEqual},\constraint{isLess}, \constraint{isLessEqual}
+      \constraint{isGreaterEqual}, \constraint{isLess}, \constraint{isLessEqual}
     \item \constraint{isPositive}, \constraint{isNegative}, \constraint{isBetween}
     \item \constraint{isMember}, \constraint{isSubset}, \constraint{isLike}
     \end{itemize}
@@ -468,7 +470,7 @@
     \item \constraint{isAll}, \constraint{isAny}
     \end{itemize}
 %
-  \item easy to extend
+  \item very easy to extend: they are boolean functions of the proposed value
 %
   \end{itemize}
 %
@@ -674,6 +676,8 @@
 % --------------------------------------
 \begin{frame}[fragile]
 %
+  \label{frame:srtm-pfg}
+%
   \frametitle{Configuration --- \identifier{pfg}}
 %
   \begin{itemize}
@@ -712,41 +716,7 @@
 % --------------------------------------
 \begin{frame}[fragile]
 %
-  \frametitle{Configuration --- \identifier{cfg}}
-%
-  \begin{itemize}
-%
-    \item here is the same configuration file in the alternative \identifier{cfg} format
-%
-      \begin{icfg}[gobble=6]{}
-        ; override the defaults in the component source code
-        [ isce.topography.dem.srtm ]
-        region = [] ; empty, by default
-        resolution = 1 ; arc seconds per pixel
-
-        ; for an instance named la
-        [ la ]
-        region = {regions.LA}
-
-        ; for an instance named greece
-        [ greece ]
-        resolution = 3
-        region = {regions.Greece}
-
-        ; region aliases
-        [ regions ]
-        LA = (33.3,-118.4), (35.7,-116.8)
-        Greece = (41,26), (39,19), (34,24), (36,29)
-      \end{icfg}
-%
-    \item no nesting
-%
-  \end{itemize}
-%
-\end{frame}
-
-% --------------------------------------
-\begin{frame}[fragile]
+  \label{frame:srtm-pml}
 %
   \frametitle{Configuration --- \identifier{pml}}
 %
@@ -780,6 +750,44 @@
 
         </config>
       \end{ipml}
+%
+  \end{itemize}
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}[fragile]
+%
+  \label{frame:srtm-cfg}
+%
+  \frametitle{Configuration --- \identifier{cfg}}
+%
+  \begin{itemize}
+%
+    \item here is the same configuration file in the alternative \identifier{cfg} format
+%
+      \begin{icfg}[gobble=6]{}
+        ; override the defaults in the component source code
+        [ isce.topography.dem.srtm ]
+        region = [] ; empty, by default
+        resolution = 1 ; arc seconds per pixel
+
+        ; for an instance named la
+        [ la ]
+        region = {regions.LA}
+
+        ; for an instance named greece
+        [ greece ]
+        resolution = 3
+        region = {regions.Greece}
+
+        ; region aliases
+        [ regions ]
+        LA = (33.3,-118.4), (35.7,-116.8)
+        Greece = (41,26), (39,19), (34,24), (36,29)
+      \end{icfg}
+%
+    \item no nesting
 %
   \end{itemize}
 %
@@ -888,6 +896,51 @@
                 Assemble the elevation model
                 """
     \end{ipython}
+%
+  \end{itemize}
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}[fragile]
+%
+  \frametitle{A simple harness}
+%
+  \vskip -3ex
+  \begin{itemize}
+%
+  \item now that \component{SRTM} can stitch a \dem, we can interact with it
+%
+    \begin{ipython}{}
+      # get the component class
+      from isce.topography.srtm3 import srtm
+
+      # instantiate one
+      greece = srtm(name='greece')
+      # show me the current configuration
+      print('{srtm.pyre_name}:'.format(srtm=greece)
+      print('    region: {srtm.region}:'.format(srtm=greece)
+      print('    resolution: {srtm.resolution}:'.format(srtm=greece)
+
+      # instantiate another
+      la = srtm(name='la')
+      # show me the current configuration
+      print('{srtm.pyre_name}:'.format(srtm=la)
+      print('    region: {srtm.region}:'.format(srtm=la)
+      print('    resolution: {srtm.resolution}:'.format(srtm=la)
+      # we can override any of this:
+      la.resolution = 3 # arc seconds per pixel
+      # and stitch a digital elevation model
+      dem = la.stitch()
+    \end{ipython}
+%
+  \item if you want try this yourself, go to a scratch area in your filesystem
+    and run this code
+%
+  \item you may want to experiment with one of the configuration files from
+    \framesref{srtm-pfg}{srtm-cfg} as well
+%
+  \item scripts like this are perfect for building test suites for individual components
 %
   \end{itemize}
 %
