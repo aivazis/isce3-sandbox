@@ -979,6 +979,9 @@
 %
   \item upon reflection, the process is very similar to our treatment of the simpler types
 %
+  \item ideally, there should be minimal coupling between \component{Topo} and
+    \component{SRTM}
+%
   \end{itemize}
 %
 \end{frame}
@@ -1202,9 +1205,14 @@
 % --------------------------------------
 
 \TODO{
-  \item properties
+%
+  \item configuration
     \begin{itemize}
-    \item explain conditional assignments
+    \item conditional assignments
+    \item assignments involving expressions and references
+    \item wiring shortcuts for properly designed package namespaces
+    \item having multiple configurations for the same property in the same file
+    \item wiring a facility to a specific, perhaps pre\"existing component
     \item syntax rules for each format
     \item explain which files are loaded automatically -- overview/15
     \item explain how \pyre\ looks for configuration files
@@ -1221,9 +1229,9 @@
 %
   \item protocols
     \begin{itemize}
-    \item add \method{pyre\_default}
+    \item ?
     \end{itemize}
-}
+  }
 
 %%% Local Variables:
 %%% mode: latex
