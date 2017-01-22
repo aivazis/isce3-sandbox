@@ -81,6 +81,14 @@
 
 % -- frametitle adjustments
 
+% control whether a particular section makes to the list of frames
+\newif\ifsectioninlbf
+% true by default
+\sectioninlbftrue
+% control whether a particular subsection makes to the list of frames
+\newif\ifsubsectioninlbf
+% true by default
+\subsectioninlbftrue
 % control whether a particular slide makes to the list of frames
 \newif\ifframeinlbf
 % true by default
@@ -105,10 +113,11 @@
       \beamer@autobreakcount=0%
       \hypertarget{\insertframetitle}{}%
       \addcontentsline{lbf}{section}{%
-        \protect\footnotesize%
-        \protect\makebox[2em][r]{\protect\usebeamercolor[fg]{structure}\insertframenumber}%
-        \hskip 1em
+        \protect\scriptsize%
+        \hskip 2em%
         \protect\hyperlink{\insertframetitle}{\insertframetitle}%
+        \hfill
+        \protect\makebox[3em][r]{\protect\usebeamercolor[fg]{structure}\insertframenumber}%
         \par}%
     }%
   \else\fi%
@@ -116,6 +125,25 @@
 
 % reset
 \makeatother
+
+\AtBeginSection[]{%
+  \ifsectioninlbf
+  \hypertarget{\secname}{}%
+  \addcontentsline{lbf}{section}{%
+    \protect\hyperlink{\secname}{\protect\usebeamercolor[fg]{structure}\secname}%
+    \par}%
+}
+
+\AtBeginSubsection[]{%
+  \ifsubsectioninlbf
+  \hypertarget{\subsecname}{}%
+  \addcontentsline{lbf}{section}{%
+    \protect\footnotesize%
+    \hskip1em%
+    \protect\hyperlink{\subsecname}{\protect\usebeamercolor[fg]{structure}\subsecname}%
+    \par}%
+}
+
 
 %      \protect\makebox[2em][l]{\protect\usebeamercolor[fg]{structure}\insertframenumber\hfill}%
 %     %\protect\hyperlink{\insertframetitle}{\insertframetitle}%
