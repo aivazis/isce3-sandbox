@@ -9,6 +9,7 @@
 \documentclass[10pt,compress]{beamer}
 %\geometry{paperwidth=11in,paperheight=8.5in}
 %\geometry{paperwidth=128mm,paperheight=96mm}
+%\geometry{paperwidth=192mm,paperheight=140mm}
 \geometry{paperwidth=140mm,paperheight=105mm}
 
 % packages, setup, macros, etc.
@@ -34,6 +35,7 @@
 \end{frame}
 
 % the sections
+\input{contents}
 \input{intro}
 \input{components}
 \input{applications}
@@ -45,14 +47,6 @@
   \frametitle{References}
   \bibliographystyle{unsrtnat}
   {\footnotesize \bibliography{sections/references}}
-\end{frame}
-
-% exclude from the list of frames
-\frameinlbffalse
-% list of frames
-\begin{frame}[allowframebreaks,t]
-  \frametitle{Contents}
-  \listofframes
 \end{frame}
 
 \end{document}

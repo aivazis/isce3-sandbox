@@ -94,7 +94,7 @@
 % true by default
 \frameinlbftrue
 
-% @ is a regular letter
+% make @ a regular letter
 \makeatletter
 % tell beamer to produce a list of slides
 \newcommand\listofframes{\@starttoc{lbf}}
@@ -116,8 +116,8 @@
         \protect\scriptsize%
         \hskip 2em%
         \protect\hyperlink{\insertframetitle}{\insertframetitle}%
-        \hfill
-        \protect\makebox[3em][r]{\protect\usebeamercolor[fg]{structure}\insertframenumber}%
+        \hskip 1em{\protect\color{pyre@sand}\protect\dotfill}\hskip 1em%
+        \protect\makebox[1em][r]{\protect\usebeamercolor[fg]{structure}\insertframenumber}%
         \par}%
     }%
   \else\fi%
