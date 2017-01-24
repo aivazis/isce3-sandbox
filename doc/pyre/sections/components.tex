@@ -859,6 +859,8 @@
 \subsection{behaviors}
 \begin{frame}[fragile]
 %
+  \label{frame:component-behaviors}
+%
   \frametitle{Behaviors}
 %
   \vskip -3ex
@@ -871,7 +873,7 @@
         class SRTM(isce.component, family='isce.topography.dem.srtm'):
   \end{ipython}
 %
-  \item here is what \component{SRTM} can do:
+  \item here is what \component{SRTM} claims it can do: (compare with \frameref{protocol-decl})
 %
   \begin{ipython}[firstnumber=19, gobble=6]{}
            @isce.export
@@ -1058,6 +1060,8 @@
 % --------------------------------------
 \begin{frame}[fragile]
 %
+  \label{frame:protocol-decl}
+%
   \frametitle{Protocol declaration}
 %
   \vskip -3ex
@@ -1093,8 +1097,49 @@
                 """
     \end{ipython}
 %
+  \item compare with the \component{SRTM} declaration on \frameref{component-behaviors}
+%
+  \end{itemize}
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}
+%
+  \frametitle{Notes on protocols}
+%
+  \vskip -3ex
+%
+  \begin{itemize}
+%
   \item it makes sense to not only require behavior, but configurable state as well, since both
     are part of the public interface
+    \begin{itemize}
+    \item this is python, not \cpp...
+    \end{itemize}
+%
+  \item protocols express requirements using the decorator \decorator{@isce.provides};
+    components advertise compliance with \decorator{@isce.export}
+%
+  \item protocol behaviors do not need a body; it is helpful to have the docstring though
+    \begin{itemize}
+    \item the language syntax requires something to be there
+    \item might as well remind implementers what you expect their implementation should do
+    \end{itemize}
+%
+  \item the mere existence of a function is currently enough to satisfy the compatibility
+    requirements
+    \begin{itemize}
+    \item e.g.~no signature checks
+    \item it is currently hard to do more than that in python
+    \item may not be bad thing after all
+    \end{itemize}
+%
+  \item known bug: there is no way to express a generic request for a property while leaving
+    the actual type up to the implementation
+    \begin{itemize}
+    \item perhaps some implementations can do better than \schema{array} for \trait{region}
+    \end{itemize}
 %
   \end{itemize}
 %
@@ -1210,36 +1255,6 @@
 %
 \end{frame}
 
-% --------------------------------------
-
-\TODO{
-%
-  \item configuration
-    \begin{itemize}
-    \item conditional assignments
-    \item assignments involving expressions and references
-    \item wiring shortcuts for properly designed package namespaces
-    \item having multiple configurations for the same property in the same file
-    \item wiring a facility to a specific, perhaps pre\"existing component
-    \item syntax rules for each format
-    \item explain which files are loaded automatically -- overview/15
-    \item explain how \pyre\ looks for configuration files
-    \item explain priorities
-    \end{itemize}
-%
-  \item behaviors
-    \begin{itemize}
-    \item \decorator{pyre.export} vs \decorator{pyre.provides}
-    \item in protocol we don't need a body, just the comment block
-    \item existence is compatibility; we don't check signature yet
-    \item known bug: there is no useful generic property type; being addressed
-    \end{itemize}
-%
-  \item protocols
-    \begin{itemize}
-    \item ?
-    \end{itemize}
-  }
 
 %%% Local Variables:
 %%% mode: latex
