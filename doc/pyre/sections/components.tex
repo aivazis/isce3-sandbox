@@ -248,7 +248,7 @@
 % --------------------------------------
 \begin{frame}
 %
-  \frametitle{Properties}
+  \frametitle{Property meta-data}
 %
   \vskip -2ex
   \begin{itemize}
@@ -273,7 +273,7 @@
     \item easy enough to implement your own; the requirements are very simple
     \end{itemize}
 %
-  \item meta-data:
+  \item other meta-data:
     \begin{itemize}
     \item \identifier{doc} and \identifier{tip}: simple and short documentation strings
     \item \identifier{default}: the default value, in case the user doesn't supply one
@@ -600,6 +600,8 @@
 
 %-----------------------------------
 \begin{frame}
+%
+  \label{frame:components-public}
 %
   \frametitle{Public components and their instances}
 %
@@ -971,7 +973,7 @@
       stitcher
     \item a way to indicate that \component{SRTM} and its alternatives can \emph{satisfy} this
       requirement
-    \item a way for the end user to specify which alternative she prefers
+    \item a way for the end user to specify the alternative she prefers
     \item a way for the framework to locate, instantiate, and validate the user's choice
     \end{itemize}
 %
@@ -981,6 +983,12 @@
 %
   \item ideally, there should be minimal coupling between \component{Topo} and
     \component{SRTM}
+%
+  \item let's first focus on what is needed for \component{SRTM} to advertise its capabilities
+    \begin{itemize}
+    \item our simple harness on \frameref{simpleapp} is an example of a component that
+      expresses a requirement for a \dem\ stitcher
+    \end{itemize}
 %
   \end{itemize}
 %
@@ -1158,7 +1166,7 @@
     statement
 %
   \item the framework checks compliance at compile time, i.e the first time the
-    \package{SRTM.py} is imported
+    file \package{SRTM.py} is imported
 %
   \item proper namespace design simplifies how the user selects an actual implementation
     \begin{itemize}
