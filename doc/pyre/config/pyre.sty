@@ -126,6 +126,7 @@
 % reset
 \makeatother
 
+% sections in the table of frames
 \AtBeginSection[]{%
   \ifsectioninlbf
   \hypertarget{\secname}{}%
@@ -134,6 +135,7 @@
     \par}%
 }
 
+% sections in the table of frames
 \AtBeginSubsection[]{%
   \ifsubsectioninlbf
   \hypertarget{\subsecname}{}%
@@ -144,12 +146,8 @@
     \par}%
 }
 
-
-%      \protect\makebox[2em][l]{\protect\usebeamercolor[fg]{structure}\insertframenumber\hfill}%
-%     %\protect\hyperlink{\insertframetitle}{\insertframetitle}%
-%      \protect\insertframetitle%
-%     \par}%
-%   %}%
+% disable the frame continuation count on [allowframebreaks]
+\setbeamertemplate{frametitle continuation}{}
 
 \mode<all>
 
