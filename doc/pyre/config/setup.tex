@@ -201,14 +201,23 @@
   escapeinside={\;@}{@},#1]
   {#2}}
 
-\lstnewenvironment{ipml}[2][]{
-  \lstset{
-    language=XML,
-    morecomment=[s]{<?}{?>},
-    morecomment=[s]{<!--}{-->},
-    morekeywords={encoding,name,family,property},
-    #1
+\lstdefinelanguage{pml}
+{
+  sensitive=true,
+  morecomment=[s]{<?}{?>},%
+  morecomment=[s]{<!--}{-->},%
+  morekeywords={encoding,name,family,property},%
+}
+\lstnewenvironment{ipml}[2][]{%
+  \lstset{%
+    language=pml,%
+    #1%
   }}{#2}
+
+\def\pml#1#2{
+  \lstinputlisting[
+    language=pml,
+    #1]{#2}}
 
 % references
 \usepackage[numbers]{natbib}
@@ -248,8 +257,8 @@
 \def\optimum#1{\stackrel[#1]{}{\mbox{\rm opt}}\,}
 
 \def\cc{\mbox{\tt\small C}}
-%\def\cpp{\mbox{\tt\small C++}}
-\def\cpp{\mbox{\tt C\raise.4ex\hbox{++}}}
+\def\cpp{\mbox{\tt\small C++}}
+%\def\cpp{\mbox{\tt C\raise.1ex\hbox{++}}}
 \def\fortran{{\tt\small FORTRAN}}
 \def\f90{{\tt\small FORTRAN90}}
 \def\mpi{{\tt MPI}}

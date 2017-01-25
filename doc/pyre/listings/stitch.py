@@ -4,7 +4,7 @@ import isce #@\label{line:applications-simple-import}@
 # the app declaration
 class Stitcher(isce.application): #@\label{line:applications-simple-decl}@
     """
-    Stitch together a DEM for some region
+    Stitch together a digital elevation model for a region of interest
     """
 
     # user configurable state

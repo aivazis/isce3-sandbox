@@ -19,35 +19,7 @@
 %
   \item \component{Stitcher}, a simple \pyrebuiltin{isce.application}
 %
-    \begin{ipython}[gobble=2]{}
-      #!/usr/bin/env python3
-      import isce #@\label{line:applications-simple-import}@
-
-      # the app declaration
-      class Stitcher(isce.application): #@\label{line:applications-simple-decl}@
-          """
-          Stitch together a DEM for some region
-          """
-
-          # user configurable state
-          dem = isce.topography.dem() #@\label{line:applications-simple-dem}@
-          dem.doc = 'the assembler of the elevation model'
-
-          # behaviors
-          @isce.export
-          def main(self, *args, **kwds): #@\label{line:applications-simple-main}@
-              """The main entry point"""
-              # stitch the dem
-              self.dem.stitch() #@\label{line:applications-simple-stitch}@
-              # indicate that all went well
-              return 0
-
-      # main
-      if __name__ == '__main__': #@\label{line:applications-simple-boot}@
-          app = Stitcher(name='stitch')
-          status = app.run()
-          raise SystemExit(status)
-    \end{ipython}
+    \python{}{listings/stitch.py}
 %
   \end{itemize}
 %
@@ -232,27 +204,13 @@
 %
   \frametitle{Application configuration files}
 %
+  \vskip -3ex
   \begin{itemize}
 %
   \item settings that we expect to change less frequently can be placed in configuration files;
     let's adapt the sample from \frameref{srtm-pfg}
 %
-    \begin{ipfg}[gobble=6]{}
-      ; application configuration
-      stitch: ; this matches the name of the application instance
-         ; pick an implementation (as an illustration)
-         dem = srtm
-
-         ; and configure it
-         dem:
-             resolution = 1
-             region = {regions.LA} ; a macro
-
-      ; region database
-      regions:
-          LA = (33.3,-118.4), (35.7,-116.8)
-          Greece = (41,26), (39,19), (34,24), (36,29)
-      \end{ipfg}
+    \pfg{}{listings/stitch.pfg}
 %
   \item the ability to capture the namespace hierarchy with the block structure makes for very
     readable configuration files
@@ -261,7 +219,7 @@
 %
   \item there are many ways to force the framework to recognize these settings
     \begin{itemize}
-    \item the natural one is to place them in a file call \package{stitch.pfg} in the working
+    \item the natural one is to place them in a file called \package{stitch.pfg} in the working
       directory
     \item see \frameref{applications-config-sources} for a more complete picture
     \end{itemize}
@@ -394,6 +352,7 @@
 \end{frame}
 
 % --------------------------------------
+\subsection{integration}
 \begin{frame}
 %
   \frametitle{Providing help}
@@ -509,7 +468,7 @@
   \item convert simple app into a plexus action
   \item more on configuration files
   \item private filesystems
-  \item the standard layout
+  \item the standard filesystem layout
 }
 
 

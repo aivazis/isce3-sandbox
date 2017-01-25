@@ -23,7 +23,8 @@ SECTIONS = \
     sections/*.bib \
 
 LISTINGS = \
-    listings/*.py listings/*.pfg \
+    listings/*.py \
+    listings/*.pfg listings/*.cfg listings/*.pml \
 
 FIGURES = \
     figures/*.pdf \

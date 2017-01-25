@@ -100,7 +100,7 @@
 %-----------------------------------
 \begin{frame}[fragile]
 %
-  \frametitle{Component declaration}
+  \frametitle{Component declarations}
 %
   \vskip -3ex
   \begin{itemize}
@@ -518,7 +518,7 @@
 
 \begin{frame}
 %
-  \frametitle{More notation}
+  \frametitle{Notational shorthand}
   \vskip -3ex
 %
   \begin{itemize}
@@ -688,26 +688,7 @@
 %
     \item here is a sample configuration file in the native \identifier{pfg} format
 %
-      \begin{ipfg}[gobble=6]{}
-        ; override the defaults in the component source code
-        isce.topography.dem.srtm:
-            region = [] ; empty, by default
-            resolution = 1 ; arc seconds per pixel
-
-        ; for an instance named la
-        la:
-            region = {regions.LA} ; a macro
-
-        ; for an instance named greece
-        greece:
-            resolution = 3
-            region = {regions.Greece}
-
-        ; region aliases
-        regions:
-            LA = (33.3,-118.4), (35.7,-116.8)
-            Greece = (41,26), (39,19), (34,24), (36,29)
-      \end{ipfg}
+      \pfg{firstnumber=7, linerange={7-24}}{listings/sample.pfg}
 %
     \item note that whitespace is significant: indentation captures the hierarchy
 %
@@ -726,32 +707,7 @@
 %
     \item here is the same configuration file in the alternative \identifier{pml} format
 %
-      \begin{ipml}[gobble=6]{}
-        <?xml version="1.0" encoding="utf-8"?>
-        <config>
-          <!-- override the defaults in the component source code -->
-          <component family="isce.topography.dem.srtm">
-            <bind property="region"> [] </bind>
-            <bind property="resolution"> 1 </bind>
-          </component>
-
-          <!-- for an instance named la -->
-          <component name="la">
-            <bind property="region">{regions.LA}</bind>
-          </component>
-
-          <!-- for an instance named greece -->
-          <component name="greece">
-            <bind property="resolution">3</bind>
-            <bind property="region">{regions.Greece}</bind>
-            </component>
-
-          <!-- region aliases -->
-          <bind property="regions.LA">(33.3,-118.4), (35.7,-116.8)</bind>
-          <bind property="regions.Greece">(41,26), (39,19), (34,24), (36,29)</bind>
-
-        </config>
-      \end{ipml}
+      \pml{firstnumber=8, linerange={8-30}}{listings/sample.pml}
 %
   \end{itemize}
 %
@@ -768,26 +724,7 @@
 %
     \item here is the same configuration file in the alternative \identifier{cfg} format
 %
-      \begin{icfg}[gobble=6]{}
-        ; override the defaults in the component source code
-        [ isce.topography.dem.srtm ]
-        region = [] ; empty, by default
-        resolution = 1 ; arc seconds per pixel
-
-        ; for an instance named la
-        [ la ]
-        region = {regions.LA}
-
-        ; for an instance named greece
-        [ greece ]
-        resolution = 3
-        region = {regions.Greece}
-
-        ; region aliases
-        [ regions ]
-        LA = (33.3,-118.4), (35.7,-116.8)
-        Greece = (41,26), (39,19), (34,24), (36,29)
-      \end{icfg}
+      \cfg{firstnumber=7, linerange={7-24}}{listings/sample.cfg}
 %
     \item no nesting
 %

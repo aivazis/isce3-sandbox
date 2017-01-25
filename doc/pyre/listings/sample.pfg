@@ -1,0 +1,26 @@
+; -*- coding: utf-8 -*-
+;
+; michael a.g. aïvázis <michael.aivazis@para-sim.com>
+; (c) 2003-2017 all rights reserved
+;
+
+; override the defaults in the component source code
+isce.topography.dem.srtm:
+    region = [] ; empty, by default
+    resolution = 1 ; arc seconds per pixel
+
+; for an instance named la
+la:
+    region = {regions.LA} ; a macro
+
+; for an instance named greece
+greece:
+    resolution = 3
+    region = {regions.Greece}
+
+; region aliases
+regions:
+    LA = (33.3,-118.4), (35.7,-116.8)
+    Greece = (41,26), (39,19), (34,24), (36,29)
+
+; end of file
