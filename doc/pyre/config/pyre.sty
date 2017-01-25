@@ -111,11 +111,11 @@
   % -- place the title in the list of contents
     \only<1>{%
       \beamer@autobreakcount=0%
-      \hypertarget{\insertframetitle}{}%
+      \hypertarget{frame-\insertframenumber}{}%
       \addcontentsline{lbf}{section}{%
         \protect\scriptsize%
         \hskip 2em%
-        \protect\hyperlink{\insertframetitle}{\insertframetitle}%
+        \protect\hyperlink{frame-\insertframenumber}{\insertframetitle}%
         \hskip 1em{\protect\color{pyre@sand}\protect\dotfill}\hskip 1em%
         \protect\makebox[1em][r]{\protect\usebeamercolor[fg]{structure}\insertframenumber}%
         \par}%
@@ -129,20 +129,24 @@
 % sections in the table of frames
 \AtBeginSection[]{%
   \ifsectioninlbf
-  \hypertarget{\secname}{}%
+  \hypertarget{section-\insertsectionnumber}{}%
   \addcontentsline{lbf}{section}{%
-    \protect\hyperlink{\secname}{\protect\usebeamercolor[fg]{structure}\secname}%
+    \protect%
+    \hyperlink{section-\insertsectionnumber}{\protect\usebeamercolor[fg]{structure}\secname}%
     \par}%
 }
 
 % sections in the table of frames
 \AtBeginSubsection[]{%
   \ifsubsectioninlbf
-  \hypertarget{\subsecname}{}%
+  \hypertarget{section-\insertsectionnumber.\insertsubsectionnumber}{}%
   \addcontentsline{lbf}{section}{%
     \protect\footnotesize%
     \hskip1em%
-    \protect\hyperlink{\subsecname}{\protect\usebeamercolor[fg]{structure}\subsecname}%
+    \protect%
+    \hyperlink%
+      {section-\insertsectionnumber.\insertsubsectionnumber}%
+      {\protect\usebeamercolor[fg]{structure}\subsecname}%
     \par}%
 }
 
