@@ -114,10 +114,11 @@
       \hypertarget{frame-\insertframenumber}{}%
       \addcontentsline{lbf}{section}{%
         \protect\scriptsize%
-        \hskip 2em%
+        \hskip 3em%
         \protect\hyperlink{frame-\insertframenumber}{\insertframetitle}%
         \hskip 1em{\protect\color{pyre@sand}\protect\dotfill}\hskip 1em%
         \protect\makebox[1em][r]{\protect\usebeamercolor[fg]{structure}\insertframenumber}%
+        \hskip 3em{~}%
         \par}%
     }%
   \else\fi%
@@ -131,6 +132,7 @@
   \ifsectioninlbf
   \hypertarget{section-\insertsectionnumber}{}%
   \addcontentsline{lbf}{section}{%
+    \hskip 1em%
     \protect%
     \hyperlink{section-\insertsectionnumber}{\protect\usebeamercolor[fg]{structure}\secname}%
     \par}%
@@ -142,7 +144,7 @@
   \hypertarget{section-\insertsectionnumber.\insertsubsectionnumber}{}%
   \addcontentsline{lbf}{section}{%
     \protect\footnotesize%
-    \hskip1em%
+    \hskip 2em%
     \protect%
     \hyperlink%
       {section-\insertsectionnumber.\insertsubsectionnumber}%
