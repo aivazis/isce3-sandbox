@@ -10,7 +10,7 @@
 % --------------------------------------
 \subsection{simple}
 \begin{frame}[fragile]
-  \label{frame:simpleapp}
+  \label{frame:applications-simple}
 %
   \frametitle{A simple application script}
 %
@@ -21,30 +21,30 @@
 %
     \begin{ipython}[gobble=2]{}
       #!/usr/bin/env python3
-      import isce
+      import isce #@\label{line:applications-simple-import}@
 
       # the app declaration
-      class Stitcher(isce.application): #@\label{line:simpleapp-decl}@
+      class Stitcher(isce.application): #@\label{line:applications-simple-decl}@
           """
           Stitch together a DEM for some region
           """
 
           # user configurable state
-          dem = isce.topography.dem() #@\label{line:simpleapp-dem}@
+          dem = isce.topography.dem() #@\label{line:applications-simple-dem}@
           dem.doc = 'the assembler of the elevation model'
 
           # behaviors
           @isce.export
-          def main(self, *args, **kwds): #@\label{line:simpleapp-main}@
+          def main(self, *args, **kwds): #@\label{line:applications-simple-main}@
               """The main entry point"""
               # stitch the dem
-              self.dem.stitch() #@\label{line:simpleapp-stitch}@
+              self.dem.stitch() #@\label{line:applications-simple-stitch}@
               # indicate that all went well
               return 0
 
       # main
-      if __name__ == '__main__': #@\label{line:simpleapp-boot}@
-          app = Stitcher(name='stitcher')
+      if __name__ == '__main__': #@\label{line:applications-simple-boot}@
+          app = Stitcher(name='stitch')
           status = app.run()
           raise SystemExit(status)
     \end{ipython}
@@ -60,15 +60,16 @@
 %
   \begin{itemize}
 %
-  \item in \lstlineref{simpleapp-decl}, \component{Stitcher} derives from
+  \item in \lstlineref{applications-simple-decl}, \component{Stitcher} derives from
     \pyrebuiltin{isce.application}
     \begin{itemize}
-    \item which makes it a component; see \frameref{pyre-plexus} for its pedigree
+    \item which makes it a component; see \frameref{applications-plexus-pedigree} for its
+      pedigree
     \item with some special capabilities
     \end{itemize}
 %
-  \item in \lstlineref{simpleapp-dem}, \component{Stitcher} registers a requirement for a
-    \protocol{dem} compatible implementation
+  \item in \lstlineref{applications-simple-dem}, \component{Stitcher} registers a requirement
+    for a \protocol{dem} compatible implementation
     \begin{itemize}
     \item note the use of the protocol as the type of the trait
     \item the syntax is the same as for properties
@@ -76,19 +77,19 @@
       event that the user does not express a preference
     \end{itemize}
 %
-  \item the special behavior \method{main} in \lstlineref{simpleapp-main} is the application
-    entry point
+  \item the special behavior \method{main} in \lstlineref{applications-simple-main} is the
+    application entry point
     \begin{itemize}
     \item it is invoked by the framework after the application instance is configured
     \end{itemize}
 %
-  \item the stanza after \lstlineref{simpleapp-boot} bootstraps the application:
+  \item the stanza after \lstlineref{applications-simple-boot} bootstraps the application:
     \begin{itemize}
     \item an instance is created and named
     \item the framework searches for a configuration file named after the instance
     \item the app is launched by invoking the method \method{run}
     \item the framework determines the hosting strategy based on the user's choice of
-      application shell; the full details are on \frameref{pyre-plexus}
+      application shell; the full details are on \frameref{applications-plexus-pedigree}
     \item it invokes the method \method{main} and collects the return status
     \item the status is shared with the user's environment by asking python to terminate in a
       controlled way
@@ -99,6 +100,7 @@
 \end{frame}
 
 % --------------------------------------
+\subsection{configuration}
 \begin{frame}
 %
   \frametitle{Exercising the default configuration}
@@ -106,11 +108,11 @@
   \vskip -3ex
   \begin{itemize}
 %
-  \item let's focus on the relationship between \instance{stitcher} and its trait \trait{dem}
+  \item let's focus on the relationship between \instance{stitch} and its trait \trait{dem}
 %
-  \item by the time we invoke the method \method{stitch} on \lstlineref{simpleapp-stitch}, we
-    expect a fully configured instance of some component compatible with
-    \protocol{isce.topography.dem}
+  \item by the time we invoke the method \method{stitch} on
+    \lstlineref{applications-simple-stitch}, we expect a fully configured instance of some
+    component compatible with \protocol{isce.topography.dem}
 %
   \item compatibility with the protocol guarantees that
     \begin{itemize}
@@ -127,7 +129,7 @@
     \item since \component{SRTM} is assignment compatible with \protocol{isce.topography.dem},
       the framework will accept it as a viable candidate and configure it
     \item the framework will initiate the process of creating and configuring an instance with
-      the name \literal{stitcher.dem}, to match the name of the \component{Stitcher} property
+      the name \literal{stitch.dem}, to match the name of the \component{Stitcher} property
     \item the instance will become the value of \literal{self.dem} for our application instance
     \item the method \method{stitch} will be invoked and find \trait{region} set to an empty
       \schema{array}, and \trait{resolution} set to \defaultvalue{1}
@@ -150,12 +152,12 @@
 %
   \item let's summarize what is and is not configurable
     \begin{itemize}
-    \item the \component{Stitcher} class declaration on \lstlineref{simpleapp-decl} does not
-      specify a family name; \component{Stitcher} is not a public class, and there is no way to
-      alter the settings for the class-wide defaults
+    \item the \component{Stitcher} class declaration on \lstlineref{applications-simple-decl}
+      does not specify a family name; \component{Stitcher} is not a public class, and there is
+      no way to alter the settings for the class-wide defaults
     \item our application instance was given a name in the bootstrapping stanza after
-      \lstlineref{simpleapp-boot}, so its \trait{dem} is under our control; it is accessible as
-      \trait{stitcher.dem}
+      \lstlineref{applications-simple-boot}, so its \trait{dem} is under our control; it is
+      accessible as \trait{stitch.dem}
     \item the \component{SRTM} class declaration has a family, so we can control the default
       values for \trait{region} and \trait{resolution} for all its instances; their names are
       \begin{itemize}
@@ -164,11 +166,11 @@
       \end{itemize}
       respectively (see \frameref{components-public})
     \item the \component{SRTM} instance that is bound to our application instance is accessible
-      as \trait{stitcher.dem}; hence its \trait{region} and \trait{resolution} values are
+      as \trait{stitch.dem}; hence its \trait{region} and \trait{resolution} values are
       accessible as
       \begin{itemize}
-      \item \trait{stitcher.dem.region}
-      \item \trait{stitcher.dem.resolution}
+      \item \trait{stitch.dem.region}
+      \item \trait{stitch.dem.resolution}
       \end{itemize}
       respectively (again, see \frameref{components-public})
     \end{itemize}
@@ -185,11 +187,11 @@
   \vskip -3ex
   \begin{itemize}
 %
-  \item suppose that the code on \frameref{simpleapp} is in a script called
+  \item suppose that the code on \frameref{applications-simple} is in a script called
     \package{stitch.py}; we don't have an alternative implementation of
     \protocol{isce.topography.dem}, but we can be explicit about the one we have
     \begin{ish}[gobble=4, numbers=none]{}
-      ~/tmp> stitch.py --stitcher.dem=isce.topography.dem.srtm
+      ~/tmp> stitch.py --stitch.dem=isce.topography.dem.srtm
     \end{ish}
 %
   \item application traits are automatically available at the top level of the namespace, so we
@@ -204,17 +206,64 @@
       ~/tmp> stitch.py --dem=srtm
     \end{ish}
 %
+\item we can also control any property of \trait{dem}
+    \begin{ish}[gobble=4, numbers=none]{}
+      ~/tmp> stitch.py --dem=srtm --dem.resolution=3
+    \end{ish}
+%
   \item mistakes are flagged
     \begin{ish}[gobble=4, numbers=none]{}
       ~/tmp> stitch.py --dem=madeup
-      stitcher: could not resolve 'madeup' into a component that implements
+      stitch: could not resolve 'madeup' into a component that implements
       protocol 'isce.topography.dem'
     \end{ish}
 %
   \item the right hand side of the \trait{dem} assignment has a very rich syntax and is a
     critical part of the extensibility of our applications
+%
+  \end{itemize}
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}[fragile]
+%
+  \label{frame:applications-config}
+%
+  \frametitle{Application configuration files}
+%
+  \begin{itemize}
+%
+  \item settings that we expect to change less frequently can be placed in configuration files;
+    let's adapt the sample from \frameref{srtm-pfg}
+%
+    \begin{ipfg}[gobble=6]{}
+      ; application configuration
+      stitch: ; this matches the name of the application instance
+         ; pick an implementation (as an illustration)
+         dem = srtm
+
+         ; and configure it
+         dem:
+             resolution = 1
+             region = {regions.LA} ; a macro
+
+      ; region database
+      regions:
+          LA = (33.3,-118.4), (35.7,-116.8)
+          Greece = (41,26), (39,19), (34,24), (36,29)
+      \end{ipfg}
+%
+  \item the ability to capture the namespace hierarchy with the block structure makes for very
+    readable configuration files
+%
+  \item the simplicity of the syntax helps as well
+%
+  \item there are many ways to force the framework to recognize these settings
     \begin{itemize}
-    \item more on this later
+    \item the natural one is to place them in a file call \package{stitch.pfg} in the working
+      directory
+    \item see \frameref{applications-config-sources} for a more complete picture
     \end{itemize}
 %
   \end{itemize}
@@ -224,34 +273,121 @@
 % --------------------------------------
 \begin{frame}
 %
-  \frametitle{Configuration sources}
+  \label{frame:applications-config-conditional}
+%
+  \frametitle{Conditional assignments}
 %
   \begin{itemize}
 %
+  \item the settings on \frameref{applications-config} contain a subtle bug
+%
+  \end{itemize}
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}
+%
+  \frametitle{Configuration event ranking}
+%
+  \vskip -3ex
+  \begin{itemize}
+%
+  \item each configuration event is assigned a priority when it is encountered
+    \begin{itemize}
+    \item the priority is a pair: (category, collation sequence)
+    \item the priority category is determined by the event source
+    \item whether and event has an effect on the corresponding trait depends on the priority of
+      the current value
+    \item this way the framework can respond correctly to newly discovered information
+    \end{itemize}
+%
   \item the framework recognizes the following priority categories, in increasing order
+%
     \begin{itemize}
-    \item defaults: the priority assigned to the default values from the declarations
-    \item boot: priority for values assigned while the framework is booting
-    \item package: priorities assigned while reading package configurations
-    \item user: priorities assigned while processing user configuration files
-    \item command line: the priority of values retrieved from the command line
-    \item explicit: explicit assignments in user code
-    \item framework: a marker that essentially renders values as read-only
+%
+    \item defaults: values from component trait declarations in the source code
+      \begin{itemize}
+      \item this is the developer's contribution
+      \end{itemize}
+%
+    \item boot: assigned while the framework is booting
+      \begin{itemize}
+      \item currently, assigned to the values of user environment variables
+      \end{itemize}
+%
+    \item package: values from configuration files in the install directory of a package
+      \begin{itemize}
+      \item this is the sysadmin's opportunity to configure a package for users on a given
+        system
+      \end{itemize}
+%
+    \item user: values from the user's configuration files, typically in \url{~/.pyre}
+      \begin{itemize}
+      \item this is the user's opportunity to override package settings
+      \end{itemize}
+%
+    \item command line: the priority of values retrieved from the command line for the current
+      invocation of the application
+%
+    \item explicit: direct assignments in user code
+      \begin{itemize}
+      \item in general, this is discouraged unless configuring a subcomponent
+      \end{itemize}
+%
+    \item framework: a priority that essentially renders values as read-only
+%
     \end{itemize}
 %
-  \item configuration files
+  \end{itemize}
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}
+%
+  \label{frame:applications-config-sources}
+%
+  \frametitle{Configuration event sources}
+%
+  \vskip -3ex
+  \begin{itemize}
+%
+  \item configuration is a dynamic process in \pyre; it happens both explicitly, such as
+    when processing the command line arguments, and implicitly, when encountering a new package
+%
     \begin{itemize}
-    \item when a compliant package is first encountered
-    \item when an application is instantiated
-    \item command line arguments + --config
+    \item compliant packages register themselves with the framework
+    \item the framework forms a filename out of the package name and an extension from each
+      register configuration codec
+    \item a search over the locations on the \trait{configpath} is initiated
+    \item all matching configuration files are loaded
     \end{itemize}
 %
-  \item locations:
+  \item by default, \trait{configpath} knows about the \pyre\ install location, the user's
+    \url{.pyre} directory, and the current working directory
+%
+  \item this process cascades into the dependencies of each package
     \begin{itemize}
-    \item pyre installation directory: vfs:/\_\_pyre/packages
-    \item user defaults: vfs:/\_\_pyre/user
-    \item cwd: vfs:/\_\_pyre/startup
+    \item for example, on \lstlineref{applications-simple-import} of
+      \frameref{applications-simple}, we \keyword{import} \isce\, which in turn imports \pyre
+    \item this means that a search for \literal{pyre.\{pfg,cfg,pml\}} is initiated, and every
+      match is loaded
+    \item followed by a search for \literal{isce.\{pfg,cfg,pml\}}
     \end{itemize}
+%
+  \item similarly, while building the application instance, the framework conducts a search for
+    a configuration file derived out of the instance name, and loads any matches
+    \begin{itemize}
+    \item this is the preferred way to configure an application implicitly; the others are
+      meant to modify the defaults from the source code
+    \end{itemize}
+%
+  \item while processing the command line arguments
+%
+  \item by invoking the application with an \literal{-config} argument
+%
+  \item in user code, by invoking the function \function{loadConfiguration()} explicitly
 %
   \end{itemize}
 %
@@ -297,30 +433,30 @@
 \subsection{shells}
 \begin{frame}
 %
-  \frametitle{The \component{script} shell}
+  \frametitle{The default shell}
 %
 \end{frame}
 
 % --------------------------------------
 \begin{frame}
 %
-  \frametitle{The \component{interactive} shell}
+  \frametitle{The interactive shell}
 %
 \end{frame}
 
 % --------------------------------------
 \begin{frame}
 %
-  \frametitle{The \component{web} shell}
+  \frametitle{The web shell}
 %
 \end{frame}
 
 % --------------------------------------
 \begin{frame}
 %
-  \label{frame:pyre-plexus}
+  \label{frame:applications-plexus-pedigree}
 %
-  \frametitle{The \component{Plexus} structure}
+  \frametitle{The plexus structure}
 %
   \vskip -3ex
   \only<1>{
@@ -359,9 +495,15 @@
 % --------------------------------------
 
 \TODO{
-  \item show a simple application
+  \item configuration
     \begin{itemize}
-    \item protocol as the property schema
+    \item conditional assignments
+    \item the full assignment uri
+    \item assignments involving expressions and references
+    \item wiring shortcuts for properly designed package namespaces
+    \item having multiple configurations for the same property in the same file
+    \item wiring a facility to a specific, perhaps pre\"existing component
+    \item syntax rules for each format
     \end{itemize}
   \item explain plexus
   \item convert simple app into a plexus action
