@@ -1,0 +1,16 @@
+; application configuration
+stitch:
+  ; pick an implementation (as an illustration)
+  dem = srtm
+
+  ; configure it
+  dem:
+    resolution = 1
+    region = {regions.LA} ; a macro
+
+; region database
+regions:
+  LA = (33.3,-118.4), (35.7,-116.8)
+  Greece = (41,26), (39,19), (34,24), (36,29)
+
+; end of file

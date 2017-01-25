@@ -22,8 +22,8 @@ SECTIONS = \
     sections/*.tex \
     sections/*.bib \
 
-zLISTINGS = \
-    listings/*.py \
+LISTINGS = \
+    listings/*.py listings/*.pfg \
 
 FIGURES = \
     figures/*.pdf \
@@ -42,7 +42,7 @@ xpdf: $(DOCUMENT).pdf
 $(DOCUMENT).pdf: $(DOCUMENT).tex $(PACKAGES) $(INCLUDES) $(SECTIONS) $(LISTINGS) $(FIGURES)
 
 # housekeeping
-PROJ_CLEAN += $(CLEAN_LATEX) *.snm *.nav *.vrb
+PROJ_CLEAN += $(CLEAN_LATEX) *.snm *.nav *.vrb *.lbf
 PROJ_DISTCLEAN = *.ps *.pdf $(PROJ_CLEAN)
 
 # end of file
