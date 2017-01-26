@@ -14,7 +14,7 @@ stitch:
     region = {regions.LA} ; a macro
 
   ; srtm instances only
-  isce.topography.dem.srtm # dem:
+  isce.topography.dem.srtm # dem: ;@\label{line:applications-conditional-syntax}@
     resolution = 1
 
 ; region database
