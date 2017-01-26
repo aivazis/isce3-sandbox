@@ -210,7 +210,7 @@
   \item settings that we expect to change less frequently can be placed in configuration files;
     let's adapt the sample from \frameref{srtm-pfg}
 %
-    \pfg{}{listings/stitch.pfg}
+    \pfg{firstnumber=7, linerange={7-20}}{listings/stitch.pfg}
 %
   \item the ability to capture the namespace hierarchy with the block structure makes for very
     readable configuration files
@@ -235,9 +235,27 @@
 %
   \frametitle{Conditional assignments}
 %
+  \vskip -3ex
   \begin{itemize}
 %
-  \item the settings on \frameref{applications-config} contain a subtle bug
+  \item the settings on \frameref{applications-config} contain a subtle bug:
+    \begin{itemize}
+    \item setting \trait{region} is ok, since the \protocol{isce.topography.dem} forces all
+      compatible implementations to have this trait
+    \item but this is not the case with \trait{resolution}
+    \end{itemize}
+%
+  \item an option is to set a default resolution for all instances of \component{SRTM}, but in
+    general this is not the right solution; besides, it only works if every use of
+    \component{SRTM} requires the high resolution tiles
+%
+  \item what we need is a way to express the following: if \trait{stitch.dem} is an instance of
+    \component{isce.topography.dem.srtm}, then set \trait{resolution} to 1
+%
+  \item there is special syntax for this use case
+    \pfg{firstnumber=7, linerange={7-18}}{listings/stitch-conditional.pfg}
+%
+  \item now the setting applies only when \trati{dem} is bound to an \component{SRTM} instance
 %
   \end{itemize}
 %

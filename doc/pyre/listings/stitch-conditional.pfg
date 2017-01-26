@@ -11,8 +11,11 @@ stitch:
 
   ; configure it
   dem:
-    resolution = 1
     region = {regions.LA} ; a macro
+
+  ; srtm instances only
+  isce.topography.dem.srtm # dem:
+    resolution = 1
 
 ; region database
 regions:
