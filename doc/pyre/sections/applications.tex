@@ -30,14 +30,15 @@
 %
   \frametitle{Applications as component containers}
 %
+  \vskip -3ex
   \begin{itemize}
 %
   \item in \lstlineref{applications-simple-decl}, \component{Stitcher} derives from
     \pyrebuiltin{isce.application}
     \begin{itemize}
-    \item which makes it a component; see \frameref{applications-plexus-pedigree} for its
-      pedigree
+    \item which makes it a component
     \item with some special capabilities
+    \item see \frameref{applications-plexus-pedigree} for its pedigree
     \end{itemize}
 %
   \item in \lstlineref{applications-simple-dem}, \component{Stitcher} registers a requirement
@@ -120,35 +121,33 @@
   \frametitle{The application inventory}
 %
   \vskip -3ex
+%
+  here is a summary of what is and is not configurable with this particular implementation
+
   \begin{itemize}
-%
-  \item let's summarize what is and is not configurable
+  \item the \component{Stitcher} class declaration on \lstlineref{applications-simple-decl}
+    does not specify a family name; \component{Stitcher} is not a public class, and there is
+    no way to alter the settings for the class-wide defaults
+  \item our application instance was given a name in the bootstrapping stanza after
+    \lstlineref{applications-simple-boot}, so its \trait{dem} is under our control; it is
+    accessible as \trait{stitch.dem}
+  \item the \component{SRTM} class declaration has a family, so we can control the default
+    values for \trait{region} and \trait{resolution} for all its instances; their names are
     \begin{itemize}
-    \item the \component{Stitcher} class declaration on \lstlineref{applications-simple-decl}
-      does not specify a family name; \component{Stitcher} is not a public class, and there is
-      no way to alter the settings for the class-wide defaults
-    \item our application instance was given a name in the bootstrapping stanza after
-      \lstlineref{applications-simple-boot}, so its \trait{dem} is under our control; it is
-      accessible as \trait{stitch.dem}
-    \item the \component{SRTM} class declaration has a family, so we can control the default
-      values for \trait{region} and \trait{resolution} for all its instances; their names are
-      \begin{itemize}
-      \item \trait{isce.topography.dem.srtm.region}
-      \item \trait{isce.topography.dem.srtm.resolution}
-      \end{itemize}
-      respectively (see \frameref{components-public})
-    \item the \component{SRTM} instance that is bound to our application instance is accessible
-      as \trait{stitch.dem}; hence its \trait{region} and \trait{resolution} values are
-      accessible as
-      \begin{itemize}
-      \item \trait{stitch.dem.region}
-      \item \trait{stitch.dem.resolution}
-      \end{itemize}
-      respectively (again, see \frameref{components-public})
+    \item \trait{isce.topography.dem.srtm.region}
+    \item \trait{isce.topography.dem.srtm.resolution}
     \end{itemize}
-%
+    respectively (see \frameref{components-public})
+  \item the \component{SRTM} instance that is bound to our application instance is accessible
+    as \trait{stitch.dem}; hence its \trait{region} and \trait{resolution} values are
+    accessible as
+    \begin{itemize}
+    \item \trait{stitch.dem.region}
+    \item \trait{stitch.dem.resolution}
+    \end{itemize}
+    respectively (again, see \frameref{components-public})
   \end{itemize}
-%
+
 \end{frame}
 
 % --------------------------------------
@@ -363,7 +362,7 @@
 %
   \item while processing the command line arguments
 %
-  \item by invoking the application with an \literal{-config} argument
+  \item by invoking the application with an \literal{-{}-config} argument
 %
   \item in user code, by invoking the function \function{loadConfiguration()} explicitly
 %
@@ -373,9 +372,188 @@
 
 % --------------------------------------
 \subsection{integration}
-\begin{frame}
+\begin{frame}[fragile]
+%
+  \label{frame:applications-help}
 %
   \frametitle{Providing help}
+%
+  \vskip -3ex
+  \begin{itemize}
+%
+  \item components that derive from \component{isce.application} have another behavior,
+    \method{help}
+    \begin{itemize}
+    \item it is tied to a family of command line arguments:
+    \end{itemize}
+%
+  \item the default implementation displays a help screen
+    \begin{ish}[gobble=4]{}
+      ~/tmp> stitch.py --help
+      stitch:
+
+          Stitch together a DEM for some region
+
+      usage:
+
+          stitch [options]
+
+      options:
+            --dem: the assembler of the elevation model [component]
+          --shell: my hosting strategy [component]
+          --DEBUG: debugging mode [bool]
+
+      ~/tmp>
+    \end{ish}
+%
+  \item the default set is: \literal{-h}, \literal{-?} and \literal{-help}
+    \begin{itemize}
+    \item configurable, since it is a property of the application \component{shell}
+    \end{itemize}
+%
+  \item the framework interrogates the application instance and generates this information
+%
+  \item applications can customize what is displayed by overriding the hook \method{pyre\_help},
+    an application method that takes no additional arguments and returns a sequence of strings
+%
+  \end{itemize}
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}
+%
+  \frametitle{Framework services for applications}
+%
+\end{frame}
+
+\begin{frame}
+%
+  \frametitle{Virtual filesystems}
+%
+\end{frame}
+
+% --------------------------------------
+\subsection{shells}
+\begin{frame}
+%
+  \frametitle{The \component{script} shell}
+%
+  \begin{itemize}
+%
+  \item components that derive from \component{isce.application} have a property \trait{shell}
+    \begin{itemize}
+    \item we saw this on \frameref{applications-help}
+    \end{itemize}
+%
+  \item the shell is the link between the call to \literal{app.run()} on
+    \lstlineref{applications-simple-run} and the behavior \method{main} on
+    \lstlineref{applications-simple-main} on \frameref{applications-simple}
+    \begin{itemize}
+    \item it helps us factor out how the application is invoked after it is configured
+    \end{itemize}
+%
+  \item shells must implement the protocol \protocol{pyre.shells}; there are two requirements
+    \begin{itemize}
+    \item the trait \trait{home} is a \basictype{str} that gives the user control over the
+      preferred working directory for the application
+    \item the method \method{launch} is the staging strategy of the shell
+    \end{itemize}
+%
+  \item the application method \method{run} simply invokes the method \method{launch} of its
+    shell, and passes itself as an argument
+%
+  \item the protocol \protocol{pyre.shells} specifies \component{script} as the default shell
+%
+  \item the method \method{launch} of \component{script} is trivial: it just invokes \method{main}
+    of whatever application object it receives as an argument
+%
+  \item any additional arguments to \method{run} are just carried through to \method{main}
+%
+  \end{itemize}
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}[fragile]
+%
+  \frametitle{The \component{interactive} shell}
+%
+  \begin{itemize}
+%
+  \item occasionally, users find it useful to poke around applications interactively
+%
+    \begin{ish}[gobble=4]{}
+      mga@praxis:~/tmp/isce/doc>stitch.py --shell=interactive
+      stitch:
+
+          Stitch together a DEM for some region
+
+      usage:
+
+          stitch [options]
+
+      options:
+            --dem: the assmebler of the elevation model [component]
+          --shell: my hosting strategy [component]
+          --DEBUG: debugging mode [bool]
+
+      entering interactive mode...
+
+      stitch: dir()
+      ['__builtins__', 'app']
+      stitch:
+    \end{ish}
+%
+  \item users can now invoke application methods through the variable \instance{app}
+%
+  \item further, all framework services are now accessible interactively
+    \begin{itemize}
+    \item for example, the executive, a singleton\supercite{patterns} that serves as the anchor
+      of all framework services, is accessible through \instance{app.pyre\_executive}
+    \end{itemize}
+%
+  \end{itemize}
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}[fragile]
+%
+  \frametitle{The \component{web} shell}
+%
+  \vskip -3ex
+  \begin{itemize}
+%
+  \item a fairly recent addition is the shell \component{web}
+%
+    \begin{ish}[gobble=4]{}
+      mga@praxis:~/tmp/isce/doc>stitch.py --shell=interactive
+      stitch: web server on '0.0.0.0':62859
+      ...
+    \end{ish}
+%
+  \item \component{web}
+    \begin{itemize}
+    \item grabs a port on the local machine
+    \item launches a web server that listens to this port for incoming connections
+    \item launches a web browser with a url that points to this server
+    \end{itemize}
+%
+  \item the default behavior is not very exciting currently (\pyre\ 1.0 revno 2787)
+
+    \begin{center}
+      \frame{\includegraphics[width=0.5\textwidth]{stitcher-web}}
+    \end{center}
+%
+  \item the web server is a \pyre\ service, and under total application developer control
+%
+  \item this opens up the possibility of extremely powerful, portable, interactive applications
+    \begin{itemize}
+    \item currently a major thrust in \pyre\ development
+    \end{itemize}
+%
+  \end{itemize}
 %
 \end{frame}
 
@@ -395,45 +573,9 @@
 \end{frame}
 
 % --------------------------------------
-\subsection{runtime}
 \begin{frame}
 %
-  \frametitle{Framework services for applications}
-%
-\end{frame}
-
-\begin{frame}
-%
-  \frametitle{Virtual filesystems}
-%
-\end{frame}
-
-% --------------------------------------
-\subsection{shells}
-\begin{frame}
-%
-  \frametitle{The \component{script} shell}
-%
-\end{frame}
-
-% --------------------------------------
-\begin{frame}
-%
-  \frametitle{The \component{interactive} shell}
-%
-\end{frame}
-
-% --------------------------------------
-\begin{frame}
-%
-  \frametitle{The \component{web} shell}
-%
-\end{frame}
-
-% --------------------------------------
-\begin{frame}
-%
-  \label{frame:applications-plexus-pedigree}
+  \label<6>{frame:applications-plexus-pedigree}
 %
   \frametitle{The \component{Plexus} structure}
 %

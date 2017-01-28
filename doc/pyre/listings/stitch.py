@@ -23,7 +23,7 @@ class Stitcher(isce.application): #@\label{line:applications-simple-decl}@
 # main
 if __name__ == '__main__': #@\label{line:applications-simple-boot}@
     app = Stitcher(name='stitch')
-    status = app.run()
+    status = app.run() #@\label{line:applications-simple-run}@
     raise SystemExit(status)
 
 # end of file
