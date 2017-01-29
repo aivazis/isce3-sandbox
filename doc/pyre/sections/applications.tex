@@ -423,13 +423,43 @@
 % --------------------------------------
 \begin{frame}
 %
-  \frametitle{Framework services for applications}
+  \frametitle{Virtual filesystems}
+%
+  \begin{itemize}
+%
+  \item virtual, local, zip, hdf5
+%
+  \item apps
+    \begin{itemize}
+    \item vfs, pfs
+    \item \method{pyre\_explore}, \method{pyre\_mountApplicationFolders}, \method{pyre\_mountPrivateFilespace},
+      \method{pyre\_mountPrivateFolder}
+    \item standard fs layout
+    \end{itemize}
+%
+  \end{itemize}
 %
 \end{frame}
 
+% --------------------------------------
 \begin{frame}
 %
-  \frametitle{Virtual filesystems}
+  \frametitle{Framework services for applications}
+%
+  \begin{itemize}
+  \item programming patterns (patterns)
+  \item primitives: path, uri (primitives)
+  \item evaluation networks (algebraic, calc)
+  \item csg primitives (geometry)
+  \item multidimensional arrays (grid)
+  \item filesystems (filesystem)
+  \item performance monitoring (timers)
+  \item content generators (weaver)
+  \item scanners and parsers (tracking, parsing, xml)
+  \item external dependencies (platforms, externals)
+  \item event driven and asynchronous apps (ipc, nexus, http)
+  \item records, tables, and databases (db, records, tabular)
+  \end{itemize}
 %
 \end{frame}
 
@@ -543,7 +573,7 @@
   \item the default behavior is not very exciting currently (\pyre\ 1.0 revno 2787)
 
     \begin{center}
-      \frame{\includegraphics[width=0.5\textwidth]{stitcher-web}}
+      \includegraphics[width=0.5\textwidth]{stitcher-web}
     \end{center}
 %
   \item the web server is a \pyre\ service, and under total application developer control
@@ -566,9 +596,199 @@
 \end{frame}
 
 % --------------------------------------
-\begin{frame}
+\begin{frame}[fragile]
 %
-  \frametitle{Application introspection: the action \action{about}}
+  \frametitle{The \isce\ default screen}
+%
+  \begin{itemize}
+%
+  \item launching \isce\ without any arguments generates the following:
+%
+    \begin{ish}[gobble=4]{}
+      ~/tmp> isce
+      isce:
+          isce 3.0 revision 161
+          copyright (c) 2003-2017 all rights reserved
+
+      authors:
+          Piyush Agram        <piyush.agram@jpl.nasa.gov>
+          Michael Aivazis     <michael.aivazis@para-sim.com>
+          Eric Gurrola        <eric.m.gurrola@jpl.nasa.gov>
+          Paul Rosen          <paul.a.rosen@jpl.nasa.gov>
+          Giangi Sacco        <gianfranco.sacco@jpl.nasa.gov>
+
+      license:
+          The complete usage terms can be found in the file LICENSE.txt
+
+      commands:
+            dem: download and assemble digital elevation models
+           srtm: manage the local cache of the SRTM data store
+          about: display information about this application
+
+      ~/tmp>
+    \end{ish}
+%
+  \end{itemize}
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}[fragile]
+%
+  \frametitle{Application introspection: the action \component{about}}
+%
+  \begin{itemize}
+%
+  \item the built-in action \component{about} displays information about the application
+%
+    \begin{ish}[gobble=4]{}
+      ~/tmp> isce about
+      isce: isce about
+
+          Display information about this application
+
+      usage:
+          isce about [command]
+
+      where [command] is one of
+               name: the name of the app for configuration purposes
+               home: the application home directory
+             prefix: the application installation directory
+           defaults: the application configuration directory
+            version: print the version number
+          copyright: print the copyright note
+            credits: print out the acknowledgments
+            license: print out the license and terms of use
+                nfs: dump the application configuration namespace
+                pfs: dump the application private filesystem
+                vfs: dump the application virtual filesystem
+               help: show this help screen
+
+      options:
+          --root: specify the portion of the namespace to display [str]
+           --dry: show what would get done without actually doing anything [bool]
+
+      ~/tmp>
+    \end{ish}
+%
+  \end{itemize}
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}[fragile]
+%
+  \frametitle{Extending the set of actions}
+%
+  \vskip -3ex
+  \begin{itemize}
+%
+  \item end users can add actions to \isce\ very easily
+%
+  \item let's place the following code in \url{~/.pyre/isce/actions/say.py}
+%
+    \python{}{listings/say-command.py}
+%
+  \end{itemize}
+ %
+\end{frame}
+
+% --------------------------------------
+\begin{frame}[fragile]
+%
+  \frametitle{Extending the set of actions}
+%
+  \vskip -3ex
+  \begin{itemize}
+%
+  \item with the user action installed, the \isce\ main help screen includes the new action
+    \component{say}
+%
+    \begin{ish}[gobble=4]{}
+      ~/tmp> isce
+      isce:
+          isce 3.0 revision 161
+          copyright (c) 2003-2017 all rights reserved
+
+      authors:
+          Piyush Agram        <piyush.agram@jpl.nasa.gov>
+          Michael Aivazis     <michael.aivazis@para-sim.com>
+          Eric Gurrola        <eric.m.gurrola@jpl.nasa.gov>
+          Paul Rosen          <paul.a.rosen@jpl.nasa.gov>
+          Giangi Sacco        <gianfranco.sacco@jpl.nasa.gov>
+
+      license:
+          The complete usage terms can be found in the file LICENSE.txt
+
+      commands:
+            say: an example of a custom action provided by the end user
+            dem: download and assemble digital elevation models
+           srtm: manage the local cache of the SRTM data store
+          about: display information about this application
+    \end{ish}
+%
+  \item invoking it yields
+%
+    \begin{ish}{}
+      ~/tmp> isce say
+      isce: hello world!
+    \end{ish}
+%
+  \end{itemize}
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}[fragile]
+%
+  \frametitle{Creating a new \isce\ panel}
+%
+  \begin{itemize}
+%
+  \item we can turn the new command into a panel by changing a few lines of code
+%
+    \python{}{listings/say-panel.py}
+%
+  \end{itemize}
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}[fragile]
+%
+  \frametitle{Invoking the \component{say} panel}
+%
+  \begin{itemize}
+%
+  \item invoking it now produces
+%
+    \begin{ish}[gobble=4]{}
+      ~/tmp> isce say
+      isce: isce say
+
+          An example of a custom action provided by the end user
+
+      usage:
+          isce say [command]
+
+      where [command] is one of
+         hello: an example of a custom behavior
+          help: show this help screen
+
+      options:
+          --dry: show what would get done without actually doing anything [bool]
+
+      ~/tmp>
+    \end{ish}
+%
+  \item we can invoke \method{hello} to get
+%
+    \begin{ish}[firstnumber=16, gobble=4]{}
+      ~/tmp> isce say hello
+      isce: hello world!
+    \end{ish}
+%
+  \end{itemize}
 %
 \end{frame}
 
@@ -618,7 +838,6 @@
 \TODO{
   \item configuration
     \begin{itemize}
-    \item conditional assignments
     \item the full assignment uri
     \item assignments involving expressions and references
     \item wiring shortcuts for properly designed package namespaces
@@ -628,7 +847,6 @@
     \end{itemize}
   \item explain plexus
   \item convert simple app into a plexus action
-  \item more on configuration files
   \item private filesystems
   \item the standard filesystem layout
 }
