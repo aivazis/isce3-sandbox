@@ -514,7 +514,7 @@
   \item occasionally, users find it useful to poke around applications interactively
 %
     \begin{ish}[gobble=4]{}
-      mga@praxis:~/tmp/isce/doc>stitch.py --shell=interactive
+      ~/tmp> stitch.py --shell=interactive
       stitch:
 
           Stitch together a DEM for some region
@@ -558,7 +558,7 @@
   \item a fairly recent addition is the shell \component{web}
 %
     \begin{ish}[gobble=4]{}
-      mga@praxis:~/tmp/isce/doc>stitch.py --shell=interactive
+      ~/tmp> stitch.py --shell=web
       stitch: web server on '0.0.0.0':62859
       ...
     \end{ish}
@@ -589,9 +589,53 @@
 
 % --------------------------------------
 \subsection{plexus}
-\begin{frame}
+\begin{frame}[fragile]
 %
-  \frametitle{\component{Plexus}: support for behavior rich applications}
+  \frametitle{Support for behavior rich applications}
+%
+  \vskip -3ex
+  \begin{itemize}
+%
+  \item \component{stitch} is an example of a single purpose application
+    \begin{itemize}
+    \item its name describes what it does
+    \item its behavior is encapsulated in its \method{main} behavior
+    \end{itemize}
+%
+  \item with the command line as the user interface, more complex behavior can be encapsulated
+    by using
+    \begin{itemize}
+    \item commands: words that invoke the named behavior
+    \item panels: containers of commands
+    \end{itemize}
+%
+  \item the UX design goal is memorable sentences
+%
+  \item the \isce\ application itself is an example; typical usage:
+    \begin{ish}{}
+      ~/tmp> isce srtm download --region='(33,-118), (35,-116)'
+    \end{ish}
+%
+  \item this mimics the interaction with the menu structure of a graphical application
+    \begin{itemize}
+    \item however, the pattern is much older: your unix shell is the prototypical example...
+    \end{itemize}
+%
+  \item the framework base class that enables this behavior is \component{isce.plexus}
+    \begin{itemize}
+    \item its \method{main} method is responsible for interpreting the first
+      non-configurational command line argument as an \protocol{action} implementation
+    \item its \method{help} introspects to build a list of known commands
+    \end{itemize}
+%
+  \item behavior is provided in terms of components that implement the protocol
+    \protocol{isce.action}, usually by deriving from
+    \begin{itemize}
+    \item \component{isce.command()} (see \frameref{applications-plexus-command})
+    \item \component{isce.panel()} (see \frameref{applications-plexus-pannel})
+    \end{itemize}
+%
+  \end{itemize}
 %
 \end{frame}
 
@@ -624,8 +668,6 @@
             dem: download and assemble digital elevation models
            srtm: manage the local cache of the SRTM data store
           about: display information about this application
-
-      ~/tmp>
     \end{ish}
 %
   \end{itemize}
@@ -667,8 +709,6 @@
       options:
           --root: specify the portion of the namespace to display [str]
            --dry: show what would get done without actually doing anything [bool]
-
-      ~/tmp>
     \end{ish}
 %
   \end{itemize}
@@ -677,6 +717,8 @@
 
 % --------------------------------------
 \begin{frame}[fragile]
+%
+  \label{frame:applications-plexus-command}
 %
   \frametitle{Extending the set of actions}
 %
@@ -741,6 +783,8 @@
 % --------------------------------------
 \begin{frame}[fragile]
 %
+  \label{frame:applications-plexus-pannel}
+%
   \frametitle{Creating a new \isce\ panel}
 %
   \begin{itemize}
@@ -756,7 +800,7 @@
 % --------------------------------------
 \begin{frame}[fragile]
 %
-  \frametitle{Invoking the \component{say} panel}
+  \frametitle{Invoking the panel extension}
 %
   \begin{itemize}
 %
@@ -797,7 +841,7 @@
 %
   \label<6>{frame:applications-plexus-pedigree}
 %
-  \frametitle{The \component{Plexus} structure}
+  \frametitle{The \component{isce.plexus} structure}
 %
   \vskip -3ex
   \only<1>{
