@@ -46,7 +46,7 @@
     \begin{itemize}
     \item note the use of the protocol as the type of the trait
     \item the syntax is the same as for properties
-    \item no explicit default is provided, so the protocol will be asked to provide one in the
+    \item no explicit default is specified, so the protocol will be asked to provide one in the
       event that the user does not express a preference
     \end{itemize}
 %
@@ -83,14 +83,14 @@
 %
   \item let's focus on the relationship between \instance{stitch} and its trait \trait{dem}
 %
-  \item by the time we invoke the method \method{stitch} on
+  \item by the time we invoke the method \method{generate} on
     \lstlineref{applications-simple-stitch}, we expect a fully configured instance of some
     component compatible with \protocol{isce.topography.dem}
 %
   \item compatibility with the protocol guarantees that
     \begin{itemize}
     \item we have a way of specifying the region of interest
-    \item the method \method{stitch} exists
+    \item the method \method{generate} exists
     \end{itemize}
     since both of these are \protocol{isce.topography.dem} requirements
 %
@@ -104,7 +104,7 @@
     \item the framework will initiate the process of creating and configuring an instance with
       the name \literal{stitch.dem}, to match the name of the \component{Stitcher} property
     \item the instance will become the value of \literal{self.dem} for our application instance
-    \item the method \method{stitch} will be invoked and find \trait{region} set to an empty
+    \item the method \method{generate} will be invoked and find \trait{region} set to an empty
       \schema{array}, and \trait{resolution} set to \defaultvalue{1}
     \end{itemize}
 %

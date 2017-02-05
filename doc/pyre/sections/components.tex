@@ -832,9 +832,9 @@
                 """
 
             @isce.export
-            def stitch(self, ...):
+            def generate(self, ...):
                 """
-                Assemble the elevation model
+                Generate the elevation model
                 """
     \end{ipython}
 %
@@ -874,7 +874,7 @@
       # we can override any of this:
       la.resolution = 3 # arc seconds per pixel
       # and stitch a digital elevation model
-      dem = la.stitch()
+      dem = la.generate()
     \end{ipython}
 %
   \item if you want try this yourself, go to a scratch area in your filesystem
@@ -1030,9 +1030,9 @@
                 """
 
             @isce.provides
-            def stitch(self, ...):
+            def generate(self, ...):
                 """
-                Assemble the elevation model
+                Generate the elevation model for a region of interest
                 """
     \end{ipython}
 %

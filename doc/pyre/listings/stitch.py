@@ -16,7 +16,7 @@ class Stitcher(isce.application): #@\label{line:applications-simple-decl}@
     def main(self, *args, **kwds): #@\label{line:applications-simple-main}@
         """The main entry point"""
         # stitch the dem
-        self.dem.stitch() #@\label{line:applications-simple-stitch}@
+        self.dem.generate() #@\label{line:applications-simple-stitch}@
         # indicate that all went well
         return 0
 
