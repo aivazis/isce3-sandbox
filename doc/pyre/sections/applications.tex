@@ -371,7 +371,7 @@
 \end{frame}
 
 % --------------------------------------
-\subsection{integration}
+\subsection{shells}
 \begin{frame}[fragile]
 %
   \label{frame:applications-help}
@@ -423,50 +423,6 @@
 % --------------------------------------
 \begin{frame}
 %
-  \frametitle{Virtual filesystems}
-%
-  \begin{itemize}
-%
-  \item virtual, local, zip, hdf5
-%
-  \item apps
-    \begin{itemize}
-    \item vfs, pfs
-    \item \method{pyre\_explore}, \method{pyre\_mountApplicationFolders}, \method{pyre\_mountPrivateFilespace},
-      \method{pyre\_mountPrivateFolder}
-    \item standard fs layout
-    \end{itemize}
-%
-  \end{itemize}
-%
-\end{frame}
-
-% --------------------------------------
-\begin{frame}
-%
-  \frametitle{Framework services for applications}
-%
-  \begin{itemize}
-  \item programming patterns (patterns)
-  \item primitives: path, uri (primitives)
-  \item evaluation networks (algebraic, calc)
-  \item csg primitives (geometry)
-  \item multidimensional arrays (grid)
-  \item filesystems (filesystem)
-  \item performance monitoring (timers)
-  \item content generators (weaver)
-  \item scanners and parsers (tracking, parsing, xml)
-  \item external dependencies (platforms, externals)
-  \item event driven and asynchronous apps (ipc, nexus, http)
-  \item records, tables, and databases (db, records, tabular)
-  \end{itemize}
-%
-\end{frame}
-
-% --------------------------------------
-\subsection{shells}
-\begin{frame}
-%
   \frametitle{The \component{script} shell}
 %
   \begin{itemize}
@@ -481,6 +437,7 @@
     \lstlineref{applications-simple-main} on \frameref{applications-simple}
     \begin{itemize}
     \item it helps us factor out how the application is invoked after it is configured
+    \item it is part of specifying the hosting strategy, hence the user interface
     \end{itemize}
 %
   \item shells must implement the protocol \protocol{pyre.shells}; there are two requirements
@@ -599,7 +556,7 @@
   \item \component{stitch} is an example of a single purpose application
     \begin{itemize}
     \item its name describes what it does
-    \item its behavior is encapsulated in its \method{main} behavior
+    \item its functionality is encapsulated in its \method{main} behavior
     \end{itemize}
 %
   \item with the command line as the user interface, more complex behavior can be encapsulated
@@ -876,25 +833,6 @@
   }
 %
 \end{frame}
-
-% --------------------------------------
-
-\TODO{
-  \item configuration
-    \begin{itemize}
-    \item the full assignment uri
-    \item assignments involving expressions and references
-    \item wiring shortcuts for properly designed package namespaces
-    \item having multiple configurations for the same property in the same file
-    \item wiring a facility to a specific, perhaps pre\"existing component
-    \item syntax rules for each format
-    \end{itemize}
-  \item explain plexus
-  \item convert simple app into a plexus action
-  \item private filesystems
-  \item the standard filesystem layout
-}
-
 
 %%% Local Variables:
 %%% mode: latex

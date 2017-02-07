@@ -19,36 +19,21 @@
 \title[pyre 1.0 -- february 2017]{pyre 1.0}
 \author[\url{michael.aivazis@para-sim.com}]{Michael A.~G.~A\"iv\'azis}
 \institute{\url{michael.aivazis@para-sim.com} \\ \small parasim }
-\date{January 2017}
+\date{February 2017}
 
 \begin{document}
 
-% title slide
-\begin{frame}[plain]
-  % the logo
-  \begin{tikzpicture}[remember picture,overlay]
-    \node[anchor=south east, xshift=-1em, yshift=1em] at (current page.south east) {%
-      \includegraphics[scale=0.25]{figures/pyre-logo.pdf}};
-  \end{tikzpicture}
-  % make the title page
-  \maketitle
-\end{frame}
-
 % the sections
+\input{splash}
 \input{contents}
 \input{intro}
 \input{components}
 \input{applications}
+\input{persistence}
+\input{references}
 \input{epilogue}
 
 % references
-\section{references}
-\begin{frame}[allowframebreaks,t]
-  \frametitle{References}
-  \bibliographystyle{unsrtnat}
-  {\footnotesize \bibliography{sections/references}}
-\end{frame}
-
 \end{document}
 
 % end of file

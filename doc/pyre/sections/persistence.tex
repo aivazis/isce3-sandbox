@@ -1,0 +1,95 @@
+% -*- LaTeX -*-
+% -*- coding: utf-8 -*-
+%
+% michael a.g. aïvázis <michael.aivazis@para-sim.com>
+% (c) 2003-2017 all rights reserved
+%
+
+\section{persistence}
+
+% --------------------------------------
+\begin{frame}
+%
+  \frametitle{Persistence}
+%
+  \begin{itemize}
+%
+  \item applications like \isce\ have sophisticated persistence requirements
+    \begin{itemize}
+    \item beyond the simple example of saving and reusing configuration choices
+    \end{itemize}
+%
+  \item typically
+    \begin{itemize}
+    \item the application has to discover and understand its input
+    \item and organize and describe its output
+    \end{itemize}
+%
+
+%
+  \end{itemize}
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}
+%
+  \frametitle{Filesystem abstractions}
+%
+  \begin{itemize}
+%
+  \item
+%
+  \end{itemize}
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}
+%
+  \frametitle{Virtual filesystems}
+%
+  \begin{itemize}
+%
+  \item virtual, local, zip, hdf5
+%
+  \item apps
+    \begin{itemize}
+    \item vfs, pfs
+    \item \method{pyre\_explore}, \method{pyre\_mountApplicationFolders}, \method{pyre\_mountPrivateFilespace},
+      \method{pyre\_mountPrivateFolder}
+    \item standard fs layout
+    \end{itemize}
+%
+  \end{itemize}
+%
+\end{frame}
+
+% --------------------------------------
+\begin{frame}
+%
+  \frametitle{Framework services for applications}
+%
+  \begin{itemize}
+  \item programming patterns (patterns)
+  \item primitives: path, uri (primitives)
+  \item evaluation networks (algebraic, calc)
+  \item csg primitives (geometry)
+  \item multidimensional arrays (grid)
+  \item filesystems (filesystem)
+  \item performance monitoring (timers)
+  \item content generators (weaver)
+  \item scanners and parsers (tracking, parsing, xml)
+  \item external dependencies (platforms, externals)
+  \item event driven and asynchronous apps (ipc, nexus, http)
+  \item records, tables, and databases (db, records, tabular)
+  \end{itemize}
+%
+\end{frame}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "../pyre"
+%%% End:
+
+% end of file
