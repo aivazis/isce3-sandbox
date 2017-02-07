@@ -19,13 +19,34 @@
     \item beyond the simple example of saving and reusing configuration choices
     \end{itemize}
 %
-  \item typically
+  \item typically, an application invocation has to
     \begin{itemize}
-    \item the application has to discover and understand its input
-    \item and organize and describe its output
+    \item discover and understand its input
+    \item organize and describe its output
     \end{itemize}
 %
-
+  \item multiple files of various sizes scattered over many directories, some common to
+    families of runs, other specific to each invocation
+%
+  \item challenges for both inputs and outputs:
+    \begin{itemize}
+    \item devise a rationale for separating data from meta-data
+    \item organize the data in a sensible directory structure
+      \begin{itemize}
+      \item given that the application developer and the end-user will have different notions
+        of \emph{sensible}
+      \end{itemize}
+    \item decide how to represent the meta-data
+      \begin{itemize}
+      \item data object model
+      \item filesystem vs.~database
+      \end{itemize}
+    \item avoid leaving user-specific paths in configuration and meta-data files
+    \end{itemize}
+%
+  \item curate runs
+%
+  \item \pyre\ provides extensive support for managing this problem
 %
   \end{itemize}
 %
@@ -36,9 +57,42 @@
 %
   \frametitle{Filesystem abstractions}
 %
+  \vskip -3ex
   \begin{itemize}
 %
-  \item
+  \item \pyre\ provides two primitive data types for encapsulating the locations of files
+%
+  \item \pyrebuiltin{pyre.primitives.path} is a powerful representation of filenames
+    \begin{itemize}
+    \item powerful operations to inspect, split, combine, and mutate
+    \item easy access to the underlying filesystem object
+    \item portable and fast
+    \end{itemize}
+%
+  \item \pyrebuiltin{pyre.primitives.uri}
+    \begin{itemize}
+    \item syntax: \literal{<scheme>://<authority>/<path>\#<fragment>}
+    \item universal and portable
+    \item familiar schemes: \literal{http}, \literal{https}, and \literal{file}; \pyre\ adds
+      \literal{vfs} and \literal{pfs} (see \frameref{persistence-virtual-filesystems})
+    \item \literal{authority} is typically used to locate network resources, so it's an IP
+      address or machine name, followed by an optional port
+    \end{itemize}
+%
+  \item both have associated schema so they can be used for component property specifications
+%
+  \item collections of files are supported by the \package{pyre.filesystem}
+    \begin{itemize}
+    \item a composite\supercite{patterns} with instances of \pyrebuiltin{pyre.filesystem.Node}
+      as leaves, and instances of \pyrebuiltin{pyre.filesystem.Folder} as containers
+    \item the root level containers determine the access mechanisms
+    \item currently supported are local filesystems and zip files; hdf5 support is in development
+    \item there is also the notion of a virtual filesystem
+    \end{itemize}
+%
+  \item filesystem exploration and traversal is supported using the
+    visitors\supercite{patterns} \pyrebuiltin{pyre.filesystem.finder},
+    \pyrebuiltin{pyre.filesystem.simpleExplorer}, \pyrebuiltin{pyre.filesystem.treeExplorer}
 %
   \end{itemize}
 %
@@ -47,11 +101,13 @@
 % --------------------------------------
 \begin{frame}
 %
+  \label{frame:persistence-virtual-filesystems}
+%
   \frametitle{Virtual filesystems}
 %
   \begin{itemize}
 %
-  \item virtual, local, zip, hdf5
+  \item virtual, local, zip, hdf5, remote
 %
   \item apps
     \begin{itemize}
