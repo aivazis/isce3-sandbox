@@ -1,4 +1,6 @@
-% -*- LaTeX -*-
+
+\frameinlbffalse
+ -*- LaTeX -*-
 % -*- coding: utf-8 -*-
 %
 % michael a.g. aïvázis <michael.aivazis@para-sim.com>
@@ -861,16 +863,16 @@
       # instantiate one
       greece = srtm(name='greece')
       # show me the current configuration
-      print('{srtm.pyre_name}:'.format(srtm=greece)
-      print('    region: {srtm.region}:'.format(srtm=greece)
-      print('    resolution: {srtm.resolution}:'.format(srtm=greece)
+      print('{srtm.pyre_name}:'.format(srtm=greece))
+      print('    region: {srtm.region}:'.format(srtm=greece))
+      print('    resolution: {srtm.resolution}:'.format(srtm=greece))
 
       # instantiate another
       la = srtm(name='la')
       # show me the current configuration
-      print('{srtm.pyre_name}:'.format(srtm=la)
-      print('    region: {srtm.region}:'.format(srtm=la)
-      print('    resolution: {srtm.resolution}:'.format(srtm=la)
+      print('{srtm.pyre_name}:'.format(srtm=la))
+      print('    region: {srtm.region}:'.format(srtm=la))
+      print('    resolution: {srtm.resolution}:'.format(srtm=la))
       # we can override any of this:
       la.resolution = 3 # arc seconds per pixel
       # and stitch a digital elevation model
@@ -1012,7 +1014,7 @@
     \protocol{DEM} implementors, regardless of their implementation details
 %
       \begin{ipython}[firstnumber=4, gobble=6]{}
-        # the srtm component
+        # the dem protocol
         class DEM(isce.protocol, family='isce.topography.dem'):
             """
             Requirements for components that assemble digital elevation models
