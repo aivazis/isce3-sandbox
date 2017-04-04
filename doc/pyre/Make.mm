@@ -8,29 +8,38 @@
 PROJECT = isce
 PACKAGE = doc/pyre
 
-OTHERS = \
+# the documents in this package
+DOCUMENTS = overview
+# the default document to build; override from the environment
+DOCUMENT = overview
 
-DOCUMENT = pyre
-
-PACKAGES =
-
-INCLUDES = \
+# the configuration dependencies
+CONFIG = \
     config/*.sty \
     config/*.tex \
 
+# section bodies
 SECTIONS = \
     sections/*.tex \
     sections/*.bib \
 
+# source code listings
 LISTINGS = \
     listings/*.py \
     listings/*.pfg listings/*.cfg listings/*.pml \
 
+# figures
 FIGURES = \
     figures/*.pdf \
 
-#
-all: $(DOCUMENT).pdf
+# make everything
+all: $(DOCUMENTS)
+
+# the documents
+overview: overview.pdf
+
+# explcit targets
+overview.pdf: overview.tex $(CONFIG) $(SECTIONS) $(LISTINGS) $(FIGURES)
 
 # preview types
 osx: $(DOCUMENT).pdf
@@ -38,9 +47,6 @@ osx: $(DOCUMENT).pdf
 
 xpdf: $(DOCUMENT).pdf
 	xpdf -remote $(DOCUMENT) $(DOCUMENT).pdf
-
-# make the document using the default document class
-$(DOCUMENT).pdf: $(DOCUMENT).tex $(PACKAGES) $(INCLUDES) $(SECTIONS) $(LISTINGS) $(FIGURES)
 
 # housekeeping
 PROJ_CLEAN += $(CLEAN_LATEX) *.snm *.nav *.vrb *.lbf
