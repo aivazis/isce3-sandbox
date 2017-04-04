@@ -9,7 +9,7 @@ PROJECT = isce
 PACKAGE = doc/pyre
 
 # the documents in this package
-DOCUMENTS = overview
+DOCUMENTS = overview extensions
 # the default document to build; override from the environment
 DOCUMENT = overview
 
@@ -37,9 +37,11 @@ all: $(DOCUMENTS)
 
 # the documents
 overview: overview.pdf
+extensions: extensions.pdf
 
 # explcit targets
 overview.pdf: overview.tex $(CONFIG) $(SECTIONS) $(LISTINGS) $(FIGURES)
+extensions.pdf: extensions.tex $(CONFIG) $(SECTIONS) $(LISTINGS) $(FIGURES)
 
 # preview types
 osx: $(DOCUMENT).pdf
