@@ -23,16 +23,17 @@ namespace isce {
         typedef pyre::memory::uri_t uri_t;
         // grid layout parts
         template <typename repT> using index_t = pyre::geometry::index_t<repT>;
-        template <typename repT> using order_t = pyre::geometry::order_t<repT>;
-        template <typename indexT, typename orderT>
-        using shape_t = pyre::geometry::tile_t<indexT, orderT>;
+        template <typename repT> using shape_t = pyre::geometry::shape_t<repT>;
+        template <typename repT> using packing_t = pyre::geometry::packing_t<repT>;
+        template <typename indexT, typename packingT>
+        using layout_t = pyre::geometry::layout_t<indexT, packingT>;
 
         // grid
-        template <typename cellT, typename tileT, typename storageT>
-        using grid_t = pyre::geometry::grid_t<cellT, tileT, storageT>;
+        template <typename cellT, typename layoutT, typename storageT>
+        using grid_t = pyre::geometry::grid_t<cellT, layoutT, storageT>;
         // direct grid
-        template <typename cellT, typename tileT, typename directT = pyre::memory::direct_t>
-        using directgrid_t = pyre::geometry::directgrid_t<cellT, tileT, directT>;
+        template <typename cellT, typename layoutT, typename directT = pyre::memory::direct_t>
+        using directgrid_t = pyre::geometry::directgrid_t<cellT, layoutT, directT>;
     }
 }
 

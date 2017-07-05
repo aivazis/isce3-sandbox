@@ -21,7 +21,7 @@ public:
     // dependent types
     typedef typename storage_type::uri_type uri_type;
     typedef typename shape_type::index_type index_type;
-    typedef typename shape_type::order_type order_type;
+    typedef typename shape_type::packing_type packing_type;
     // my parts
     typedef pyre::geometry::grid_t<pixel_type, shape_type, storage_type> grid_type;
 

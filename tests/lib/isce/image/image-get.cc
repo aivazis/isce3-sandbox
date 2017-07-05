@@ -26,26 +26,27 @@ int main() {
     typedef std::array<int, 3> rep_t;
     // pull the shape parts
     typedef isce::image::index_t<rep_t> index_t;
-    typedef isce::image::order_t<rep_t> order_t;
-    typedef isce::image::shape_t<index_t, order_t> shape_t;
+    typedef isce::image::shape_t<rep_t> shape_t;
+    typedef isce::image::packing_t<rep_t> packing_t;
+    typedef isce::image::layout_t<index_t, packing_t> layout_t;
     // my image type
-    typedef isce::image::directimage_t<pixel_t, shape_t> image_t;
+    typedef isce::image::directimage_t<pixel_t, layout_t> image_t;
 
     // the name of the file
     uri_t name {"image.dat"};
     // extent
-    index_t extent {1*k, 3*k, 3};
+    shape_t shape {1*k, 3*k, 3};
     // layout
-    order_t layout {2, 1, 0};
-    // image shape
-    shape_t shape {extent, layout};
+    packing_t packing {2, 1, 0};
+    // image layout
+    layout_t layout {shape, packing};
     // make an image
-    image_t image {name, shape};
+    image_t image {name, layout};
 
     // make channel
     pyre::journal::debug_t channel("isce.image");
     // loop over the image
-    for (auto idx : image.shape()) {
+    for (auto idx : image.layout()) {
         // reduce the index
         auto v = std::accumulate(idx.begin(), idx.end(), 1, std::multiplies<pixel_t>());
         // verify we read the correct value

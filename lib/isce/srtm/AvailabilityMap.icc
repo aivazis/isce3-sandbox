@@ -24,7 +24,7 @@ isce::srtm::AvailabilityMap::
 size() const
 {
     // my tile knows
-    return _grid.shape().size();
+    return _grid.layout().size();
 }
 
 

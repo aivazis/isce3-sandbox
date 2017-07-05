@@ -38,7 +38,7 @@ auto
 isce::srtm::Tile::
 shape() const {
     // easy enough...
-    return _grid.shape();
+    return _grid.layout();
 }
 
 

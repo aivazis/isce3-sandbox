@@ -26,21 +26,22 @@ int main() {
     typedef std::array<int, 3> rep_t;
     // pull the shape parts
     typedef isce::image::index_t<rep_t> index_t;
-    typedef isce::image::order_t<rep_t> order_t;
-    typedef isce::image::shape_t<index_t, order_t> shape_t;
+    typedef isce::image::shape_t<rep_t> shape_t;
+    typedef isce::image::packing_t<rep_t> packing_t;
+    typedef isce::image::layout_t<shape_t, packing_t> layout_t;
     // my image type
-    typedef isce::image::directimage_t<pixel_t, shape_t> image_t;
+    typedef isce::image::directimage_t<pixel_t, layout_t> image_t;
 
     // the name of the file
     uri_t name {"image.dat"};
     // extent
-    index_t extent {1*k, 3*k, 3};
+    shape_t shape {1*k, 3*k, 3};
     // layout
-    order_t layout {2, 1, 0};
+    packing_t packing {2, 1, 0};
     // image shape
-    shape_t shape {extent, layout};
+    layout_t layout {shape, packing};
     // make an image
-    image_t image {name, shape};
+    image_t image {name, layout};
 
     // my favorite place
     index_t index {1, 1, 1};
@@ -50,8 +51,8 @@ int main() {
     channel
         << pyre::journal::at(__HERE__)
         << "image:" << pyre::journal::newline
-        << "   shape: (" << image.shape().shape() << ")" << pyre::journal::newline
-        << "   order: (" << image.shape().order() << ")" << pyre::journal::newline
+        << "   shape: (" << image.layout().shape() << ")" << pyre::journal::newline
+        << " packing: (" << image.layout().packing() << ")" << pyre::journal::newline
         << "  mapped: " << image.data()
         << pyre::journal::endl;
 
