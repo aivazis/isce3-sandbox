@@ -31,7 +31,7 @@ int main() {
     // extent
     image_t::shape_type shape {1*k, 3*k, 3};
     // layout
-    image_t::packing_type packing {2, 1, 0};
+    image_t::packing_type packing {2u, 1u, 0u};
     // image layout
     image_t::layout_type layout {shape, packing};
     // make an image

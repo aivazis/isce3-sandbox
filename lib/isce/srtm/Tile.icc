@@ -15,7 +15,7 @@ isce::srtm::Tile::
 Tile(const void * rawdata, int arcsecondsPerPixel) :
     _grid {
         // the tile
-        {{3600/arcsecondsPerPixel+1, 3600/arcsecondsPerPixel+1}, {1, 0}},
+        {{3600/arcsecondsPerPixel+1, 3600/arcsecondsPerPixel+1}, {1u, 0u}},
         // the storage
         { rawdata } }
 {

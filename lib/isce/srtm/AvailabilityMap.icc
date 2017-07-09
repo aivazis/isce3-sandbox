@@ -13,7 +13,7 @@
 // meta-methods
 isce::srtm::AvailabilityMap::
 AvailabilityMap(uri_type uri) :
-    _grid { uri, {{360u, 180u}, {1, 0}} }
+    _grid { uri, {{360u, 180u}, {1u, 0u}} }
 {}
 
 
