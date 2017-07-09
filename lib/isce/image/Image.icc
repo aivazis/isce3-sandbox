@@ -11,17 +11,17 @@
 
 
 // meta-methods
-template <typename pixelT, typename shapeT, typename storageT>
-isce::image::Image<pixelT, shapeT, storageT>::
-Image(shape_type shape, const storage_type & storage) :
-    grid_t<pixelT, shapeT, storageT> { shape, storage }
+template <typename pixelT, typename layoutT, typename storageT>
+isce::image::Image<pixelT, layoutT, storageT>::
+Image(layout_type layout, const storage_type & storage) :
+    grid_t<pixelT, layoutT, storageT> { layout, storage }
 {}
 
 
-template <typename pixelT, typename shapeT, typename storageT>
-isce::image::Image<pixelT, shapeT, storageT>::
-Image(shape_type shape, storage_type && storage) :
-    grid_t<pixelT, shapeT, storageT> { shape, std::move(storage) }
+template <typename pixelT, typename layoutT, typename storageT>
+isce::image::Image<pixelT, layoutT, storageT>::
+Image(layout_type layout, storage_type && storage) :
+    grid_t<pixelT, layoutT, storageT> { layout, std::move(storage) }
 {}
 
 // end of file

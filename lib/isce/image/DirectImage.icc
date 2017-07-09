@@ -11,10 +11,10 @@
 
 
 // meta-methods
-template <typename pixelT, typename shapeT, typename storageT>
-isce::image::DirectImage<pixelT, shapeT, storageT>::
-DirectImage(uri_type uri, shape_type shape) :
-    directgrid_t<pixelT, shapeT, storageT> { uri, shape }
+template <typename pixelT, typename layoutT, typename storageT>
+isce::image::DirectImage<pixelT, layoutT, storageT>::
+DirectImage(uri_type uri, layout_type layout) :
+    directgrid_t<pixelT, layoutT, storageT> { uri, layout }
 {}
 
 

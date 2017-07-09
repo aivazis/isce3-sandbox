@@ -20,8 +20,7 @@ public:
     typedef std::array<int, 2> rep_type;
     // my shape specification
     typedef pyre::geometry::index_t<rep_type> index_type;
-    typedef pyre::geometry::packing_t<rep_type> packing_type;
-    typedef pyre::geometry::layout_t<index_type, packing_type> shape_type;
+    typedef pyre::geometry::layout_t<index_type> shape_type;
     // my storage type
     typedef pyre::memory::constview_t storage_type;
     // my grid

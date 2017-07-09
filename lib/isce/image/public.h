@@ -24,9 +24,7 @@ namespace isce {
         // grid layout parts
         template <typename repT> using index_t = pyre::geometry::index_t<repT>;
         template <typename repT> using shape_t = pyre::geometry::shape_t<repT>;
-        template <typename repT> using packing_t = pyre::geometry::packing_t<repT>;
-        template <typename indexT, typename packingT>
-        using layout_t = pyre::geometry::layout_t<indexT, packingT>;
+        template <typename indexT> using layout_t = pyre::geometry::layout_t<indexT>;
 
         // grid
         template <typename cellT, typename layoutT, typename storageT>
@@ -41,22 +39,22 @@ namespace isce {
 namespace isce {
     namespace image {
         // forward declarations of the image api classes
-        template <typename pixelT, typename shapeT, typename storageT> class Image;
-        template <typename pixelT, typename shapeT, typename storageT> class DirectImage;
+        template <typename pixelT, typename layoutT, typename storageT> class Image;
+        template <typename pixelT, typename layoutT, typename storageT> class DirectImage;
     }
 }
 
 // type aliases for the above; these are the recommended type names for public access
 namespace isce {
     namespace image {
-        // image_t: you specify pixel, shape, and storage
-        template <typename pixelT, typename shapeT, typename storageT>
-        using image_t = Image<pixelT, shapeT, storageT>;
+        // image_t: you specify pixel, layout, and storage
+        template <typename pixelT, typename layoutT, typename storageT>
+        using image_t = Image<pixelT, layoutT, storageT>;
 
-        // directimage_t: specify pixel, shape; storage is memory mapped;
+        // directimage_t: specify pixel, layout; storage is memory mapped;
         // instantiate with {constdirect_t> for read-only access
-        template <typename pixelT, typename shapeT, typename storageT = pyre::memory::direct_t>
-        using directimage_t = DirectImage<pixelT, shapeT, storageT>;
+        template <typename pixelT, typename layoutT, typename storageT = pyre::memory::direct_t>
+        using directimage_t = DirectImage<pixelT, layoutT, storageT>;
     }
 }
 

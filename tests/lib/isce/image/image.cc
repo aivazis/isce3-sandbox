@@ -18,26 +18,22 @@ int main() {
     auto k = 1024;
     // the image data type
     typedef double pixel_t;
-    // names of files
-    typedef isce::image::uri_t uri_t;
     // index realization
     typedef std::array<int, 3> rep_t;
-    // pull the layout parts
+    // specify the layout parts
     typedef isce::image::index_t<rep_t> index_t;
-    typedef isce::image::shape_t<rep_t> shape_t;
-    typedef isce::image::packing_t<rep_t> packing_t;
-    typedef isce::image::layout_t<index_t, packing_t> layout_t;
+    typedef isce::image::layout_t<index_t> layout_t;
     // my image type
     typedef isce::image::directimage_t<pixel_t, layout_t> image_t;
 
     // the name of the file
-    uri_t name {"image.dat"};
+    image_t::uri_type name {"image.dat"};
     // extent
-    shape_t shape {1*k, 3*k, 3};
+    image_t::shape_type shape {1*k, 3*k, 3};
     // layout
-    packing_t packing {2, 1, 0};
+    image_t::packing_type packing {2, 1, 0};
     // image layout
-    layout_t layout {shape, packing};
+    image_t::layout_type layout {shape, packing};
     // make an image
     image_t image {name, layout};
 
