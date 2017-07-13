@@ -22,13 +22,17 @@ class AuthenticationError(ISCEError):
 
     # public data
     description = "{0.reason}"
+    reason = "unknown authentication error"
+
 
     # meta-methods
-    def __init__(self, reason, **kwds):
+    def __init__(self, reason=None, **kwds):
         # chain up
         super().__init__(**kwds)
-        # save the cause of the error
-        self.reason = reason
+        # if the caller supplied a {reason} for the error
+        if reason is not None:
+            # save it
+            self.reason = reason
         # all done
         return
 
