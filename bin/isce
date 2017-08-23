@@ -11,7 +11,7 @@ if __name__ == '__main__':
     # get the package
     import isce
     # build an instance of the plexus
-    app = isce.components.isce(name='isce.plexus')
+    app = isce.shells.isce(name='isce.plexus')
     # run it
     status = app.run()
     # and report the exit code to the shell

@@ -7,7 +7,7 @@
 # project defaults
 include isce.def
 # package name
-PACKAGE = components
+PACKAGE = shells
 # the python modules
 EXPORT_PYTHON_MODULES = \
     Action.py \

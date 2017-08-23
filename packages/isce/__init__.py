@@ -37,8 +37,8 @@ from . import (
     # support
     topography,     # digital elevation models
 
-    # user interface
-    components, actions,
+    # user interfaces
+    shells, actions,
     )
 
 # end of file

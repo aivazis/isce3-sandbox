@@ -11,7 +11,7 @@ import isce
 
 
 # the ISCE plexus
-class ISCE(isce.plexus, family='isce.components.isce'):
+class ISCE(isce.plexus, family='isce.shells.isce'):
     """
     The main action dispatcher for the isce application
     """
