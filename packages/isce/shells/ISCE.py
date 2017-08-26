@@ -27,7 +27,7 @@ class ISCE(isce.plexus, family='isce.shells.isce'):
         Place the application banner in the {info} channel
         """
         # show the license header
-        return isce.version.license
+        return isce.meta.license
 
 
     # interactive session management

@@ -72,7 +72,7 @@ class About(isce.panel(), family='isce.actions.about'):
         Print the version of the isce package
         """
         # make some space
-        plexus.info.log(isce.version.header)
+        plexus.info.log(isce.meta.header)
         # all done
         return
 
@@ -83,7 +83,7 @@ class About(isce.panel(), family='isce.actions.about'):
         Print the copyright note of the isce package
         """
         # show the copyright note
-        plexus.info.log(isce.version.copyright)
+        plexus.info.log(isce.meta.copyright)
         # all done
         return
 
@@ -94,7 +94,7 @@ class About(isce.panel(), family='isce.actions.about'):
         Print out the license and terms of use of the isce package
         """
         # make some space
-        plexus.info.log(isce.version.header)
+        plexus.info.log(isce.meta.acknowledgments)
         # all done
         return
 
@@ -105,7 +105,7 @@ class About(isce.panel(), family='isce.actions.about'):
         Print out the license and terms of use of the isce package
         """
         # make some space
-        plexus.info.log(isce.version.license)
+        plexus.info.log(isce.meta.license)
         # all done
         return
 

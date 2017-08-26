@@ -30,8 +30,8 @@ home, prefix, defaults = package.layout()
 
 # export my parts
 from . import (
-    exceptions,     # version info
-    version,        # version info
+    exceptions,     # the foundations of the ISCE exception hierarchy
+    meta,           # package meta-data
     extensions,     # my extension module
 
     # support
@@ -40,5 +40,36 @@ from . import (
     # user interfaces
     shells, actions,
     )
+
+# administrative
+def copyright():
+    """
+    Return the isce copyright note
+    """
+    return print(meta.header)
+
+
+def license():
+    """
+    Print the isce license
+    """
+    # print it
+    return print(meta.license)
+
+
+def version():
+    """
+    Return the isce version
+    """
+    return meta.version
+
+
+def credits():
+    """
+    Print the acknowledgments
+    """
+    # print it
+    return print(meta.acknowledgments)
+
 
 # end of file
