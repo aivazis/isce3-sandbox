@@ -5,29 +5,34 @@
 # (c) 2003-2017 all rights reserved
 #
 
+# package defaults
 include isce.def
 
-# stuff to clean
-PROJ_CLEAN += [NS][0-9][0-9][EW][0-9][0-9][0-9].SRTMGL[13].hgt.zip srtmgl[13].map
+# the subdirectories to visit
+RECURSE_DIRS = \
+    srtm \
 
+
+# standard targets
 all: test clean
 
-test: sanity low-level srtm
+tidy::
+	BLD_ACTION="tidy" $(MM) recurse
+
+clean::
+	BLD_ACTION="clean" $(MM) recurse
+
+distclean::
+	BLD_ACTION="distclean" $(MM) recurse
+
+# test targets
+test: sanity low-level
+	BLD_ACTION="test" $(MM) recurse
 
 sanity:
 	${PYTHON} ./sanity.py
 
 low-level:
 	${PYTHON} ./extension.py
-
-srtm:
-	${PYTHON} ./srtm.py
-	${PYTHON} ./srtm_component.py
-	${PYTHON} ./srtm_uris.py
-	${PYTHON} ./srtm_tile.py
-	${PYTHON} ./srtm_tile_download_available.py
-	${PYTHON} ./srtm_tile_download_unavailable.py
-	${PYTHON} ./srtm_tile_write.py
-	${PYTHON} ./srtm_tile_dem.py
 
 # end of file
