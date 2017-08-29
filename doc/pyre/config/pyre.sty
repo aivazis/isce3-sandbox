@@ -107,7 +107,7 @@
       \includegraphics[scale=0.15]{figures/pyre-logo.pdf}};%
   \end{tikzpicture}%
 % -- if this slide is to be inserted in the list of slides
-  \ifframeinlbf
+  \ifframeinlbf%
   % -- place the title in the list of contents
     \only<1>{%
       \beamer@autobreakcount=0%
@@ -129,18 +129,19 @@
 
 % sections in the table of frames
 \AtBeginSection[]{%
-  \ifsectioninlbf
+  \ifsectioninlbf%
   \hypertarget{section-\insertsectionnumber}{}%
   \addcontentsline{lbf}{section}{%
     \hskip 1em%
     \protect%
     \hyperlink{section-\insertsectionnumber}{\protect\usebeamercolor[fg]{structure}\secname}%
     \par}%
+  \else\fi%
 }
 
 % sections in the table of frames
 \AtBeginSubsection[]{%
-  \ifsubsectioninlbf
+  \ifsubsectioninlbf%
   \hypertarget{section-\insertsectionnumber.\insertsubsectionnumber}{}%
   \addcontentsline{lbf}{section}{%
     \protect\footnotesize%
@@ -150,6 +151,7 @@
       {section-\insertsectionnumber.\insertsubsectionnumber}%
       {\protect\usebeamercolor[fg]{structure}\subsecname}%
     \par}%
+  \else\fi%
 }
 
 % disable the frame continuation count on [allowframebreaks]
