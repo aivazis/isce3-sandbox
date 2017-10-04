@@ -16,6 +16,7 @@ RECURSE_DIRS = \
     actions \
     extensions \
     image \
+    sensors \
     shells \
     topography \
 

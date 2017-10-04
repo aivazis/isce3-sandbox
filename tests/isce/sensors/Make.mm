@@ -10,8 +10,7 @@ include isce.def
 
 # the subdirectories to visit
 RECURSE_DIRS = \
-    sensors \
-    srtm \
+    ALOS \
 
 
 # standard targets
@@ -27,13 +26,11 @@ distclean::
 	BLD_ACTION="distclean" $(MM) recurse
 
 # test targets
-test: sanity low-level
+test: sanity
 	BLD_ACTION="test" $(MM) recurse
 
 sanity:
 	${PYTHON} ./sanity.py
 
-low-level:
-	${PYTHON} ./extension.py
 
 # end of file

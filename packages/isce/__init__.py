@@ -5,6 +5,11 @@
 # (c) 2003-2017 all rights reserved
 #
 
+# N.B. there is no python version check here; the assumption is that the isce requirements are
+# in sync with the pyre requirements, so the python version check that happens on importing
+# pyre is sufficient; the only problem is that the error message complains about pyre, not
+# isce; is this worth fixing?
+
 # pull the framework parts
 from pyre import (
     # protocols, components and traits
@@ -35,11 +40,17 @@ from . import (
     extensions,     # my extension module
 
     # support
+    sensors,        # instruments
     topography,     # digital elevation models
 
     # user interfaces
     shells, actions,
     )
+
+# my protocols
+dem = topography.dem
+sensor = sensors.sensor
+
 
 # administrative
 def copyright():
