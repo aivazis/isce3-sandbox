@@ -140,6 +140,22 @@ class SRTM(isce.panel(), family='isce.actions.srtm'):
         return status
 
 
+    @isce.export(tip="generate the elevation model for the region of interest")
+    def generate(self, plexus, **kwds):
+        """
+        Generate the elevation model for the region of interest
+        """
+        # get the archive accessor
+        srtm = self.srtm
+        # configure it
+        srtm.region = self.region
+        srtm.force = self.force
+        # ask it to generate the elevation model
+        status = srtm.generate()
+        # all done
+        return status
+
+
     # meta-methods
     def __init__(self, plexus, **kwds):
         # chain up

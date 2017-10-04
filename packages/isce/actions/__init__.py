@@ -12,35 +12,32 @@ import isce
 # topography
 @isce.foundry(implements=isce.action, tip="download and assemble digital elevation models")
 def dem():
-    """
-    Display information about this application
-    """
     # get the command panel
     from .Topography import Topography
-    # and return it
+    # attach the docstring
+    __doc__ = Topography.__doc__
+    # and return the panel
     return Topography
 
 
 @isce.foundry(implements=isce.action, tip="manage the local cache of the SRTM data store")
 def srtm():
-    """
-    Display information about this application
-    """
     # get the command panel
     from .SRTM import SRTM
-    # and return it
+    # attach the docstring
+    __doc__ = SRTM.__doc__
+    # and return the panel
     return SRTM
 
 
 # administrivia
 @isce.foundry(implements=isce.action, tip="display information about this application")
 def about():
-    """
-    Display information about this application
-    """
     # get the command panel
     from .About import About
-    # and return it
+    # attach the docstring
+    __doc__ = About.__doc__
+    # and return the panel
     return About
 
 

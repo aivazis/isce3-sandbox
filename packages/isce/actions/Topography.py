@@ -28,36 +28,36 @@ class Topography(isce.panel(), family='isce.actions.dem'):
     force.doc = 'perform the requested action unconditionally'
 
 
-    @isce.export(tip="download the tiles that cover the region of interest")
-    def download(self, plexus, **kwds):
+    @isce.export(tip="describe the work required to generate the elevation model")
+    def plan(self, plexus, **kwds):
         """
-        Download digital elevation models from an archive
+        Describe the work required to generate the elevation model
         """
-        # pick a channel
-        channel = plexus.info
         # get the archive accessor
         dem = self.dem
         # configure it
         dem.region = self.region
-        # and ask it to do the work
-        status = dem.download(channel=channel)
-        # flush the channel
-        channel.log()
+        dem.force = self.force
+        # and ask it to do the planning
+        status = dem.plan()
         # all done
         return status
 
 
-    @isce.export(tip="stitch together all necessary tiles to form the elevation model")
-    def stitch(self, plexus, **kwds):
+    @isce.export(tip="generate the elevation model for the region of interest")
+    def generate(self, plexus, **kwds):
         """
-        Assemble a digital elevation model by stitching together tiles from a data archive
+        Generate the elevation model for the region of interest
         """
-        # grab the error channel
-        error = plexus.error
-        # complain
-        error.log('stitch: not implemented yet')
+        # get the archive accessor
+        dem = self.dem
+        # configure it
+        dem.region = self.region
+        dem.force = self.force
+        # ask it to generate the elevation model
+        status = dem.generate()
         # all done
-        return
+        return status
 
 
     # meta methods
