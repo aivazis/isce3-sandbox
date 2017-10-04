@@ -41,4 +41,11 @@ pull:
 push:
 	bzr push bzr+ssh://$(PROJECT)@$(PROJ_REPO_HOST)
 
+# shortcuts for building specific subdirectories
+.PHONY: $(RECURSE_DIRS) doc
+
+$(RECURSE_DIRS) doc:
+	(cd $@; $(MM))
+
+
 # end of file
