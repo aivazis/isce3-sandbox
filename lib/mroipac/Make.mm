@@ -4,15 +4,27 @@
 # (c) 2003-2017 all rights reserved
 #
 
-# project defaults
+# get the global defaults
 include isce.def
-# my subdirectories
-RECURSE_DIRS = \
-    mroipac \
-    isce \
 
-# the standard targets
-all:
+# the local package: everything goes to {libmroipac}
+PACKAGE = mroipac
+# the list of directories to visit
+RECURSE_DIRS = \
+    correlation \
+    dopiq \
+    doppler \
+    filter \
+    geolocate \
+    grass \
+    image \
+    peg \
+    slc \
+
+# standard targets
+all: subdirs
+
+subdirs::
 	BLD_ACTION="all" $(MM) recurse
 
 tidy::
@@ -27,14 +39,10 @@ distclean::
 export::
 	BLD_ACTION="export" $(MM) recurse
 
-live:
-	BLD_ACTION="live" $(MM) recurse
+#  shortcuts to building in my subdirectories
+.PHONY: $(RECURSE_DIRS)
 
-# shortcuts for building specific subdirectories
-.PHONY: $(RECURSE_DIRS) doc
-
-$(RECURSE_DIRS) doc:
+$(RECURSE_DIRS):
 	(cd $@; $(MM))
-
 
 # end of file
