@@ -15,7 +15,8 @@ import collections, functools, getpass, os, pickle, urllib.request
 class SRTM(isce.component,
            family='isce.topography.dem.srtm', implements=isce.topography.dem):
     """
-    Accessor for the SRTM data archive
+    Access the SRTM data archive to download tiles and produce a digital elevation model for a
+    specified region of interest
     """
 
     # errors
@@ -27,7 +28,7 @@ class SRTM(isce.component,
 
     # user configurable state
     region = isce.properties.array()
-    region.doc = 'a cloud of (lat,lon) pairs that specifies of the region of interest'
+    region.doc = 'a cloud of (lat,lon) pairs that specify of the region of interest'
 
     resolution = isce.properties.int(default=1)
     resolution.doc = 'the resolution of the data set in pixels per arc-second; either 1 or 3'
@@ -95,6 +96,9 @@ class SRTM(isce.component,
         """
         Ensure that the availability map reflects the contents of the local store accurately
         """
+        # make a channel
+        channel = isce.journal.info(self.pyre_family()) if channel is None else channel
+
         # get the map
         map = self.availabilityMap
         # build a mosaic over the entire globe
@@ -102,10 +106,8 @@ class SRTM(isce.component,
         # get the contents of the local store as a set of tile names
         contents = self.localstoreContents
         # do the sync
-        map.sync(cache=contents, mosaic=globe)
+        map.sync(cache=contents, mosaic=globe, channel=channel)
 
-        # make a channel
-        channel = isce.journal.info(self.pyre_family()) if channel is None else channel
         # everything below is a report
         if not channel:
             # so skip it if the channel is not active
@@ -114,16 +116,16 @@ class SRTM(isce.component,
         # compute the margin
         margin = '  '*dent
         # show me where the local store is
-        channel.line('{}local cache: {.cache.uri}'.format(margin, self))
+        channel.line(f"{margin}local cache: '{self.cache.uri}'")
         # show me the name of the availability map
-        channel.line('{}      map: {.uri.name}'.format(margin, map))
+        channel.line(f"{margin}      map: '{map.uri.name}'")
         # count the number of tiles that are present
         count = len(contents)
         # why not do it right...
         plural = '' if count == 1 else 's'
         # show me
-        channel.line('{}  present: {} tile{}'.format(margin, count, plural))
-        channel.line('{}    globe: {} tiles'.format(margin, len(globe)))
+        channel.line(f'{margin}    globe: {len(globe)} tiles')
+        channel.line(f'{margin}  present: {count} tile{plural}')
         # ask the map for a summary
         map.summary(channel=channel, dent=dent)
 
@@ -141,7 +143,7 @@ class SRTM(isce.component,
         # build a mosaic that covers it
         mosaic = self.mosaic(region=self.region, resolution=self.resolution)
         # get the map
-        map = self.availabilityMap
+        availability = self.availabilityMap
         # check the status of the tiles in the mosaic
         summary = self.checkAvailability(mosaic=mosaic)
 
@@ -154,28 +156,32 @@ class SRTM(isce.component,
 
         # compute the margin
         margin = '  '*dent
+        # render the shape
+        shape = 'x'.join(map(str, mosaic.shape))
         # show me the region
-        channel.line('{}region of interest: {}'.format(margin, region))
+        channel.line(f'{margin}region of interest: {region}')
         # the layout of the mosaic
-        channel.line('{}mosaic: {}x{} grid of tiles'.format(margin, *mosaic.shape))
+        channel.line(f'{margin}mosaic: {shape} grid of tiles')
         # where the local store is
-        channel.line("{}cache: '{.cache.uri}'".format(margin, self))
+        channel.line(f"{margin}cache: '{self.cache.uri}'")
         # the name of the availability map
-        channel.line('{}map: {.uri.name}'.format(margin, map))
+        channel.line(f'{margin}map: {availability.uri.name}')
 
         # mark the section
-        channel.line('{}tiles:'.format(margin))
+        channel.line(f'{margin}tiles:')
+
+        necessary = ", ".join(tile.name for tile in mosaic)
         # show me the names of the needed tiles
-        channel.line('{}    necessary: {}'.format(margin, ", ".join(tile.name for tile in mosaic)))
+        channel.line(f'{margin}    necessary: {necessary}')
         # mark the section
-        channel.line('{}status:'.format(margin))
+        channel.line(f'{margin}status:')
+
         # and now the status piles
         for status in self.availability:
+            # build the list of names
+            names = ", ".join(tile.name for tile in summary[status])
             # show me the code and the tiles
-            channel.line('{}  {:>11}: {}'.format(
-                margin,
-                status.name,
-                ", ".join(tile.name for tile in summary[status])))
+            channel.line(f'{margin}  {status.name:>11}: {names}')
 
         # all done
         return
@@ -218,64 +224,13 @@ class SRTM(isce.component,
         # all done
         return 0
 
-        # make a timer
-        timer = isce.executive.newTimer(name=self.pyre_family())
-        # and a channel
-        channel = isce.journal.info(self.pyre_family()) if channel is None else channel
-        # compute the margin
-        margin = '  '*dent
 
-        # make a pile of workers
-        workers = {}
-        # check in
-        channel.line('{}downloading:'.format(margin))
-        # go through the tile URIs
-        for tile in mosaic:
-            # if the tile is locally cached
-            if tile.status is self.availability.cached:
-                # tell me
-                channel.line('{}  skipping {tile.name}; {tile.status.name}'.format(
-                    margin, tile=tile))
-                # skip it
-                continue
-            # if the tile is known to not exist
-            if tile.status is self.availability.unavailable:
-                # skip it
-                continue
-
-            # form the tile uri
-            uri = tile.filename
-
-            # spawn a worker
-            pid = os.fork()
-            # add his id to the pile
-            workers[pid] = uri
-            # if this is the worker
-            if pid == 0:
-                # reset the timer
-                timer.reset().start()
-                # open the url
-                response = urllib.request.urlopen(archive+uri)
-                # grab the bytes
-                contents = response.read()
-                # create the destination file
-                cache.write(name=uri, contents=contents, mode='wb')
-                # update the tile status
-                tile.status = self.availability.cached
-                # update the map
-                map.update(tile=tile)
-                # show me
-                channel.log('{}  got {!r} ({:.3f} sec)'.format(margin, uri, timer.stop().read()))
-                # this worker is done
-                raise SystemExit(0)
-
-        # back at the ranch
-        for _ in range(len(workers)):
-            # wait for a worker to finish
-            pid, status = os.wait()
-            # show me
-            channel.line('worker {}: tile {!r}, status {}'.format(pid, workers[pid], status))
-
+    @isce.export
+    def generate(self):
+        """
+        Generate the elevation model for the region of interest
+        """
+        self.info.log("NYI!")
         # all done
         return
 
@@ -292,8 +247,11 @@ class SRTM(isce.component,
         if map is not None:
             # all done
             return map
-        # otherwise, get the map
-        map = self.loadAvailabilityMap()
+        try:
+            # otherwise, get the map
+            map = self.loadAvailabilityMap()
+        except Exception as error:
+            print(error)
         # cache it
         self._availabilityMap = map
         # and return it

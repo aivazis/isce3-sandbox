@@ -30,9 +30,8 @@ class AvailabilityMap:
         channel = self._channel if channel is None else channel
         # setup the margin
         margin = '  '*indent
-
         # sign in
-        channel.line('{}updating the availability map'.format(margin))
+        channel.line(f'{margin}updating the availability map')
 
         # now visit all the tiles in the globe
         for tile in mosaic:
@@ -49,8 +48,7 @@ class AvailabilityMap:
                 # mark it in the map
                 self.update(tile=tile)
                 # and show me
-                channel.line('{}  marked tile {tile.name!r} as locally available'.format(
-                    margin, tile=tile))
+                channel.line(f'{margin}  marked tile {tile.name!r} as locally available')
 
             # if the file was marked as cached in the map but it's not in the store contents
             if status is self.availability.cached and not isCached:
@@ -59,7 +57,7 @@ class AvailabilityMap:
                 # update the map
                 self.update(tile=tile)
                 # and show me
-                channel.line('{}  tile {tile.name!r} has disappeared'.format(margin, tile=tile))
+                channel.line(f'{margin}  tile {tile.name!r} has disappeared')
 
         # all done
         return
@@ -74,7 +72,7 @@ class AvailabilityMap:
         # setup the margin
         margin = '  '*dent
         # sign in
-        channel.line('{}tile availability summary:'.format(margin))
+        channel.line(f'{margin}tile availability summary:')
 
         # get my map
         map = self.map
@@ -82,6 +80,9 @@ class AvailabilityMap:
         range = len(self.availability)
         # build the summary
         frequencies = libisce.srtmAvailabilityMapSummary(map, range)
+
+        # figure out the widest status label
+        width = max(len(status.name) for status in self.availability)
 
         # display the table: go through the status codes
         for status in self.availability:
@@ -92,7 +93,7 @@ class AvailabilityMap:
             # why not do it right...
             plural = '' if count == 1 else 's'
             # show me
-            channel.line('{}  {}: {} tile{}'.format(margin, label, count, plural))
+            channel.line(f'{margin}  {label:>{width}}: {count} tile{plural}')
 
         # all done
         return frequencies

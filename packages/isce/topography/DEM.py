@@ -20,6 +20,20 @@ class DEM(isce.protocol, family='isce.topography.dem'):
     region.doc = 'the specification of the region of interest'
 
 
+    # required behavior
+    @isce.provides
+    def plan(self):
+        """
+        Describe the work required to generate the specified elevation model
+        """
+
+    @isce.provides
+    def generate(self):
+        """
+        Generate the elevation model for a specified region
+        """
+
+
     # framework obligations
     @classmethod
     def pyre_default(cls, **kwds):
