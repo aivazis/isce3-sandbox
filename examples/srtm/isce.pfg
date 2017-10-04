@@ -13,7 +13,7 @@ isce.actions:
     ; the region of interest
     ; region = (0, 0), ; this tile is not present in the datastore
     ; region = (0, 6), ; this one is
-    ; region = (39, 23), ; home
+    ; region = (39.4214, 23.1542), ; home
     region = {regions.LA}
 
   ; management of the SRTM local store
