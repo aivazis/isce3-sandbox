@@ -4,8 +4,15 @@
 # (c) 2003-2017 all rights reserved
 #
 
+# dependencies
 # make sure code is relocatable
 include shared/target.def
+# we need fftw almost everywhere
+include fftw/default.def
+# we also need MPI
+include MPI/default.def
+# and HDF5
+include HDF5/default.def
 
 # global options for spisce
 PROJECT = isce
@@ -14,18 +21,30 @@ PROJECT = isce
 PROJECT_MAJOR = 3
 PROJECT_MINOR = 0
 
-# project settings
-PROJ_CXX_FLAGS = $(COMPILER_CXX_STD14)
-
-# figure out the build type
-ifeq (debug, ${findstring debug, $(BLD_USER_TARGET)})
-   PROJ_CXX_DEFINES = DEBUG_CHECK_BOUNDS
-endif
-
 # the repository
 PROJ_REPO_ADMIN = root
 PROJ_REPO_HOST = fiji.para-sim.com
 PROJ_REPO_HOME = /home/projects/$(PROJECT)
 PROJ_REPO_REPOSITORY = $(PROJ_REPO_HOME)/repository
+
+# project settings
+# C++
+PROJ_CXX_DEFINES = HAVE_FFTW
+PROJ_CXX_FLAGS = $(COMPILER_CXX_STD14)
+
+# figure out the build type
+ifeq (debug, ${findstring debug, $(BLD_USER_TARGET)})
+   PROJ_CXX_DEFINES += DEBUG_CHECK_BOUNDS
+endif
+
+# C
+PROJ_CC_DEFINES = HAVE_FFTW
+
+# FORTRAN
+PROJ_F77_DEFINES = HAVE_FFTW
+PROJ_F90_MODULES = $(PROJ_INCDIR)
+PROJ_F77_FLAGS = \
+  $(COMPILER_F77_LONGLINES) $(COMPILER_F77_NORANGECHECK) \
+  $(F77_MODULE_PLACEMENT_FLAG)$(PROJ_INCDIR)
 
 # end of file
