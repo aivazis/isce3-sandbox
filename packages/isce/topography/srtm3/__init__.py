@@ -2,7 +2,7 @@
 #
 # michael a.g. aïvázis
 # orthologue
-# (c) 2003-2017 all rights reserved
+# (c) 2003-2018 all rights reserved
 #
 
 # grant access to the package parts
