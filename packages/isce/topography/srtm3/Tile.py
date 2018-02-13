@@ -172,7 +172,7 @@ class Tile:
     # the tile URI template: tile name and resolution
     _filenameTemplate = "{tile.name}.SRTMGL{tile.resolution}.hgt.zip"
     # the template for the URI of the datastore at the USGS
-    _usgsTemplate = "http://e4ftl01.cr.usgs.gov/SRTM/SRTMGL{tile.resolution}.003/2000.02.11/"
+    _usgsTemplate = "http://e4ftl01.cr.usgs.gov/MEASURES/SRTMGL{tile.resolution}.003/2000.02.11/"
 
 
 # end of file
