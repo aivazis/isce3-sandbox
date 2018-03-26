@@ -42,9 +42,9 @@ push:
 	bzr push bzr+ssh://$(PROJECT)@$(PROJ_REPO_HOST)
 
 # shortcuts for building specific subdirectories
-.PHONY: $(RECURSE_DIRS) doc
+.PHONY: $(RECURSE_DIRS)
 
-$(RECURSE_DIRS) doc:
+$(RECURSE_DIRS):
 	(cd $@; $(MM))
 
 
