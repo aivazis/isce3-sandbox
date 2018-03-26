@@ -346,9 +346,10 @@ tile(PyObject *, PyObject * args)
 
     // N.B.: the python tile must guarantee that the bytes live at least as long as the capsule
     // itself; otherwise, the view constructed by srtm::tile_t looks over bad memory
-    const void * const rawdata = PyBytes_AsString(bytes);
+    const void * rawdata = PyBytes_AsString(bytes);
     // make a tile
-    isce::srtm::tile_t * tile = new isce::srtm::tile_t(rawdata, resolution);
+    isce::srtm::tile_t * tile =
+        new isce::srtm::tile_t(static_cast<isce::srtm::tile_t::const_pointer>(rawdata), resolution);
 
     // dress it up and return it
     return PyCapsule_New(tile, tile_capsule, freeTile);

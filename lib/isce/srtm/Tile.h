@@ -15,6 +15,10 @@ class isce::srtm::Tile {
 public:
     // the payload type
     typedef int16_t data_type;
+    typedef data_type * pointer;
+    typedef const data_type * const_pointer;
+    typedef data_type & reference;
+    typedef const data_type & const_reference;
 
     // storage for my indices
     typedef std::array<int, 2> rep_type;
@@ -22,13 +26,13 @@ public:
     typedef pyre::geometry::index_t<rep_type> index_type;
     typedef pyre::geometry::layout_t<index_type> shape_type;
     // my storage type
-    typedef pyre::memory::constview_t storage_type;
+    typedef pyre::memory::constview_t<data_type> storage_type;
     // my grid
     typedef pyre::geometry::grid_t<data_type, shape_type, storage_type> grid_type;
 
     // meta-methods
 public:
-    inline Tile(const void * rawdata, int arcsecondsPerPixel=1);
+    inline Tile(const_pointer rawdata, int arcsecondsPerPixel=1);
 
     // interface
     inline auto shape() const;

@@ -30,7 +30,9 @@ namespace isce {
         template <typename cellT, typename layoutT, typename storageT>
         using grid_t = pyre::geometry::grid_t<cellT, layoutT, storageT>;
         // direct grid
-        template <typename cellT, typename layoutT, typename directT = pyre::memory::direct_t>
+        template <typename cellT,
+                  typename layoutT,
+                  typename directT = pyre::memory::direct_t<cellT> >
         using directgrid_t = pyre::geometry::directgrid_t<cellT, layoutT, directT>;
     }
 }
@@ -53,7 +55,9 @@ namespace isce {
 
         // directimage_t: specify pixel, layout; storage is memory mapped;
         // instantiate with {constdirect_t> for read-only access
-        template <typename pixelT, typename layoutT, typename storageT = pyre::memory::direct_t>
+        template <typename pixelT,
+                  typename layoutT,
+                  typename storageT = pyre::memory::direct_t<pixelT>>
         using directimage_t = DirectImage<pixelT, layoutT, storageT>;
     }
 }

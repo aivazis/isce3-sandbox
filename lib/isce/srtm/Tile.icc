@@ -12,7 +12,7 @@
 
 // meta-methods
 isce::srtm::Tile::
-Tile(const void * rawdata, int arcsecondsPerPixel) :
+Tile(const_pointer rawdata, int arcsecondsPerPixel) :
     _grid {
         // the tile
         {{3600/arcsecondsPerPixel+1, 3600/arcsecondsPerPixel+1}, {1u, 0u}},
