@@ -201,7 +201,7 @@ availabilityMapGet(PyObject *, PyObject * args)
         << pyre::journal::at(__HERE__)
         << "tile@(" << lat << "," << lon << ") <- "
         << "(" << index[0] << ", " << index[1] << ") -> "
-        << value
+        << static_cast<size_t>(value)
         << pyre::journal::endl;
 
     // dress it up and return it
@@ -274,7 +274,7 @@ availabilityMapSet(PyObject *, PyObject * args)
         << pyre::journal::at(__HERE__)
         << "tile@(" << lat << "," << lon << ") <- "
         << "(" << index[0] << ", " << index[1] << ") <-"
-        << (size_t) value
+        << static_cast<size_t>(value)
         << pyre::journal::endl;
 
     // perform the assignment
@@ -453,7 +453,7 @@ tileGet(PyObject *, PyObject * args)
     channel
         << pyre::journal::at(__HERE__)
         << "tile@(" << i << "," << j << ") <- "
-        << value
+        << static_cast<size_t>(value)
         << pyre::journal::endl;
 
     // dress it up and return it
